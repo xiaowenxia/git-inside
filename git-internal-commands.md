@@ -1,36 +1,40 @@
 # git 底层命令
 
-常用的 git 命令见 [git cheatsheet](#d5IQV) 。本文记录一些底层 git 笔记。
-> 本文的图片大部分都是引用自其它的文章，是其它文章的搬运工 :smile: 
-
+> 本文的图片大部分都是引用自其它的文章，是其它文章的搬运工 :smile: 。
 
 
 <a name="OS6wF"></a>
 ## 底层命令
 <a name="h2UUt"></a>
 ### git cat-file
-查看objects文件。<br />**说明**
-```bash
-usage: git cat-file (-t [--allow-unknown-type] | -s [--allow-unknown-type] | -e | -p | <type> | --textconv | --filters) [--path=<path>] <object>
-   or: git cat-file (--batch | --batch-check) [--follow-symlinks] [--textconv | --filters]
+查看objects文件。
 
-<type> can be one of: blob, tree, commit, tag
-    -t                    show object type
-    -s                    show object size
-    -e                    exit with zero when there's no error
-    -p                    pretty-print object's content
-    --textconv            for blob objects, run textconv on object's content
-    --filters             for blob objects, run filters on object's content
-    --path <blob>         use a specific path for --textconv/--filters
-    --allow-unknown-type  allow -s and -t to work with broken/corrupt objects
-    --buffer              buffer --batch output
-    --batch[=<format>]    show info and content of objects fed from the standard input
-    --batch-check[=<format>]
-                          show info about objects fed from the standard input
-    --follow-symlinks     follow in-tree symlinks (used with --batch or --batch-check)
-    --batch-all-objects   show all objects with --batch or --batch-check
-```
-**示例**
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git cat-file (-t [--allow-unknown-type] | -s [--allow-unknown-type] | -e | -p | <type> | --textconv | --filters) [--path=<path>] <object>
+    or: git cat-file (--batch | --batch-check) [--follow-symlinks] [--textconv | --filters]
+
+    <type> can be one of: blob, tree, commit, tag
+        -t                    show object type
+        -s                    show object size
+        -e                    exit with zero when there's no error
+        -p                    pretty-print object's content
+        --textconv            for blob objects, run textconv on object's content
+        --filters             for blob objects, run filters on object's content
+        --path <blob>         use a specific path for --textconv/--filters
+        --allow-unknown-type  allow -s and -t to work with broken/corrupt objects
+        --buffer              buffer --batch output
+        --batch[=<format>]    show info and content of objects fed from the standard input
+        --batch-check[=<format>]
+                            show info about objects fed from the standard input
+        --follow-symlinks     follow in-tree symlinks (used with --batch or --batch-check)
+        --batch-all-objects   show all objects with --batch or --batch-check
+</details>
+
+</br>
+
+示例
 ```bash
 # 查看objects文件类型
 $ git cat-file -t 56ec1a0729533fbd8d38b7964b6f8ca2cace70ba
@@ -64,42 +68,48 @@ tagging initial release of libgit2
 
 <a name="5M8In"></a>
 ### git ls-files
-查看index文件内容。<br />**说明**
-```
-usage: git ls-files [<options>] [<file>...]
+查看index文件内容。
 
-    -z                    paths are separated with NUL character
-    -t                    identify the file status with tags
-    -v                    use lowercase letters for 'assume unchanged' files
-    -f                    use lowercase letters for 'fsmonitor clean' files
-    -c, --cached          show cached files in the output (default)
-    -d, --deleted         show deleted files in the output
-    -m, --modified        show modified files in the output
-    -o, --others          show other files in the output
-    -i, --ignored         show ignored files in the output
-    -s, --stage           show staged contents' object name in the output
-    -k, --killed          show files on the filesystem that need to be removed
-    --directory           show 'other' directories' names only
-    --eol                 show line endings of files
-    --empty-directory     don't show empty directories
-    -u, --unmerged        show unmerged files in the output
-    --resolve-undo        show resolve-undo information
-    -x, --exclude <pattern>
-                          skip files matching pattern
-    -X, --exclude-from <file>
-                          exclude patterns are read from <file>
-    --exclude-per-directory <file>
-                          read additional per-directory exclude patterns in <file>
-    --exclude-standard    add the standard git exclusions
-    --full-name           make the output relative to the project top directory
-    --recurse-submodules  recurse through submodules
-    --error-unmatch       if any <file> is not in the index, treat this as an error
-    --with-tree <tree-ish>
-                          pretend that paths removed since <tree-ish> are still present
-    --abbrev[=<n>]        use <n> digits to display SHA-1s
-    --debug               show debugging data
-```
-**示例**
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git ls-files [<options>] [<file>...]
+        -z                    paths are separated with NUL character
+        -t                    identify the file status with tags
+        -v                    use lowercase letters for 'assume unchanged' files
+        -f                    use lowercase letters for 'fsmonitor clean' files
+        -c, --cached          show cached files in the output (default)
+        -d, --deleted         show deleted files in the output
+        -m, --modified        show modified files in the output
+        -o, --others          show other files in the output
+        -i, --ignored         show ignored files in the output
+        -s, --stage           show staged contents' object name in the output
+        -k, --killed          show files on the filesystem that need to be removed
+        --directory           show 'other' directories' names only
+        --eol                 show line endings of files
+        --empty-directory     don't show empty directories
+        -u, --unmerged        show unmerged files in the output
+        --resolve-undo        show resolve-undo information
+        -x, --exclude <pattern>
+                            skip files matching pattern
+        -X, --exclude-from <file>
+                            exclude patterns are read from <file>
+        --exclude-per-directory <file>
+                            read additional per-directory exclude patterns in <file>
+        --exclude-standard    add the standard git exclusions
+        --full-name           make the output relative to the project top directory
+        --recurse-submodules  recurse through submodules
+        --error-unmatch       if any <file> is not in the index, treat this as an error
+        --with-tree <tree-ish>
+                            pretend that paths removed since <tree-ish> are still present
+        --abbrev[=<n>]        use <n> digits to display SHA-1s
+        --debug               show debugging data
+</details>
+
+</br>
+
+示例
+
 ```bash
 $ git ls-files
 .gitignore
@@ -119,24 +129,32 @@ write-tree.c
 # 使用 hexdump 可以查看到index文件内容
 $ hexdump -C .git/index
 ```
-<a name="CFLvH"></a>
-### git ls-tree
-查看树内容，可以是commit-id，也可以是tree-id，也可以是 [gitrevisions](#E2HWG) 格式。<br />**说明**
-```bash
-usage: git ls-tree [<options>] <tree-ish> [<path>...]
 
-    -d                    only show trees
-    -r                    recurse into subtrees
-    -t                    show trees when recursing
-    -z                    terminate entries with NUL byte
-    -l, --long            include object size
-    --name-only           list only filenames
-    --name-status         list only filenames
-    --full-name           use full path names
-    --full-tree           list entire tree; not just current directory (implies --full-name)
-    --abbrev[=<n>]        use <n> digits to display SHA-1s
-```
-**示例**
+<a name="CFLvH"></a>
+
+### git ls-tree
+查看树内容，可以是commit-id，也可以是tree-id，也可以是 [git revisions](./git-revisions.md) 格式。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git ls-tree [<options>] <tree-ish> [<path>...]
+
+        -d                    only show trees
+        -r                    recurse into subtrees
+        -t                    show trees when recursing
+        -z                    terminate entries with NUL byte
+        -l, --long            include object size
+        --name-only           list only filenames
+        --name-status         list only filenames
+        --full-name           use full path names
+        --full-tree           list entire tree; not just current directory (implies --full-name)
+        --abbrev[=<n>]        use <n> digits to display SHA-1s
+</details>
+
+</br>
+示例
+
 ```bash
 $ git ls-tree bace6b8b2d3058e3cc0495f5edfb235ed8cff21e
 100644 blob c30106543ed8f32af334362fa82e3a4ad71ef20f	home.md
@@ -164,33 +182,40 @@ $ git ls-tree --full-name HEAD^{tree}
 
 <a name="AAHtb"></a>
 ### git read-tree
-把tree的信息（可以是多个）写入到索引（index）中。<br />**说明**
-```bash
-usage: git read-tree [(-m [--trivial] [--aggressive] | --reset | --prefix=<prefix>) [-u [--exclude-per-directory=<gitignore>] | -i]] [--no-sparse-checkout] [--index-output=<file>] (--empty | <tree-ish1> [<tree-ish2> [<tree-ish3>]])
+把tree的信息（可以是多个）写入到索引（index）中。
 
-    --index-output <file>
-                          write resulting index to <file>
-    --empty               only empty the index
-    -v, --verbose         be verbose
+<details>
+<summary>命令说明（点击展开）</summary>
 
-Merging
-    -m                    perform a merge in addition to a read
-    --trivial             3-way merge if no file level merging required
-    --aggressive          3-way merge in presence of adds and removes
-    --reset               same as -m, but discard unmerged entries
-    --prefix <subdirectory>/
-                          read the tree into the index under <subdirectory>/
-    -u                    update working tree with merge result
-    --exclude-per-directory <gitignore>
-                          allow explicitly ignored files to be overwritten
-    -i                    don't check the working tree after merging
-    -n, --dry-run         don't update the index or the work tree
-    --no-sparse-checkout  skip applying sparse checkout filter
-    --debug-unpack        debug unpack-trees
-    --recurse-submodules[=<checkout>]
-                          control recursive updating of submodules
-```
-**示例**
+    usage: git read-tree [(-m [--trivial] [--aggressive] | --reset | --prefix=<prefix>) [-u [--exclude-per-directory=<gitignore>] | -i]] [--no-sparse-checkout] [--index-output=<file>] (--empty | <tree-ish1> [<tree-ish2> [<tree-ish3>]])
+
+        --index-output <file>
+                            write resulting index to <file>
+        --empty               only empty the index
+        -v, --verbose         be verbose
+
+    Merging
+        -m                    perform a merge in addition to a read
+        --trivial             3-way merge if no file level merging required
+        --aggressive          3-way merge in presence of adds and removes
+        --reset               same as -m, but discard unmerged entries
+        --prefix <subdirectory>/
+                            read the tree into the index under <subdirectory>/
+        -u                    update working tree with merge result
+        --exclude-per-directory <gitignore>
+                            allow explicitly ignored files to be overwritten
+        -i                    don't check the working tree after merging
+        -n, --dry-run         don't update the index or the work tree
+        --no-sparse-checkout  skip applying sparse checkout filter
+        --debug-unpack        debug unpack-trees
+        --recurse-submodules[=<checkout>]
+                            control recursive updating of submodules
+</details>
+
+</br>
+
+示例
+
 ```bash
 $ git read-tree 7fc6c35263716bad0d1df5a814766e8f1fd20345
 $ git ls-files
@@ -207,6 +232,7 @@ main.md
 <a name="UDzYk"></a>
 ### git gc
 打包压缩操作，将多个 object 对象打包成 pack 文件对象。
+
 ```bash
 $ git gc
 Enumerating objects: 43, done.
@@ -222,14 +248,18 @@ Computing commit graph generation numbers: 100% (10/10), done.
 <a name="hPrtl"></a>
 ### git verify-pack
 查看pack包内容。<br />
-<br />**说明**
-```bash
-usage: git verify-pack [-v | --verbose] [-s | --stat-only] <pack>...
 
-    -v, --verbose         verbose
-    -s, --stat-only       show statistics only
-```
-**示例**
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git verify-pack [-v | --verbose] [-s | --stat-only] <pack>...
+
+        -v, --verbose         verbose
+        -s, --stat-only       show statistics only
+</details>
+</br>
+
+示例
 ```bash
 # 查看简略信息
 $ git verify-pack -s objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.idx
@@ -260,20 +290,25 @@ objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.pack: ok
 <a name="D5x8u"></a>
 ### git hash-object
 计算并生成object文件。<br />
-<br />**说明**
-```bash
-usage: git hash-object [-t <type>] [-w] [--path=<file> | --no-filters] [--stdin] [--] <file>...
-   or: git hash-object  --stdin-paths
 
-    -t <type>             object type
-    -w                    write the object into the object database
-    --stdin               read the object from stdin
-    --stdin-paths         read file names from stdin
-    --no-filters          store file as is without filters
-    --literally           just hash any random garbage to create corrupt objects for debugging Git
-    --path <file>         process file as it were from this path
-```
-**示例**
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git hash-object [-t <type>] [-w] [--path=<file> | --no-filters] [--stdin] [--] <file>...
+    or: git hash-object  --stdin-paths
+
+        -t <type>             object type
+        -w                    write the object into the object database
+        --stdin               read the object from stdin
+        --stdin-paths         read file names from stdin
+        --no-filters          store file as is without filters
+        --literally           just hash any random garbage to create corrupt objects for debugging Git
+        --path <file>         process file as it were from this path
+</details>
+</br>
+
+示例
+
 ```bash
 # 仅计算内容的hash值
 $ echo "test" | git hash-object --stdin
@@ -289,11 +324,17 @@ test
 
 <a name="nKiGC"></a>
 ### git show-index
-从标准输入（stdio）中读取打包索引文件（`*.idx`）内容，解析并显示打包文件的索引信息。<br />**说明**
-```bash
-usage: git show-index
-```
-**示例**
+从标准输入（stdio）中读取打包索引文件（`*.idx`）内容，解析并显示打包文件的索引信息。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git show-index
+</details>
+</br>
+
+示例
+
 ```bash
 $ cat .git/objects/pack/pack-b433cf40a267c0fd6b9c4b8afff213eb9ef4a6fe.idx  | git show-index
 11588816 003e02611d63514e51b57eb6575e47475290ed26 (fe575e7e)
