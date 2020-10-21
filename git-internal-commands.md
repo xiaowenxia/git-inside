@@ -250,14 +250,14 @@ main.md
 <details>
 <summary>命令说明（点击展开）</summary>
 
-usage: git gc [<options>]
+    usage: git gc [<options>]
 
-    -q, --quiet           suppress progress reporting
-    --prune[=<date>]      prune unreferenced objects
-    --aggressive          be more thorough (increased runtime)
-    --auto                enable auto-gc mode
-    --force               force running gc even if there may be another gc running
-    --keep-largest-pack   repack all other packs except the largest pack
+        -q, --quiet           suppress progress reporting
+        --prune[=<date>]      prune unreferenced objects
+        --aggressive          be more thorough (increased runtime)
+        --auto                enable auto-gc mode
+        --force               force running gc even if there may be another gc running
+        --keep-largest-pack   repack all other packs except the largest pack
 
 </details>
 </br>
@@ -391,19 +391,19 @@ $ cat .git/objects/pack/pack-b433cf40a267c0fd6b9c4b8afff213eb9ef4a6fe.idx  | git
 <details>
 <summary>命令说明（点击展开）</summary>
 
-usage: git show-ref [-q | --quiet] [--verify] [--head] [-d | --dereference] [-s | --hash[=<n>]] [--abbrev[=<n>]] [--tags] [--heads] [--] [<pattern>...]
-   or: git show-ref --exclude-existing[=<pattern>]
+    usage: git show-ref [-q | --quiet] [--verify] [--head] [-d | --dereference] [-s | --hash[=<n>]] [--abbrev[=<n>]] [--tags] [--heads] [--] [<pattern>...]
+    or: git show-ref --exclude-existing[=<pattern>]
 
-    --tags                only show tags (can be combined with heads)
-    --heads               only show heads (can be combined with tags)
-    --verify              stricter reference checking, requires exact ref path
-    --head                show the HEAD reference, even if it would be filtered out
-    -d, --dereference     dereference tags into object IDs
-    -s, --hash[=<n>]      only show SHA1 hash using <n> digits
-    --abbrev[=<n>]        use <n> digits to display SHA-1s
-    -q, --quiet           do not print results to stdout (useful with --verify)
-    --exclude-existing[=<pattern>]
-                          show refs from stdin that aren't in local repository
+        --tags                only show tags (can be combined with heads)
+        --heads               only show heads (can be combined with tags)
+        --verify              stricter reference checking, requires exact ref path
+        --head                show the HEAD reference, even if it would be filtered out
+        -d, --dereference     dereference tags into object IDs
+        -s, --hash[=<n>]      only show SHA1 hash using <n> digits
+        --abbrev[=<n>]        use <n> digits to display SHA-1s
+        -q, --quiet           do not print results to stdout (useful with --verify)
+        --exclude-existing[=<pattern>]
+                            show refs from stdin that aren't in local repository
 </details>
 </br>
 
@@ -423,16 +423,16 @@ $ git show-ref
 <details>
 <summary>命令说明（点击展开）</summary>
 
-usage: git update-ref [<options>] -d <refname> [<old-val>]
-   or: git update-ref [<options>]    <refname> <new-val> [<old-val>]
-   or: git update-ref [<options>] --stdin [-z]
+    usage: git update-ref [<options>] -d <refname> [<old-val>]
+    or: git update-ref [<options>]    <refname> <new-val> [<old-val>]
+    or: git update-ref [<options>] --stdin [-z]
 
-    -m <reason>           reason of the update
-    -d                    delete the reference
-    --no-deref            update <refname> not the one it points to
-    -z                    stdin has NUL-terminated arguments
-    --stdin               read updates from stdin
-    --create-reflog       create a reflog
+        -m <reason>           reason of the update
+        -d                    delete the reference
+        --no-deref            update <refname> not the one it points to
+        -z                    stdin has NUL-terminated arguments
+        --stdin               read updates from stdin
+        --create-reflog       create a reflog
 </details>
 </br>
 
