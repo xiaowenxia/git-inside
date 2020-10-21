@@ -7,4 +7,5 @@ git 底层原理
 * [git 底层对象](./git-internal-objects.md)
 * [git revisions](./git-revisions.md)
 * [git 工作流](./git-workflows.md)
+* [git 的特殊文件](./git-internal-files.md)
 * [git 的特殊技巧](./git-tips.md)

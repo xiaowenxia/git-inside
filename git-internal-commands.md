@@ -1,8 +1,22 @@
 # git 底层命令
 
 <a name="OS6wF"></a>
+## 目录
+* [git cat-file](#git-cat-file)
+* [git ls-files](#git-ls-files)
+* [git ls-tree](#git-ls-tree)
+* [git read-tree](#git-read-tree)
+* [git gc](#git-gc)
+* [git verify-pack](#git-verify-pack)
+* [git hash-object](#git-hash-object)
+* [git show-index](#git-show-index)
+* [git show-ref](#git-show-ref)
+* [git update-ref](#git-update-ref)
+* [git rev-parse](#git-rev-parse)
+
 ## 底层命令
 <a name="h2UUt"></a>
+
 ### git cat-file
 查看objects文件。
 
@@ -64,6 +78,7 @@ tagging initial release of libgit2
 
 
 <a name="5M8In"></a>
+
 ### git ls-files
 查看index文件内容。
 
@@ -178,6 +193,7 @@ $ git ls-tree --full-name HEAD^{tree}
 
 
 <a name="AAHtb"></a>
+
 ### git read-tree
 把tree的信息（可以是多个）写入到索引（index）中。
 
@@ -227,8 +243,24 @@ main.md
 
 
 <a name="UDzYk"></a>
+
 ### git gc
 打包压缩操作，将多个 object 对象打包成 pack 文件对象。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+usage: git gc [<options>]
+
+    -q, --quiet           suppress progress reporting
+    --prune[=<date>]      prune unreferenced objects
+    --aggressive          be more thorough (increased runtime)
+    --auto                enable auto-gc mode
+    --force               force running gc even if there may be another gc running
+    --keep-largest-pack   repack all other packs except the largest pack
+
+</details>
+</br>
 
 ```bash
 $ git gc
@@ -243,6 +275,7 @@ Computing commit graph generation numbers: 100% (10/10), done.
 
 
 <a name="hPrtl"></a>
+
 ### git verify-pack
 查看pack包内容。<br />
 
@@ -285,6 +318,7 @@ objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.pack: ok
 
 
 <a name="D5x8u"></a>
+
 ### git hash-object
 计算并生成object文件。<br />
 
@@ -320,6 +354,7 @@ test
 
 
 <a name="nKiGC"></a>
+
 ### git show-index
 从标准输入（stdio）中读取打包索引文件（`*.idx`）内容，解析并显示打包文件的索引信息。
 
@@ -349,8 +384,28 @@ $ cat .git/objects/pack/pack-b433cf40a267c0fd6b9c4b8afff213eb9ef4a6fe.idx  | git
 
 
 <a name="2odx3"></a>
+
 ### git show-ref
 列出本地引用（ref）。<br />
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+usage: git show-ref [-q | --quiet] [--verify] [--head] [-d | --dereference] [-s | --hash[=<n>]] [--abbrev[=<n>]] [--tags] [--heads] [--] [<pattern>...]
+   or: git show-ref --exclude-existing[=<pattern>]
+
+    --tags                only show tags (can be combined with heads)
+    --heads               only show heads (can be combined with tags)
+    --verify              stricter reference checking, requires exact ref path
+    --head                show the HEAD reference, even if it would be filtered out
+    -d, --dereference     dereference tags into object IDs
+    -s, --hash[=<n>]      only show SHA1 hash using <n> digits
+    --abbrev[=<n>]        use <n> digits to display SHA-1s
+    -q, --quiet           do not print results to stdout (useful with --verify)
+    --exclude-existing[=<pattern>]
+                          show refs from stdin that aren't in local repository
+</details>
+</br>
 
 ```bash
 $ git show-ref
@@ -361,8 +416,25 @@ $ git show-ref
 
 
 <a name="RFGzC"></a>
+
 ### git update-ref
 更新引用（ref）的内容为指定的对象名称或sha1值。<br />
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+usage: git update-ref [<options>] -d <refname> [<old-val>]
+   or: git update-ref [<options>]    <refname> <new-val> [<old-val>]
+   or: git update-ref [<options>] --stdin [-z]
+
+    -m <reason>           reason of the update
+    -d                    delete the reference
+    --no-deref            update <refname> not the one it points to
+    -z                    stdin has NUL-terminated arguments
+    --stdin               read updates from stdin
+    --create-reflog       create a reflog
+</details>
+</br>
 
 ```bash
 $ git update-ref HEAD 52855ba8f5c7e8410db2277ca1b00c4e1d1c2721
@@ -370,8 +442,20 @@ $ git update-ref HEAD 52855ba8f5c7e8410db2277ca1b00c4e1d1c2721
 
 
 <a name="mIaJ6"></a>
+
 ### git rev-parse
 把 [revisions](#PVM6y) 解析成 commit-id，除此之外，还有其他的功能。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git rev-parse --parseopt [<options>] -- [<args>...]
+    or: git rev-parse --sq-quote [<arg>...]
+    or: git rev-parse [<options>] [<arg>...]
+
+</details>
+</br>
+
 ```bash
 # 显示 revisions 的 sha1 值
 $ git rev-parse HEAD
@@ -398,9 +482,55 @@ $ git rev-parse --show-cdup
 
 
 <a name="NcEOk"></a>
+
 ### git rev-list
 按照时间顺序输出历史的commit-id。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git rev-list [OPTION] <commit-id>... [ -- paths... ]
+    limiting output:
+        --max-count=<n>
+        --max-age=<epoch>
+        --min-age=<epoch>
+        --sparse
+        --no-merges
+        --min-parents=<n>
+        --no-min-parents
+        --max-parents=<n>
+        --no-max-parents
+        --remove-empty
+        --all
+        --branches
+        --tags
+        --remotes
+        --stdin
+        --quiet
+    ordering output:
+        --topo-order
+        --date-order
+        --reverse
+    formatting output:
+        --parents
+        --children
+        --objects | --objects-edge
+        --unpacked
+        --header | --pretty
+        --[no-]object-names
+        --abbrev=<n> | --no-abbrev
+        --abbrev-commit
+        --left-right
+        --count
+    special purpose:
+        --bisect
+        --bisect-vars
+        --bisect-all
+</details>
+</br>
+
 ```bash
+# 显示 master 分支的历史版本
 $ git rev-list master
 52855ba8f5c7e8410db2277ca1b00c4e1d1c2721
 b16a0f533bbda973eb28fbfbc91a7dbb345d38d1
@@ -412,6 +542,16 @@ b16a0f533bbda973eb28fbfbc91a7dbb345d38d1
 84c83efa85ddfa026d3db955dac212c3376bd101
 93af3cd9281510c1d64d806c30b77ca508942859
 32067c28ccc498b8059fb37823aedfb9a2d5527c
+
+# 显示master 分支历史版本，同时显示objects
+$ git rev-list master --objects
+...
+29885ee583595d9080b841625d7b2d16f0fb34d2 internal
+81a035a831bf13dc28cb86373e23c20d48b08c7c internal/diff
+05bb5447d0c6d121103ff75cfde889cd5f790794 internal/diff/diff.go
+7248748b8897d3e28421387b5133632c0cd772dd internal/service
+a0995fd53aeb7748b7618e5427844bbedf20c832 internal/service/diff
+...
 ```
 
 
