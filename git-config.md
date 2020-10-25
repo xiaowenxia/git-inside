@@ -1,6 +1,6 @@
 ### git 的配置说明
 
-> 参考 [Pro Git](https://git-scm.com/book/en/v2) 的 [Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)
+> 参考 [Pro Git](https://git-scm.com/book/en/v2) 的 [Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)。
 
 ### git 的 3 种配置
 git 有 3 种配置，分别为当前工作区配置、全局配置、系统配置，各自的配置文件分别为：

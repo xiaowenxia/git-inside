@@ -1,6 +1,6 @@
 ## git 的一些环境变量
 
-### GIT_TRACE
+#### GIT_TRACE
 GIT_TRACE=1 可以显示具体的git内部执行过程，比如：
 
 ```bash
@@ -33,3 +33,5 @@ Your branch is up to date with 'origin/master'.
 
 nothing to commit, working tree clean
 ```
+
+#### GIT_DIR

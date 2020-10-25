@@ -11,3 +11,4 @@ git 底层原理
 * [git 环境变量](./git-env.md)
 * [git 的特殊文件](./git-internal-files.md)
 * [git 的特殊技巧](./git-tips.md)
+* [git 术语](./git-glossary.md)
