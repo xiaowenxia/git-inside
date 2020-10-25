@@ -79,5 +79,89 @@ $ git config --global core.editor vim
         --includes            respect include directives on lookup
         --show-origin         show origin of config (file, standard input, blob, command line)
         --default <value>     with --get, use default value when missing entry
-</detail>
+</details>
 </br>
+
+### 更多配置项
+
+#### core.editor
+git 默认使用环境变量 `VISUAL` 或 `EDITOR` 作为默认的编辑器，用户可以通过配置 `core.editor` 设置默认的编辑器。
+
+#### commit.template
+`commit.template` 可以让你配置 `git commit` 时的提交信息的模板文件：
+```bash
+# 配置 commit 模板文件为 ~/.gitmessage.txt
+$ git config --global commit.template ~/.gitmessage.txt
+# 提交时，则会显示模板
+$ git commit
+```
+
+#### core.pager
+配置默认的查看git 输出的工具，比如 `git log`、 `git diff`等，默认为 [less](https://man7.org/linux/man-pages/man1/less.1.html)，当然你也可以配置成其他的翻页工具：
+```bash
+# 配置成 more
+$ git config --global core.pager more
+# 配置为空，则不使用翻页工具
+$ git config --global core.pager ''
+```
+
+#### user.signingkey
+设置你的 [GPG](https://docs.gitlab.com/ee/user/project/repository/gpg_signed_commits/#:~:text=You%20can%20use%20a%20GPG%20key%20to%20sign,used%20for%20all%20OpenPGP%2FPGP%2FGPG%20related%20material%20and%20implementations.) 签名id：
+```bash
+$ git config --global user.signingkey <gpg-key-id>
+```
+
+#### core.excludesfile
+设置全局 ignore 的文件，该配置项相当于全局的 [.gitignore](https://git-scm.com/docs/gitignore) 文件。
+
+```bash
+$ git config --global core.excludesfile ~/.gitignore_global
+```
+
+#### help.autocorrect
+git 命令如果输入有误时，会提示是否存在类似的命令，比如：
+
+```bash
+# 故意输错 chekcout，则提示相似的 checkout 命令
+$ git chekcout master
+git: 'chekcout' is not a git command. See 'git --help'.
+
+The most similar command is
+    checkout
+```
+`help.autocorrect` 则可以让 git 自动纠正命令并执行：
+```bash
+$ git chekcout master
+WARNING: You called a Git command named 'chekcout', which does not exist.
+Continuing under the assumption that you meant 'checkout'
+in 0.1 seconds automatically...
+```
+
+#### color.ui
+设置 git 命令输出是否带有颜色。
+git 还支持更细颗粒度的颜色输出配置：
+```
+color.branch
+color.diff
+color.interactive
+color.status
+```
+
+#### core.autocrlf
+
+Windows 和 Linux/MacOS 的换行符是有差异的，Windows的换行符是 `CRLF`，Linux/MacOS 的换行符是`LF`，如果用户在 Windows 上提交代码，那 checkout 到Linux/MacOS 平台上则会有显示问题，开启 `core.autocrlf` 配置项则可以让 git 根据平台自动转换换行符。
+
+```bash
+$ git config --global core.autocrlf true
+```
+#### 配置 merge 或者 diff 工具
+git 还支持配置 merge 或者 diff 工具，比如如下的配置：
+```bash
+$ git config --global merge.tool extMerge
+$ git config --global mergetool.extMerge.cmd \
+  'extMerge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"'
+$ git config --global mergetool.extMerge.trustExitCode false
+$ git config --global diff.external extDiff
+```
+
+详细配置说明请参考 [Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)。
