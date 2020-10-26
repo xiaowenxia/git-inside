@@ -47,15 +47,15 @@
 
 示例
 ```bash
-# 查看objects文件类型
+# 查看 objects 文件类型
 $ git cat-file -t 56ec1a0729533fbd8d38b7964b6f8ca2cace70ba
 commit
 
-# 查看objects文件大小
+# 查看 objects 文件大小
 $ git cat-file -s 56ec1a0729533fbd8d38b7964b6f8ca2cace70ba
 243
 
-# 查看objects文件（格式化）内容
+# 查看 objects 文件（格式化）内容
 $ git cat-file -p 56ec1a0729533fbd8d38b7964b6f8ca2cace70ba
 tree 7f9adb36c3e987d1ca9d40ba538afd8cbc74e942
 parent cf22ff3d15d718603f93c36f13d848e00d841def
@@ -145,7 +145,7 @@ $ hexdump -C .git/index
 <a name="CFLvH"></a>
 
 ### git ls-tree
-查看树内容，可以是commit-id，也可以是tree-id，也可以是 [git revisions](./git-revisions.md) 格式。
+查看树内容，可以是 commit-id ，也可以是 tree-id ，也可以是 [git revisions](./git-revisions.md) 格式。
 
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -277,7 +277,7 @@ Computing commit graph generation numbers: 100% (10/10), done.
 <a name="hPrtl"></a>
 
 ### git verify-pack
-查看pack包内容。<br />
+查看 pack 包内容。<br />
 
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -320,7 +320,7 @@ objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.pack: ok
 <a name="D5x8u"></a>
 
 ### git hash-object
-计算并生成object文件。<br />
+计算并生成 object 文件。<br />
 
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -341,11 +341,11 @@ objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.pack: ok
 示例
 
 ```bash
-# 仅计算内容的hash值
+# 仅计算内容的 hash 值
 $ echo "test" | git hash-object --stdin
 9daeafb9864cf43055ae93beb0afd6c7d144bfa4
 
-# 计算内容的hash值并写入成object文件
+# 计算内容的 hash 值并写入成 object 文件
 $ ll objects/9d/aeafb9864cf43055ae93beb0afd6c7d144bfa4
 -r--r--r-- 1 root root 20 Sep 28 09:55 objects/9d/aeafb9864cf43055ae93beb0afd6c7d144bfa4
 $ git cat-file -p 9daeafb9864cf43055ae93beb0afd6c7d144bfa4
@@ -418,7 +418,7 @@ $ git show-ref
 <a name="RFGzC"></a>
 
 ### git update-ref
-更新引用（ref）的内容为指定的对象名称或sha1值。<br />
+更新引用（ref）的内容为指定的对象名称或 sha1 值。<br />
 
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -444,7 +444,7 @@ $ git update-ref HEAD 52855ba8f5c7e8410db2277ca1b00c4e1d1c2721
 <a name="mIaJ6"></a>
 
 ### git rev-parse
-把 [revisions](#PVM6y) 解析成 commit-id，除此之外，还有其他的功能。
+把 [revisions](#PVM6y) 解析成 commit-id ，除此之外，还有其他的功能。
 
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -484,7 +484,7 @@ $ git rev-parse --show-cdup
 <a name="NcEOk"></a>
 
 ### git rev-list
-按照时间顺序输出历史的commit-id。
+按照时间顺序输出历史的 commit-id 。
 
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -543,7 +543,7 @@ b16a0f533bbda973eb28fbfbc91a7dbb345d38d1
 93af3cd9281510c1d64d806c30b77ca508942859
 32067c28ccc498b8059fb37823aedfb9a2d5527c
 
-# 显示master 分支历史版本，同时显示objects
+# 显示 master 分支历史版本，同时显示 objects
 $ git rev-list master --objects
 ...
 29885ee583595d9080b841625d7b2d16f0fb34d2 internal
