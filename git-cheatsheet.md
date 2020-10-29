@@ -12,3 +12,11 @@
 ![image.png](https://img.alicdn.com/tfs/TB18W3uZBr0gK0jSZFnXXbRRXXa-1305-1801.png)
 > 出自 [Rico's cheatsheets](https://devhints.io/git-revisions) - git revisions 。
 
+### git 各个区的关系
+> 出自 http://amio.github.io/git-cheatsheet-chs/#loc=remote_repo; 。
+
+![](https://img.alicdn.com/tfs/TB1zdjy0XY7gK0jSZKzXXaikpXa-2584-1320.png)
+![](https://img.alicdn.com/tfs/TB12.Tz0oz1gK0jSZLeXXb9kVXa-2604-1316.png)
+![](https://img.alicdn.com/tfs/TB1aZytnsVl614jSZKPXXaGjpXa-2576-1314.png)
+![](https://img.alicdn.com/tfs/TB1VeKqo2zO3e4jSZFxXXaP_FXa-2596-1318.png)
+![](https://img.alicdn.com/tfs/TB1yRnF0oH1gK0jSZSyXXXtlpXa-2588-1314.png)
