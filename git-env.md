@@ -35,3 +35,8 @@ nothing to commit, working tree clean
 ```
 
 #### GIT_DIR
+
+
+#### GIT_CURL_VERBOSE
+
+#### GIT_TRACE_PACKET
