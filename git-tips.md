@@ -29,9 +29,13 @@ $ git reset
 ### git clone --bare
 
 ```bash
-$ git clone --bare git@gitlab.alibaba-inc.com:chenan.xxw/force-stone-dev-docker.git
-$ tree force-stone-dev-docker.git/
-force-stone-dev-docker.git/
+$ git clone --bare git@github.com:xiaowenxia/git-inside.git
+Cloning into bare repository 'git-inside.git'...
+...
+
+# 查看目录
+$ tree git-inside.git 
+git-inside.git
 |-- HEAD
 |-- branches
 |-- config
@@ -68,5 +72,15 @@ origin/releases/20201015194918032_r_release_62648_t-force-stone-code
 ### 查看某人的所有提交（所有分支）
 ```bash
 $ git log --all --author="775117471@qq.com"
-......
+commit 59cabcd911a3a7460d53c850ee2c69372397cec9 (HEAD -> main, origin/main, origin/HEAD)
+Author: xiaowenxia <775117471@qq.com>
+Date:   Tue Nov 3 20:07:30 2020 +0800
+
+    add some git tips
+
+commit 834afb32e8e9825e80c7910dbd9379e1be77629a
+Author: xiaowenxia <775117471@qq.com>
+Date:   Mon Nov 2 15:09:43 2020 +0800
+
+    Add `git-refs`.
 ```
