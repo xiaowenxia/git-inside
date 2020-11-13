@@ -555,3 +555,113 @@ a0995fd53aeb7748b7618e5427844bbedf20c832 internal/service/diff
 ```
 
 
+### git for-each-ref
+查看引用列表。
+<details>
+<summary>命令说明（点击展开）</summary>
+
+</details>
+</br>
+
+```bash
+$ git for-each-ref
+ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/heads/master
+ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/remotes/origin/HEAD
+785b6024cfa7e95359eb5b0fe8cfc7c8e6c4905e commit refs/remotes/origin/cmn/config-snapshot
+b63157de51a6caeffe067d3410b0a3f375b94390 commit refs/remotes/origin/cmn/go-http
+a333fd9a49b14bd329ee02d9bdf6968ba3847ffd commit refs/remotes/origin/cmn/oid-copies
+519b8e16d67d00cc20e4cfcdcd3382e85bf42e5f commit refs/remotes/origin/cmn/pointer-indirection
+92bb4425bc968f47d1ca632caae6d1334ca79338 commit refs/remotes/origin/cmn/remote-callbacks
+f13b40445ece7fcbb6149d10ea70148ea7bad5a3 commit refs/remotes/origin/cmn/remotes-ng
+0d3b5bd5511b59375464ee0ab63f6d5aa65a7471 commit refs/remotes/origin/cmn/tls-stream
+1eeddfa291ecbeb1ef0283bf51718763ac9e58ff commit refs/remotes/origin/cmn/tree-parse-go
+ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/remotes/origin/master
+5d0a4c752a74258a5f42e40fccd2908ac4e336b8 commit refs/remotes/origin/next
+4aa4dc05ded5c4a8918490de80a6bec44ac7062a commit refs/remotes/origin/release-0.22
+a5764fdd237616aeefecbf5e0a630369f747fa94 commit refs/remotes/origin/release-0.23
+1b45e29af5f39766262cf2f49e01f320d728bea2 commit refs/remotes/origin/release-0.24
+334260d743d713a55ff3c097ec6707f2bb39e9d5 commit refs/remotes/origin/release-0.25
+c9f7fd544d3991bd26c400b3c227673bcada42cc commit refs/remotes/origin/release-0.26
+800edc61bf1616f10c5182ddea7c752dee07a6d4 commit refs/remotes/origin/release-0.27
+b00c365f5027bb500db7b00579fd23e0e7e8417f commit refs/remotes/origin/release-0.28
+0843b826d219b16d55d3bb7fffbb5fb3fbbf82f8 commit refs/remotes/origin/release-0.99
+2bf0e14e9ed02e22edbddfeec1658f6069546dd9 commit refs/remotes/origin/release-1.0
+ad3ec3664d54779c4c2e49e41f85e886fbff343c commit refs/remotes/origin/release-1.1
+b60db7feec4dad0e865518893516315bbcf6bd22 commit refs/remotes/origin/remotes
+16ef893af9de00c4633e48fcfae2c32809ce63ee commit refs/remotes/origin/revwalk
+41ad00f868e7dfcdb04c7538f27350d400f710a3 commit refs/remotes/origin/v22
+fa644d2fc9efa3baee93b525212d76dfa17a5db5 commit refs/remotes/origin/v23
+22091886372e73de5d66168e8665775676ec13c5 commit refs/remotes/origin/v24
+334260d743d713a55ff3c097ec6707f2bb39e9d5 commit refs/remotes/origin/v25
+c9f7fd544d3991bd26c400b3c227673bcada42cc commit refs/remotes/origin/v26
+6cc7d3dc6aec2781fe0239315da215f49c76e2f8 commit refs/remotes/origin/v27
+7694d5f5fcef65ca981eb66d803d34b464a4aa14 commit refs/remotes/origin/v28
+e662016367f851f9a8c2b32028b0c91f0f514608 commit refs/remotes/origin/winfix
+6ee3a5f5896cf88a937d107ba6fe89afbd89eecd commit refs/tags/v0.27.10
+b1eec9a4662a2e64953aa83365f84f5c773b6399 commit refs/tags/v0.28.4
+437c7c33440da8b0c96734054c77bfadf72e80d2 commit refs/tags/v0.28.4.1
+7694d5f5fcef65ca981eb66d803d34b464a4aa14 commit refs/tags/v0.28.5
+5d6404f309aa42d0292792c4cf97270725827513 commit refs/tags/v22.3.0
+a6ef0d4521e1938c44ea08f16404c91748ec4656 commit refs/tags/v23.4.0
+51063a965b098b6d2ebac977bb75055e06ed5913 commit refs/tags/v24.6.0
+334260d743d713a55ff3c097ec6707f2bb39e9d5 commit refs/tags/v25.1.0
+c9f7fd544d3991bd26c400b3c227673bcada42cc commit refs/tags/v26.8.0
+6cc7d3dc6aec2781fe0239315da215f49c76e2f8 commit refs/tags/v27.10.0
+6453cf9f8ada2ca65ff48b515d2160cab2c8c987 commit refs/tags/v27.11.0
+0430fd700c88953686644dd27c0b39a8a5ef9f41 commit refs/tags/v27.11.1
+7b9a768b08984dd81922560c995e567944ffddbb commit refs/tags/v27.11.10
+4d690277874bce93e81a1f1a12c9ec9ba3daca0f commit refs/tags/v27.11.2
+9912ed9742b906725971b140d5939077c36dc384 commit refs/tags/v27.11.3
+3d80bd22ad0f884d94733d06c446bb5e3411fa31 commit refs/tags/v27.11.4
+627f58d4038cdbc20a1ea96dc43ee06709528d2f commit refs/tags/v27.11.5
+a81a08606fb54ba61c0179739b793ec8fbc3558b commit refs/tags/v27.11.6
+6cb9c7cf4136c14b59768c81a4e623b89f5eaeff commit refs/tags/v27.11.7
+27f87bd821239fda40db72790d2eca4bde9e3ac0 commit refs/tags/v27.11.8
+f58d71b8a9228a1d1a1966c0dcd4a3a63e8a7439 commit refs/tags/v27.11.9
+800edc61bf1616f10c5182ddea7c752dee07a6d4 commit refs/tags/v27.12.0
+7694d5f5fcef65ca981eb66d803d34b464a4aa14 commit refs/tags/v28.4.0
+20c6fefa56286d9264694ca0937115ada12bc472 commit refs/tags/v28.5.0
+a3140afde20ad746ae58241be2534a5640a3cc68 commit refs/tags/v28.5.1
+6badd3d00d3b832f0e3cb9a21150a1e3e1771742 commit refs/tags/v28.5.10
+2870fabe227bfed22769bac9c80fd8f29a9ba39d commit refs/tags/v28.5.11
+61ea21fbd6dda3a701c43ec0394edfb984e61f3a commit refs/tags/v28.5.2
+4883fbe87201c5aba92be18d54fd786072076e56 commit refs/tags/v28.5.3
+fb4e5911aaa2e298903374378777cef46bb6d0db commit refs/tags/v28.5.4
+1cf6bf83143b08e359185dca12b883872b526f57 commit refs/tags/v28.5.5
+3fcab7513d02572ec18409515370c617f8cbcc3c commit refs/tags/v28.5.6
+4b27f5c4301d73891d116eeb5333f78e31ae582e commit refs/tags/v28.5.7
+b6212551e2735745387db173bfcae918760af370 commit refs/tags/v28.5.8
+8b6f3d805664c4df49ffc6ffa42026d21ce4fa24 commit refs/tags/v28.5.9
+c18989f6529eb494fad15bcb629c7248e05292b6 commit refs/tags/v28.6.0
+bd9b40fc67ab760f9458b52d470d878271849954 commit refs/tags/v28.6.1
+b00c365f5027bb500db7b00579fd23e0e7e8417f commit refs/tags/v28.7.0
+e10c2eeef23d05e0ce12061bb535132f37e6d457 commit refs/tags/v29.0.0
+a32375a86063768507a01b32cc3d868f4c2ffa9c commit refs/tags/v29.0.1
+0843b826d219b16d55d3bb7fffbb5fb3fbbf82f8 commit refs/tags/v29.0.2
+13ca96065e6be3292c931cc580bbc125962b394e commit refs/tags/v30.0.0
+91d08450b68efc8ef5bd5bfee29e813ca5829229 commit refs/tags/v30.0.1
+7e726fda6ec2b5d773e5a8b54ed06378a53c0f7f commit refs/tags/v30.0.10
+3c5c580d78831d10e082743f3783424b72ac9e09 commit refs/tags/v30.0.11
+f3a746d7b6a27a9d6f98143641466f68ef1f3dee commit refs/tags/v30.0.12
+111185838cebe3415e47c75e67fb81295952ce68 commit refs/tags/v30.0.13
+37b81b61f16f4bdf891a54dc8311bd5d2236e329 commit refs/tags/v30.0.14
+5b6ce70b8997254ce48f8c24ba4198080e646fdd commit refs/tags/v30.0.15
+3a4204bd934b59a55581d33d300617a4f621257f commit refs/tags/v30.0.16
+10d5ebf231bdc37293235a6fc2bdf94fd25d0c56 commit refs/tags/v30.0.17
+f83530b18dc46867ed06fc261b309b8b545a3b6f commit refs/tags/v30.0.18
+8b51d0db8e40e97283b771a5a51b13bea4651f81 commit refs/tags/v30.0.2
+31f877e249e28c29cc4fcd512381a5a5b26e59d9 commit refs/tags/v30.0.3
+9eaf4fed5f4f2361898f9da8345b34886076bfc2 commit refs/tags/v30.0.4
+20a55cdf92f4ad6af4110861811a7076056cdf36 commit refs/tags/v30.0.5
+fc6eaf36388841b16ff004e1d48e887d3f9613dc commit refs/tags/v30.0.6
+2ac9f4e69bd57a686d15176d199a3c9cc4a6bb91 commit refs/tags/v30.0.7
+7883ec85de56ee55667481228282fd690fce6246 commit refs/tags/v30.0.8
+7d4453198b55ecc2d9e09b64352edecb5db8b6ef commit refs/tags/v30.0.9
+bcfa2568377b4cc52d28cf63e1256cec756781a5 commit refs/tags/v30.1.0
+2bf0e14e9ed02e22edbddfeec1658f6069546dd9 commit refs/tags/v30.2.0
+ad3ec3664d54779c4c2e49e41f85e886fbff343c commit refs/tags/v31.0.0
+c3664193f3c05bd6ae48f153c6c41cd7d7a3d98b commit refs/tags/v31.1.0
+77460dd7f0fb4108e22681ac1efc3e0fd52093a6 commit refs/tags/v31.1.1
+b46ebfab8c11a551db58858bb00aeebc1faf41b3 commit refs/tags/v31.2.0
+ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/tags/v31.3.0
+```

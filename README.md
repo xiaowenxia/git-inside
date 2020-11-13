@@ -10,6 +10,7 @@
     * [git revisions](./git-revisions.md)
     * [git 的分支策略](./git-branch.md)
     * [git 工作流](./git-workflows.md)
+    * [git 引用](./git-refs.md)
 * git 底层原理
     * [git 底层命令](./git-internal-commands.md)
     * [git 底层对象](./git-internal-objects.md)
