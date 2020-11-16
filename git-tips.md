@@ -84,3 +84,16 @@ Date:   Mon Nov 2 15:09:43 2020 +0800
 
     Add `git-refs`.
 ```
+
+### 如何在 vscode 中查看已经提交的代码 diff
+
+```bash
+# reset 到前面 7 个提交
+$ git reset --soft HEAD~7
+
+# 恢复
+$ git pull
+```
+
+如下所示：
+![](https://img.alicdn.com/tfs/TB1A08J2AL0gK0jSZFtXXXQCXXa-3092-2098.png)
