@@ -97,3 +97,12 @@ $ git pull
 
 如下所示：
 ![](https://img.alicdn.com/tfs/TB1A08J2AL0gK0jSZFtXXXQCXXa-3092-2098.png)
+
+### cherry-pick 多个提交
+```bash
+# 中间使用三个点（...）代表 pick 多个提交，这些提交必须是连续的
+$ git cherry-pick 33fbcded...4f17fa9f
+
+# 不连续的提交则需要单独指定 commit-id
+$ git cherry-pick 33fbcded 4f17fa9f 820b38b4
+```
