@@ -1,5 +1,5 @@
 ## git 的一些环境变量
-
+> 参考：https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F
 #### GIT_TRACE
 GIT_TRACE=1 可以显示具体的git内部执行过程，比如：
 

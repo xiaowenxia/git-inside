@@ -18,3 +18,8 @@
     * [git 的特殊技巧](./git-tips.md)
     * [git 术语](./git-glossary.md)
     * [git cheatsheet](./git-cheatsheet.md)
+
+
+## 参考手册
+
+* GIT Manual Page: https://mirrors.edge.kernel.org/pub/software/scm/git/docs/
