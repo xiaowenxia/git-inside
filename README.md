@@ -22,4 +22,5 @@
 
 ## 参考手册
 
-* GIT Manual Page: https://mirrors.edge.kernel.org/pub/software/scm/git/docs/
+* Git Manual Page: https://mirrors.edge.kernel.org/pub/software/scm/git/docs/
+* Git User Manual: https://mirrors.edge.kernel.org/pub/software/scm/git/docs/user-manual.html

@@ -86,7 +86,7 @@ Date:   Mon Nov 2 15:09:43 2020 +0800
 ```
 
 ### 如何在 vscode 中查看已经提交的代码 diff
-
+因为 vscode 查看代码 diff 非常方便，比 git 默认的编辑器查看 diff 方便很多。
 ```bash
 # reset 到前面 7 个提交
 $ git reset --soft HEAD~7
@@ -105,4 +105,17 @@ $ git cherry-pick 33fbcded...4f17fa9f
 
 # 不连续的提交则需要单独指定 commit-id
 $ git cherry-pick 33fbcded 4f17fa9f 820b38b4
+```
+
+
+### 指定 git 仓库路径
+
+```bash
+$ git -C ~/workspace/github/git-inside status
+```
+
+### 指定 git 的工作目录
+
+```bash
+$ git --git-dir=~/workspace/github/git-inside/.git status
 ```
