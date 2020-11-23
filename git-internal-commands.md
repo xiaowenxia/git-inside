@@ -338,6 +338,8 @@ objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.pack: ok
 </details>
 </br>
 
+* `--literally` 参数：可以对任意数据（可能是垃圾数据）创建松散对象，防止被 git 阻止或过滤。这种方式主要用于调试 git。
+
 示例
 
 ```bash
