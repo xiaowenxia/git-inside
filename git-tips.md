@@ -60,7 +60,6 @@ git-inside.git
 9 directories, 18 files
 ```
 
-
 ### 查看 commit-id 属于哪个分支
 
 ```bash
@@ -118,4 +117,62 @@ $ git -C ~/workspace/github/git-inside status
 
 ```bash
 $ git --git-dir=~/workspace/github/git-inside/.git status
+```
+
+### git 的一些数据统计命令
+
+> 统计的是 git 的仓库：https://github.com/git/git 。
+
+#### 统计仓库里面提交次数
+
+```bash
+# 统计每个人的提交次数
+$ git log | grep "^Author: " | awk '{print $2}' | sort | uniq -c | sort -k1,1nr
+22110 Junio
+3685 Jeff
+1824 Nguyễn
+......
+ 680 Brandon
+ 524 Jakub
+......
+   1 Андрей
+
+# 统计 Junio 的提交次数
+$ git log | grep "^Author: .*<gitster@pobox.com>" | awk '{print $2}' | sort | uniq -c | sort -k1,1nr
+22110 Junio
+
+# 或者
+$ git log --author=gitster@pobox.com --oneline |  wc -l
+   22110
+```
+
+#### 按月统计指定用户的提交次数
+
+```bash
+$ git log --author=gitster@pobox.com --since="2020-07-01" --no-merges | grep -e 'commit [a-zA-Z0-9]*' | wc -l
+      79
+```
+
+#### 统计仓库所有提交次数
+
+```bash
+# 统计指定分支的提交次数
+$ git log --oneline | wc -l
+   61128
+
+# 统计所有分支的提交次数
+$ git log --oneline --all | wc -l
+   63541
+```
+
+#### 统计指定用户的代码量
+
+```bash
+# 当前分支
+$ git log --author="gitster@pobox.com" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
+added lines: 232482, removed lines: 101841, total lines: 130641
+
+# 所有分支
+$ git log --author="gitster@pobox.com" --pretty=tformat: --numstat --all | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
+added lines: 549564, removed lines: 376991, total lines: 172573
 ```
