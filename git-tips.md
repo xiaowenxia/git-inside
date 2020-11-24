@@ -131,10 +131,10 @@ $ git log | grep "^Author: " | awk '{print $2}' | sort | uniq -c | sort -k1,1nr
 22110 Junio
 3685 Jeff
 1824 Nguyễn
-......
+...... # 省略
  680 Brandon
  524 Jakub
-......
+...... # 省略
    1 Андрей
 
 # 统计 Junio 的提交次数
@@ -176,3 +176,26 @@ added lines: 232482, removed lines: 101841, total lines: 130641
 $ git log --author="gitster@pobox.com" --pretty=tformat: --numstat --all | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
 added lines: 549564, removed lines: 376991, total lines: 172573
 ```
+
+### 如何快速克隆 github 上的源码
+github 在国内的 clone 速度是非常慢的，速率一般在100k以下，如果要 clone 相对比较大的项目那会非常痛苦，而且git clone 没有断点续传功能，网络中断的话则需要重新clone。
+此时可以利用 [gitee](https://gitee.com/)。[gitee](https://gitee.com/) 在国内的访问速度非常快，达到 `4~5M` 的 clone 速率，而且针对 github 上部分大型且比较有名的项目，gitee都会做一个仓库镜像，该镜像会每日同步，具体可以访问 [Gitee 极速下载](https://gitee.com/mirrors)。
+所以要快速克隆 github 上的源码，可以进行如下操作：
+
+```bash
+# 首先 git clone gitee 的国内 git 镜像仓库。
+$ git clone git@gitee.com:mirrors/AliOS-Things.git
+
+# 再添加一个新的 remote 仓库为 github 的仓库。
+$ cd AliOS-Things
+$ git remote add github git@github.com:alibaba/AliOS-Things.git
+
+# 然后 git fetch --all 就可以把 github 的仓库快速 clone 下来。
+$ git fetch –all
+
+# 新建 github 的本地分支，也可以删除掉 gitee 远程仓库。
+$ git checkout –b github_rel_3.0.0 –track github/rel_3.0.0
+```
+
+操作示例如下：
+![](https://img.alicdn.com/tfs/TB1YCyVjrr1gK0jSZR0XXbP8XXa-967-534.gif)
