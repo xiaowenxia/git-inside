@@ -1,6 +1,6 @@
 ### git 的配置说明
 
-> 参考 [Pro Git](https://git-scm.com/book/en/v2) 的 [Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)。
+> 参考 [Pro Git](https://git-scm.com/book/en/v2) 的 [Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)。更详细的配置项说明见：https://git-scm.com/docs/git-config 。
 
 ### git 的 3 种配置
 git 有 3 种配置，分别为当前工作区配置、全局配置、系统配置，各自的配置文件分别为：
@@ -154,6 +154,10 @@ Windows 和 Linux/MacOS 的换行符是有差异的，Windows的换行符是 `CR
 ```bash
 $ git config --global core.autocrlf true
 ```
+
+#### core.attributesFile
+设置 .gitattributes 文件路径。
+
 #### 配置 merge 或者 diff 工具
 git 还支持配置 merge 或者 diff 工具，比如如下的配置：
 ```bash
