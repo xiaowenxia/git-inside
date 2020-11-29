@@ -92,3 +92,18 @@ gitattributes 支持的属性有：
 了解 git 底层原理的人应该比较清楚，git 无法追踪一个空的文件夹，当用户需要追踪(track)一个空的文件夹的时候，按照惯例，大家会把一个称为 `.gitkeep` 的文件放在这些文件夹里。
 
 #### .gitmodules
+
+
+#### .git/description
+`.git/description` 文件用来存储仓库名称以及仓库的描述信息。默认的值为：
+```
+Unnamed repository; edit this file 'description' to name the repository.
+```
+
+也可以改成类似如下的值：
+
+```
+git-inside This is git-inside
+```
+
+有些Git 工具（比如 [GitWeb](https://git-scm.com/book/zh/v2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-GitWeb) ）通过读取该文件来获取仓库名称以及仓库的说明信息。git hooks 也会读取 `.git/description` 来获取仓库名称。
