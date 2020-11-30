@@ -30,13 +30,25 @@ $ zlib-flate -uncompress < .git/objects/aa/548c4d7910229712ba3a41e74c6db872e8ab6
 > 需要安装 qpdf 才能正常使用 [zlib-flate](http://manpages.ubuntu.com/manpages/trusty/man1/zlib-flate.1.html) 命令：apt install qpdf 。
 
 
-
-<a name="YOJoN"></a>
 ### 索引文件
-索引文件格式为：<br />![image.png](https://img.alicdn.com/tfs/TB1T.NsZoz1gK0jSZLeXXb9kVXa-2526-1594.png)
-> 详细说明请见：[源码解析：Git的第一个提交是什么样的 - 索引文件](https://juejin.im/post/6874840619332665357#heading-18)。
+索引文件默认路径为：`.git/index`。索引文件用来存储变更文件的相关信息，当运行 `git add` 命令时会添加变更文件的信息到索引文件中。
 
+> 同时也有一个叫 `.git/index.lock` 的文件，该文件存在时表示当前工作区被锁定，无法进行提交操作。
 
+使用 `hexdump` 命令可以查看到索引文件内容：
+```
+$ hexdump -C .git/index 
+00000000  43 52 49 44 01 00 00 00  01 00 00 00 ae 73 c4 f2  |CRID.........s..|
+00000010  ce 32 c9 6f 13 20 0d 56  9c e8 cf 0d d3 75 10 c8  |.2.o. .V.....u..|
+00000020  94 ad 4c 5f f4 5c 42 06  94 ad 4c 5f f4 5c 42 06  |..L_.\B...L_.\B.|
+00000030  00 03 01 00 91 16 d2 04  b4 81 00 00 ee 03 00 00  |................|
+00000040  ee 03 00 00 0b 00 00 00  a3 f4 a0 66 c5 46 39 78  |...........f.F9x|
+00000050  1e 30 19 a3 20 42 e3 82  84 ee 31 54 09 00 52 45  |.0.. B....1T..RE|
+00000060  41 44 4d 45 2e 6d 64 00                           |ADME.md.|
+```
+
+`.git/index` 索引文件使用二进制存储相关内容，该文件由 **文件头 + 变更文件信息** 组成：
+![image.png](https://img.alicdn.com/tfs/TB1T.NsZoz1gK0jSZLeXXb9kVXa-2526-1594.png)
 
 <a name="NEN6x"></a>
 ### pack文件

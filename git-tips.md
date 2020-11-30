@@ -199,3 +199,13 @@ $ git checkout –b github_rel_3.0.0 –track github/rel_3.0.0
 
 操作示例如下：
 ![](https://img.alicdn.com/tfs/TB1YCyVjrr1gK0jSZR0XXbP8XXa-967-534.gif)
+
+### 为什么 git 仓库提交历史很难篡改？
+
+git 的底层 chain 对象和区块链有异曲同工之处，都是基于 merkle tree 的链式。
+> [区块链如何运用merkle tree验证交易真实性](https://www.tangshuang.net/4117.html)
+### vscode 里面的git 管理具体是怎么实现的？
+
+### git 为什么要使用sha256？
+* git hash object的作用
+* sha1的优势劣势
