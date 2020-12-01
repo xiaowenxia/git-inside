@@ -344,7 +344,7 @@ objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.pack: ok
 
 ```bash
 # 仅计算内容的 hash 值
-$ echo "test" | git hash-object --stdin
+$ echo "test" | git hash-object --stdin -w --literally
 9daeafb9864cf43055ae93beb0afd6c7d144bfa4
 
 # 计算内容的 hash 值并写入成 object 文件
