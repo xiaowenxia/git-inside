@@ -1,4 +1,5 @@
 ## git 内部原理
+了解 git 内部原理其实很有用，比如意外删除了分支怎么办？二进制大文件占用太多磁盘空间怎么清理等等。
 
 git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。
 
@@ -8,6 +9,17 @@ git 的所有核心底层命令实际上都是在操作 git 对象。比如 git 
 
 本文一步一步讲解 git 的内部实现原理。
 
+<blockquote>
+<p>不知道各位有没有体会，总感觉之前的代码写的很 low 逼，想抽点空来折腾折腾自己还是很有乐趣的。<strong>重构还是很有乐趣的</strong>。手工狗头镇楼！</p>
+</blockquote>
+
+
+<div>
+<pre data-tool="mdnice编辑器" style="margin-top: 10px;margin-bottom: 10px;border-radius: 5px;" data-darkmode-color-16069084740659="rgb(163, 163, 163)" data-darkmode-original-color-16069084740659="rgb(0,0,0)"><span style="display: block;background: url(&quot;https://img.alicdn.com/tfs/TB1oxKyosieb18jSZFvXXaI3FXa-450-130.png&quot;) 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;" data-darkmode-color-16069084740659="rgb(0,0,0)" data-darkmode-original-color-16069084740659="rgb(0,0,0)" data-darkmode-bgimage-16069084740659="1" class="js_darkmode__bg__0 js_darkmode__28" data-style="display: block; background: url(&quot;https://img.alicdn.com/tfs/TB1oxKyosieb18jSZFvXXaI3FXa-450-130.png&quot;) 10px 10px / 40px no-repeat rgb(40, 44, 52); height: 30px; width: 100%; margin-bottom: -7px; border-radius: 5px;"></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;display: -webkit-box;font-family: Operator Mono, Consolas, Monaco, Menlo, monospace;font-size: 12px;-webkit-overflow-scrolling: touch;padding-top: 15px;background: #282c34;border-radius: 5px;" data-darkmode-color-16069084740659="rgb(171, 178, 191)" data-darkmode-original-color-16069084740659="rgb(171, 178, 191)" data-darkmode-bgcolor-16069084740659="rgb(49, 54, 63)" data-darkmode-original-bgcolor-16069084740659="rgb(40, 44, 52)" data-style="overflow-x: auto; padding: 15px 16px 16px; color: rgb(171, 178, 191); display: -webkit-box; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; font-size: 12px; background: rgb(40, 44, 52); border-radius: 5px;" class="js_darkmode__29">所有符合征文活动要求的参与文章，都将获得「&nbsp;掘金首页热门推荐」，更有机会获得掘金官方微博、微信公众号等渠道推荐，让更多用户可以看到你的文章。<br data-darkmode-color-16069084740659="rgb(171, 178, 191)" data-darkmode-original-color-16069084740659="rgb(171, 178, 191)" data-darkmode-bgcolor-16069084740659="rgb(49, 54, 63)" data-darkmode-original-bgcolor-16069084740659="rgb(40, 44, 52)"></code></pre>
+</div>
+
+
+<h3 style="color: inherit;line-height: inherit;padding: 0px;margin: 1.6em 0px;font-weight: bold;border-bottom: 2px solid rgb(65, 105, 225);font-size: 1.3em;" data-darkmode-color-16069092717197="rgb(163, 163, 163)" data-darkmode-original-color-16069092717197="rgb(62, 62, 62)"><span style="font-size: inherit;line-height: inherit;margin: 0px;display: inline-block;font-weight: normal;background: rgb(65, 105, 225);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;" data-darkmode-color-16069092717197="rgb(255, 255, 255)" data-darkmode-original-color-16069092717197="rgb(255, 255, 255)" data-darkmode-bgcolor-16069092717197="rgb(65, 105, 225)" data-darkmode-original-bgcolor-16069092717197="rgb(65, 105, 225)">CPU 如何选择线程的？</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid rgb(239, 235, 233);border-right: 20px solid transparent;" data-darkmode-color-16069092717197="rgb(163, 163, 163)" data-darkmode-original-color-16069092717197="rgb(62, 62, 62)" data-style="display: inline-block; vertical-align: bottom; border-bottom: 36px solid rgb(239, 235, 233); border-right: 20px solid transparent;" class="js_darkmode__18"> </span></h3>
 ##### 0x01: 首先初始化工程
 ```bash
 # 初始化工程
