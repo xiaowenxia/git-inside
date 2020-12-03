@@ -7,7 +7,7 @@ git 实际上是一个内容文件系统，载体是 git 的对象，存储的�
 
 <div align="center"><img src="https://www.zz101z.com/uploads/2019/0328/5c9c305b11a44.jpg" width=600 /></div> 
 
-git 的所有核心底层命令实际上都是在操作 git 对象。比如 git add 命令，就是把文件快照存储成 `blob` 对象，`git commit` 命令，就是把提交信息存储成 `tree` 对象，`git checkout -b`创建分支命令，就是创建一个指针指向 `commit` 对象。
+git 的所有核心底层命令实际上都是在操作 git 对象。比如 git add 命令，就是把文件快照存储成 `blob` 对象，`git commit` 命令，就是把提交的文件列表和提交信息分别存储成 `tree` 对象和 `commit` 对象，`git checkout -b`创建分支命令，就是创建一个指针指向 `commit` 对象。
 
 本文会从一个空的仓库开始，一步一步讲解 git 的底层文件变动和内部原理。
 
@@ -204,12 +204,12 @@ $ tree .git/objects
 
 可以看到除了原先的 `6fb38b7`、`4120b5f`、`523d41c`，又新增了：
 * `45c7a58`: blob 对象， 存储 `changelog` 内容快照。
-* `469f265`: commit 对象，指向。
+* `469f265`: commit 对象，指向 `d6b927d`、`523d41c`。
 * `5664e30`: blob 对象， 存储 `README.md` 内容快照。
 * `b4e7d04`: blob 对象， 存储 `file.txt` 内容快照。
 * `d6b927d`: tree 对象， 指向 `45c7a58`、`5664e30`、`b4e7d04`。
 
-查看 commit 对象内容：
+查看 commit 对象 `469f265` 内容：
 
 ```bash
 $ git cat-file -p 469f265
