@@ -109,7 +109,8 @@ $ git commit -m "first commit"
 
 > 其中 `100644` 是指的文件模式，`100644` 表明这是一个普通文件。 其他情况比如 `100755` 表示可执行文件，`120000` 表示符号链接。
 
-> 如果你是边阅读本文边动手操作，那你会发现生成的 commit 对象的 sha1 值跟本文不一致，因为提交日期以及用户名邮箱是不一样的，可以点击 [这里](#LhzBD) 查看如何设置跟本文一样的日期和用户名邮箱。
+> 如果你是边阅读本文边动手操作，那你会发现生成的 commit 对象的 sha1 值跟本文不一致，因为提交日期以及用户名邮箱是不一样的，可以点击这里 [设置固定的时间日期、用户名和邮箱](#LhzBD)，这样提交的对象就会是一样的 sha1值，也方便阅读本文。
+
 查看 `.git/objects` 目录下，会新增 2 个 git 对象：
 
 ```bash
@@ -327,6 +328,11 @@ tag 对象相对比较独立，不参与构建文件系统，只是单纯的存�
 * **commit 对象**：包含着指向前述 tree 对象的指针和所有提交信息，数据结构参考：[commit 对象](https://github.com/xiaowenxia/git-first-commit#commit-%E5%AF%B9%E8%B1%A1)。
 * **tag 对象**：记录带注释的 tag 。
 
+最后，我们用一张图来总结上述的一系列步骤生成的对象之间的关系：
+
+![](https://img.alicdn.com/tfs/TB1pltF4kL0gK0jSZFAXXcA9pXa-2878-1384.png)
+
+##### git 对象的相关命令
 git 擅长的一点是提供了很多丰富抽象的子命令来操作这些 git 对象，比如上面的一系列操作：
 
 * `git add`：实际上是把当前工作区的文件快照保存下来，产出是 blob 对象。
@@ -341,14 +347,14 @@ git 擅长的一点是提供了很多丰富抽象的子命令来操作这些 git
 * [`git-read-tree`](https://git-scm.com/docs/git-read-tree)：把 tree 对象读取到暂存区。
 * [`git-commit-tree`](https://git-scm.com/docs/git-commit-tree)：根据输入信息（tree、父提交、author、commiter、日期等）存储成 commit 对象。
 * [`git-ls-tree`](https://git-scm.com/docs/git-ls-tree)：读取并格式化输出 tree 对象。
-
-最后，我们用一张图来总结上述的一系列步骤生成的对象之间的关系：
-
-![](https://img.alicdn.com/tfs/TB1pltF4kL0gK0jSZFAXXcA9pXa-2878-1384.png)
+* [`git-mktag`](https://git-scm.com/docs/git-mktag)：把输入内容存储成 tag 对象。
+* [`git-mktree`](https://git-scm.com/docs/git-mktree)：根据输入（`ls-tree`的输出格式）来生成 tree 对象。
+* [`git-fsck`](https://git-scm.com/docs/git-fsck)：校验对象链表的正确性和有效性。
+* [`git-diff-tree`](https://git-scm.com/docs/git-diff-tree)：比较 2 个tree 对象 的差异并格式化输出。
 
 <a name="LhzBD"></a>
 
-##### 其他
+##### 设置固定的时间日期、用户名和邮箱
 
 本文中的示例都设置了固定的时间日期、用户名和邮箱，如果你是边阅读本文边动手操作，可以如下执行 `git commit` 或者 `git tag` ，这样生成的对象hash值和本文中的是一致的：
 
@@ -360,15 +366,10 @@ $ GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMA
 $ GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMAIL="775117471@qq.com" GIT_COMMITTER_DATE="1606913178 +0800"  GIT_COMMITTER_NAME="xiaowenxia" GIT_COMMITTER_EMAIL="775117471@qq.com" git tag "v0.0.2" -m "this is annotated tag"
 ```
 
-或者可以这样全局的环境变量：
+或者可以使用 `export` 设置为全局的环境变量：
 
 ```bash
-export GIT_AUTHOR_DATE="1606913178 +0800"
-export GIT_AUTHOR_NAME="xiaowenxia"
-export GIT_AUTHOR_EMAIL="775117471@qq.com"
-export GIT_COMMITTER_DATE="1606913178 +0800"
-export GIT_COMMITTER_NAME="xiaowenxia"
-export GIT_COMMITTER_EMAIL="775117471@qq.com"
+export GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMAIL="775117471@qq.com" GIT_COMMITTER_DATE="1606913178 +0800" GIT_COMMITTER_NAME="xiaowenxia" GIT_COMMITTER_EMAIL="775117471@qq.com"
 ```
 
 ### 参考资料
