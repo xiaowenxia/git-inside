@@ -57,12 +57,8 @@ $ git add file.txt
 此时查看 `.git/` 工作目录：
 
 ```bash
-$ tree .git/objects
-.git/objects
-├── 6f
-│   └── b38b7118b554886e96fa736051f18d63a80c85
-├── info
-└── pack
+$ find .git/objects -type f
+.git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
 ```
 
 可以看到新生成了一个 git 对象，路径为`.git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85`。
@@ -114,16 +110,10 @@ $ git commit -m "first commit"
 查看 `.git/objects` 目录下，会新增 2 个 git 对象：
 
 ```bash
-$  tree .git/objects
-.git/objects
-├── 41
-│   └── 20b5f61a582cb12d4dcdaab71c7ef1862dbbca
-├── 52
-│   └── 3d41ce82ea993e7c7df8be1292b2eac84d4659
-├── 6f
-│   └── b38b7118b554886e96fa736051f18d63a80c85
-├── info
-└── pack
+$ find .git/objects -type f
+.git/objects/41/20b5f61a582cb12d4dcdaab71c7ef1862dbbca
+.git/objects/52/3d41ce82ea993e7c7df8be1292b2eac84d4659
+.git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
 ```
 分别是 `523d41c` 和 `4120b5f` 。
 
@@ -178,28 +168,16 @@ $ git commit -m "second commit"
 查看 git 对象列表：
 
 ```bash
-$ tree .git/objects
-.git/objects
-├── 10
-│   └── da3741b6e365b6795335e1e2d3ed5820e794cd      # tree | 第二次提交
-├── 39
-│   └── fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree: doc/ | 第二次提交
-├── 41
-│   └── 20b5f61a582cb12d4dcdaab71c7ef1862dbbca      # tree | 第一次提交
-├── 45
-│   └── c7a584f300657dba878a542a6ab3b510b63aa3      # blob | changelog
-├── 52
-│   └── 3d41ce82ea993e7c7df8be1292b2eac84d4659      # commit | 第一次提交
-├── 56
-│   └── 64e303b5dc2e9ef8e14a0845d9486ec1920afd      # blob | README.md
-├── 6f
-│   └── b38b7118b554886e96fa736051f18d63a80c85      # blob | 第一次提交 | file.txt
-├── a0
-│   └── e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0      # commit | 第二次提交
-├── ae
-│   └── c2e48cbf0a881d893ccdd9c0d4bbaf011b5b23      # blob | 第二次提交 | file.txt
-├── info
-└── pack
+$ find .git/objects -type f | sort
+.git/objects/10/da3741b6e365b6795335e1e2d3ed5820e794cd      # tree | 第二次提交
+.git/objects/39/fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree: doc/ | 第二次提交
+.git/objects/41/20b5f61a582cb12d4dcdaab71c7ef1862dbbca      # tree | 第一次提交
+.git/objects/45/c7a584f300657dba878a542a6ab3b510b63aa3      # blob | changelog
+.git/objects/52/3d41ce82ea993e7c7df8be1292b2eac84d4659      # commit | 第一次提交
+.git/objects/56/64e303b5dc2e9ef8e14a0845d9486ec1920afd      # blob | README.md
+.git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85      # blob | 第一次提交 | file.txt
+.git/objects/a0/e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0      # commit | 第二次提交
+.git/objects/ae/c2e48cbf0a881d893ccdd9c0d4bbaf011b5b23      # blob | 第二次提交 | file.txt
 ```
 
 可以看到除了原先的 `6fb38b7`、`4120b5f`、`523d41c`，又新增了：
@@ -263,31 +241,20 @@ second commit
 ```bash
 $ git tag "v0.0.2" -m "this is annotated tag"
 
-# 查看 git 对象 和 引用
-$ tree .git/objects .git/refs
-.git/objects
-├── 03
-│   └── 2ddd9205d65abd773af1610038c764f46a0b12      # tag
-├── 10
-│   └── da3741b6e365b6795335e1e2d3ed5820e794cd      # tree | 第二次提交
-├── 39
-│   └── fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree: doc/ | 第二次提交
-├── 41
-│   └── 20b5f61a582cb12d4dcdaab71c7ef1862dbbca      # tree | 第一次提交
-├── 45
-│   └── c7a584f300657dba878a542a6ab3b510b63aa3      # blob | changelog
-├── 52
-│   └── 3d41ce82ea993e7c7df8be1292b2eac84d4659      # commit | 第一次提交
-├── 56
-│   └── 64e303b5dc2e9ef8e14a0845d9486ec1920afd      # blob | README.md
-├── 6f
-│   └── b38b7118b554886e96fa736051f18d63a80c85      # blob | 第一次提交 | file.txt
-├── a0
-│   └── e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0      # commit | 第二次提交
-├── ae
-│   └── c2e48cbf0a881d893ccdd9c0d4bbaf011b5b23      # blob | 第二次提交 | file.txt
-├── info
-└── pack
+# 查看 git 对象和引用
+$ find .git/objects -type f | sort
+.git/objects/03/2ddd9205d65abd773af1610038c764f46a0b12      # tag
+.git/objects/10/da3741b6e365b6795335e1e2d3ed5820e794cd      # tree | 第二次提交
+.git/objects/39/fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree: doc/ | 第二次提交
+.git/objects/41/20b5f61a582cb12d4dcdaab71c7ef1862dbbca      # tree | 第一次提交
+.git/objects/45/c7a584f300657dba878a542a6ab3b510b63aa3      # blob | changelog
+.git/objects/52/3d41ce82ea993e7c7df8be1292b2eac84d4659      # commit | 第一次提交
+.git/objects/56/64e303b5dc2e9ef8e14a0845d9486ec1920afd      # blob | README.md
+.git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85      # blob | 第一次提交 | file.txt
+.git/objects/a0/e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0      # commit | 第二次提交
+.git/objects/ae/c2e48cbf0a881d893ccdd9c0d4bbaf011b5b23      # blob | 第二次提交 | file.txt
+
+$ tree .git/refs
 .git/refs
 ├── heads
 │   └── master
