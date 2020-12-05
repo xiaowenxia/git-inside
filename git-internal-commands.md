@@ -13,6 +13,8 @@
 * [git show-ref](#git-show-ref)
 * [git update-ref](#git-update-ref)
 * [git rev-parse](#git-rev-parse)
+* [git var](#git-var)
+* [git diff-tree](#git-diff-tree)
 
 ## 底层命令
 <a name="h2UUt"></a>
@@ -562,6 +564,28 @@ a0995fd53aeb7748b7618e5427844bbedf20c832 internal/service/diff
 <details>
 <summary>命令说明（点击展开）</summary>
 
+    usage: git for-each-ref [<options>] [<pattern>]
+    or: git for-each-ref [--points-at <object>]
+    or: git for-each-ref [(--merged | --no-merged) [<commit>]]
+    or: git for-each-ref [--contains [<commit>]] [--no-contains [<commit>]]
+
+        -s, --shell           quote placeholders suitably for shells
+        -p, --perl            quote placeholders suitably for perl
+        --python              quote placeholders suitably for python
+        --tcl                 quote placeholders suitably for Tcl
+
+        --count <n>           show only <n> matched refs
+        --format <format>     format to use for the output
+        --color[=<when>]      respect format colors
+        --sort <key>          field name to sort on
+        --points-at <object>  print only refs which points at the given object
+        --merged <commit>     print only refs that are merged
+        --no-merged <commit>  print only refs that are not merged
+        --contains <commit>   print only refs which contain the commit
+        --no-contains <commit>
+                            print only refs which don't contain the commit
+        --ignore-case         sorting and filtering are case insensitive
+
 </details>
 </br>
 
@@ -573,4 +597,79 @@ ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/remotes/origin/HEAD
 b63157de51a6caeffe067d3410b0a3f375b94390 commit refs/remotes/origin/cmn/go-http
 ...... # 省略
 ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/tags/v31.3.0
+```
+
+### git var
+查看 Git 当前生效的变量。
+<details>
+<summary>命令说明（点击展开）</summary>
+
+usage: git var (-l | <variable>)
+</details>
+</br>
+
+```bash
+$ git var -l
+credential.helper=osxkeychain
+color.ui=auto
+# 省略
+alias.co=checkout
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+core.precomposeunicode=true
+GIT_COMMITTER_IDENT=xiaowenxia <775117471@qq.com> 1607157829 +0800
+GIT_AUTHOR_IDENT=xiaowenxia <775117471@qq.com> 1607157829 +0800
+GIT_EDITOR=vi
+GIT_PAGER=less
+```
+
+### git diff-tree
+
+比较 2 个tree 对象 的差异并格式化输出。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+    usage: git diff-tree [--stdin] [-m] [-c] [--cc] [-s] [-v] [--pretty] [-t] [-r] [--root] [<common-diff-options>] <tree-ish> [<tree-ish>] [<path>...]
+    -r            diff recursively
+    --root        include the initial commit as diff against /dev/null
+
+    common diff options:
+    -z            output diff-raw with lines terminated with NUL.
+    -p            output patch format.
+    -u            synonym for -p.
+    --patch-with-raw
+                    output both a patch and the diff-raw format.
+    --stat        show diffstat instead of patch.
+    --numstat     show numeric diffstat instead of patch.
+    --patch-with-stat
+                    output a patch and prepend its diffstat.
+    --name-only   show only names of changed files.
+    --name-status show names and status of changed files.
+    --full-index  show full object name on index lines.
+    --abbrev=<n>  abbreviate object names in diff-tree header and diff-raw.
+    -R            swap input file pairs.
+    -B            detect complete rewrites.
+    -M            detect renames.
+    -C            detect copies.
+    --find-copies-harder
+                    try unchanged files as candidate for copy detection.
+    -l<n>         limit rename attempts up to <n> paths.
+    -O<file>      reorder diffs according to the <file>.
+    -S<string>    find filepair whose only one side contains the string.
+    --pickaxe-all
+                    show all files diff when -S is used and hit is found.
+    -a  --text    treat all files as text.
+
+</details>
+</br>
+
+```bash
+git diff-tree a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0^{tree} 523d41ce82ea993e7c7df8be1292b2eac84d4659^{tree}
+:100644 000000 5664e303b5dc2e9ef8e14a0845d9486ec1920afd 0000000000000000000000000000000000000000 D	README.md
+:040000 000000 39fb0fbcac51f66b514fbd589a5b2bc0809ce664 0000000000000000000000000000000000000000 D	doc
+:100644 100644 aec2e48cbf0a881d893ccdd9c0d4bbaf011b5b23 6fb38b7118b554886e96fa736051f18d63a80c85 M	file.txt
 ```
