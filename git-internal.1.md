@@ -109,6 +109,7 @@ $ git commit -m "first commit"
 
 > 其中 `100644` 是指的文件模式，`100644` 表明这是一个普通文件。 其他情况比如 `100755` 表示可执行文件，`120000` 表示符号链接。
 
+> 如果你是边阅读本文边动手操作，那你会发现生成的 commit 对象的 sha1 值跟本文不一致，因为提交日期以及用户名邮箱是不一样的，可以点击 [这里](#LhzBD) 查看如何设置跟本文一样的日期和用户名邮箱。
 查看 `.git/objects` 目录下，会新增 2 个 git 对象：
 
 ```bash
@@ -162,12 +163,12 @@ $ git cat-file -p 4120b5f
 我们继续提交代码和文件：
 
 ```bash
-$ echo "append content" > file.txt
+$ echo "append content" >> file.txt
 $ echo "git" > README.md
-$ mkdir doc && echo "v0.0.1" > changelog
+$ mkdir doc && echo "v0.0.1" > doc/changelog
 $ git add -A
 $ git commit -m "second commit"
-[master 17036d5] second commit
+[master ef13f41] second commit
  3 files changed, 3 insertions(+)
  create mode 100644 README.md
  create mode 100644 doc/changelog
@@ -180,10 +181,8 @@ $ tree .git/objects
 .git/objects
 ├── 10
 │   └── da3741b6e365b6795335e1e2d3ed5820e794cd      # tree | 第二次提交
-├── 17
-│   └── 036d5689723955d2be5d34a2cc85cb316975ce      # commit | 第二次提交
 ├── 39
-│   └── fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree | 第二次提交
+│   └── fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree: doc/ | 第二次提交
 ├── 41
 │   └── 20b5f61a582cb12d4dcdaab71c7ef1862dbbca      # tree | 第一次提交
 ├── 45
@@ -194,6 +193,8 @@ $ tree .git/objects
 │   └── 64e303b5dc2e9ef8e14a0845d9486ec1920afd      # blob | README.md
 ├── 6f
 │   └── b38b7118b554886e96fa736051f18d63a80c85      # blob | 第一次提交 | file.txt
+├── a0
+│   └── e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0      # commit | 第二次提交
 ├── ae
 │   └── c2e48cbf0a881d893ccdd9c0d4bbaf011b5b23      # blob | 第二次提交 | file.txt
 ├── info
@@ -202,10 +203,10 @@ $ tree .git/objects
 
 可以看到除了原先的 `6fb38b7`、`4120b5f`、`523d41c`，又新增了：
 * `10da374`: tree 对象，指向 `README.md` ( `5664e30` ) 、`file.txt` ( `aec2e48` )、`doc/` ( `39fb0fb` )。
-* `17036d5`: commit 对象，指向 `10da374`、`523d41c`。
 * `39fb0fb`: tree 对象，指向 `changelog` ( `45c7a58` )。
 * `45c7a58`: blob 对象， 存储 `changelog` 内容快照。
 * `5664e30`: blob 对象，存储 `README.md` 内容快照。
+* `a0e96b5`: commit 对象，指向 `10da374`、`523d41c`。
 * `aec2e48`: blob 对象，存储更改的 `file.txt` 内容快照。
 
 查看新增的 2 个 tree 对象：
@@ -222,22 +223,22 @@ $ git cat-file -p 39fb0fb
 
 这里有必要说明一下，Git 使用 tree 对象来存储目录结构，不同的目录对应不同的 tree 对象，这次提交里面，顶层目录对应的 tree 是 `10da374`，`doc/` 目录对应的 tree 是 `39fb0fb`。
 
-继续查看 commit 对象 `17036d5` 内容：
+继续查看 commit 对象 `a0e96b5` 内容：
 
 ```bash
-$ git cat-file -p 17036d5
+$ git cat-file -p a0e96b5
 tree 10da3741b6e365b6795335e1e2d3ed5820e794cd
 parent 523d41ce82ea993e7c7df8be1292b2eac84d4659
-author xiaowenxia <775117471@qq.com> 1607008935 +0800
-committer xiaowenxia <775117471@qq.com> 1607008935 +0800
+author xiaowenxia <775117471@qq.com> 1606913178 +0800
+committer xiaowenxia <775117471@qq.com> 1606913178 +0800
 
 second commit
 ```
 
-仔细的同学会发现，`17036d5` 跟第一次提交生成的 commit 对象（`523d41c`）相比，多了一个 `parent` 字段。`parent` 字段是用来指向上一次提交的，一般是1个 parent ，有些情况下会是多个 parent ，比如 merge 这种情况。
+仔细的同学会发现，`a0e96b5` 跟第一次提交生成的 commit 对象（`523d41c`）相比，多了一个 `parent` 字段。`parent` 字段是用来指向上一次提交的，一般是1个 parent ，有些情况下会是多个 parent ，比如 merge 这种情况。
 
 我们再总结一下这些对象之间的关系：
-![](https://img.alicdn.com/tfs/TB11Phx4aL7gK0jSZFBXXXZZpXa-1928-1174.png)
+![](https://img.alicdn.com/tfs/TB1butYtRBh1e4jSZFhXXcC9VXa-2294-1390.png)
 
 如图所示，每一次提交可以是一个文件，也可以是多个文件和多个目录，一次提交就是一次版本（ [revision](./git-revisions.md) ）。
 同时这里又引申出来了 git 的一个非常重要的概念，每一次新的提交都会指向上一个提交，这样多个提交就组成了一个提交链。这个提交链使用到了一个非常有名的算法：[merkle tree](https://baike.baidu.com/item/%E6%A2%85%E5%85%8B%E5%B0%94%E6%A0%91/22456281)，感兴趣的同学可以去深入了解，这里就不深入讲解了。`merkle tree` 有一个重要的特性就是单独更改其中一个节点的内容就会破坏掉这个tree，也就是说 `merkle tree` 的节点是不可更改的。git 就是通过 `merkle tree` 来保证每个版本都是连续有效的。
@@ -246,11 +247,11 @@ second commit
 
 可以猜想一下，如果继续提交代码，那 git 对象会是如下的关系：
 
-![](https://img.alicdn.com/tfs/TB10t4y4oY1gK0jSZFMXXaWcVXa-2148-1366.png)
+![](https://img.alicdn.com/tfs/TB1U3NZuP39YK4jSZPcXXXrUFXa-2140-1356.png)
 
 按照先后时间顺序单独看 `commit` 对象之间的关系：
 
-<div align="center"><img src="https://img.alicdn.com/tfs/TB1afJx4oY1gK0jSZFCXXcwqXXa-500-216.png" width=200 /></div> 
+<div align="center"><img src="https://img.alicdn.com/tfs/TB1LU0F4kL0gK0jSZFAXXcA9pXa-496-208.png" width=200 /></div> 
 
 这个 `commit` 对象关系图非常重要，git 分支策略就是围绕着这个关系图来运作的，这里暂且不做展开。
 
@@ -264,12 +265,12 @@ $ git tag "v0.0.2" -m "this is annotated tag"
 # 查看 git 对象 和 引用
 $ tree .git/objects .git/refs
 .git/objects
+├── 03
+│   └── 2ddd9205d65abd773af1610038c764f46a0b12      # tag
 ├── 10
 │   └── da3741b6e365b6795335e1e2d3ed5820e794cd      # tree | 第二次提交
-├── 17
-│   └── 036d5689723955d2be5d34a2cc85cb316975ce      # commit | 第二次提交
 ├── 39
-│   └── fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree | 第二次提交
+│   └── fb0fbcac51f66b514fbd589a5b2bc0809ce664      # tree: doc/ | 第二次提交
 ├── 41
 │   └── 20b5f61a582cb12d4dcdaab71c7ef1862dbbca      # tree | 第一次提交
 ├── 45
@@ -278,10 +279,10 @@ $ tree .git/objects .git/refs
 │   └── 3d41ce82ea993e7c7df8be1292b2eac84d4659      # commit | 第一次提交
 ├── 56
 │   └── 64e303b5dc2e9ef8e14a0845d9486ec1920afd      # blob | README.md
-├── 5c
-│   └── d9a3bcc12a1cf3bd47ab9c7c426e51aad0f30a      # tag
 ├── 6f
 │   └── b38b7118b554886e96fa736051f18d63a80c85      # blob | 第一次提交 | file.txt
+├── a0
+│   └── e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0      # commit | 第二次提交
 ├── ae
 │   └── c2e48cbf0a881d893ccdd9c0d4bbaf011b5b23      # blob | 第二次提交 | file.txt
 ├── info
@@ -293,28 +294,28 @@ $ tree .git/objects .git/refs
     └── v0.0.2                                      # tag 引用
 ```
 
-此时新增了一个 `5cd9a3b` 的对象，同时在 `.git/refs/` 中增加了 名为 `v0.0.2` 的标签。使用如下命令查看他们的内容：
+此时新增了一个 `032ddd9` 的对象，同时在 `.git/refs/` 中增加了 名为 `v0.0.2` 的标签。使用如下命令查看他们的内容：
 
 ```bash
 # 查看 v0.0.2 的内容
 $ cat .git/refs/tags/v0.0.2
-5cd9a3bcc12a1cf3bd47ab9c7c426e51aad0f30a
+032ddd9205d65abd773af1610038c764f46a0b12
 
-# 查看 5cd9a3b 的类型
+# 查看 032ddd9 的类型
 $ git cat-file -t 5cd9a3b
 tag
 
-# 查看 5cd9a3b 的内容
+# 查看 032ddd9 的内容
 $ git cat-file -p 5cd9a3b
-object 17036d5689723955d2be5d34a2cc85cb316975ce
+object a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0
 type commit
 tag v0.0.2
-tagger xiaowenxia <775117471@qq.com> 1607012401 +0800
+tagger xiaowenxia <775117471@qq.com> 1606913178 +0800
 
 this is annotated tag
 ```
 
-`.git/refs/tags/v0.0.2` 是 Git 的一个重要的概念：[引用](./git-refs.md)。这个引用实际上是一个指针，内容为 `5cd9a3b` 的 sha1 值，代表指向 `5cd9a3b` 。而 `5cd9a3b` 是一个 tag 对象，指向第二次提交的 commit 对象：`17036d5`。
+`.git/refs/tags/v0.0.2` 是 Git 的一个重要的概念：[引用](./git-refs.md)。这个引用实际上是一个指针，内容为 `5cd9a3b` 的 sha1 值，代表指向 `5cd9a3b` 。而 `5cd9a3b` 是一个 tag 对象，指向第二次提交的 commit 对象：`a0e96b5`。
 
 tag 对象相对比较独立，不参与构建文件系统，只是单纯的存储信息。
 
@@ -332,7 +333,7 @@ git 擅长的一点是提供了很多丰富抽象的子命令来操作这些 git
 * `git commit`：保存暂存区的文件层级关系和提交者信息，产出是 tree 对象 和 commit 对象。
 * `git tag -m`：保存 tag 标签的信息，产出是 tag 对象。
 
-这些是上层命令，实际上 git 还提供了非常丰富的底层命令：
+这些是上层命令，实际上 git 还提供了非常丰富的底层命令用来操作对象：
 * [`git-hash-object`](https://git-scm.com/docs/git-hash-object)：把输入内容存储成 blob 对象。
 * [`git-cat-file`](https://git-scm.com/docs/git-cat-file)：读取并格式化输出对象。
 * [`git-count-objects`](https://git-scm.com/docs/git-count-objects)：计算对象数量。
@@ -343,7 +344,32 @@ git 擅长的一点是提供了很多丰富抽象的子命令来操作这些 git
 
 最后，我们用一张图来总结上述的一系列步骤生成的对象之间的关系：
 
-![](https://img.alicdn.com/tfs/TB1LrGcoIieb18jSZFvXXaI3FXa-2880-1390.png)
+![](https://img.alicdn.com/tfs/TB1pltF4kL0gK0jSZFAXXcA9pXa-2878-1384.png)
+
+<a name="LhzBD"></a>
+
+##### 其他
+
+本文中的示例都设置了固定的时间日期、用户名和邮箱，如果你是边阅读本文边动手操作，可以如下执行 `git commit` 或者 `git tag` ，这样生成的对象hash值和本文中的是一致的：
+
+```bash
+# git commit
+$ GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMAIL="775117471@qq.com" GIT_COMMITTER_DATE="1606913178 +0800"  GIT_COMMITTER_NAME="xiaowenxia" GIT_COMMITTER_EMAIL="775117471@qq.com" git commit -m "first commit"
+
+# git tag
+$ GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMAIL="775117471@qq.com" GIT_COMMITTER_DATE="1606913178 +0800"  GIT_COMMITTER_NAME="xiaowenxia" GIT_COMMITTER_EMAIL="775117471@qq.com" git tag "v0.0.2" -m "this is annotated tag"
+```
+
+或者可以这样全局的环境变量：
+
+```bash
+export GIT_AUTHOR_DATE="1606913178 +0800"
+export GIT_AUTHOR_NAME="xiaowenxia"
+export GIT_AUTHOR_EMAIL="775117471@qq.com"
+export GIT_COMMITTER_DATE="1606913178 +0800"
+export GIT_COMMITTER_NAME="xiaowenxia"
+export GIT_COMMITTER_EMAIL="775117471@qq.com"
+```
 
 ### 参考资料
 * https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
