@@ -1,14 +1,11 @@
 <h1 style="margin-top: 30px; margin-bottom: 15px; padding: 0px 100px; font-size: 22px; text-align: center; position: relative; font-weight: bold; color: black; line-height: 1.1em; padding-top: 12px; padding-bottom: 12px; margin: 70px 30px 30px; border: 1px solid #000; width: 60%; margin: 0 auto" data-id="heading-2"><span style="float: left; display: block; width: 60%; border-top: 1px solid #000; height: 1px; line-height: 1px; margin-left: -5px; margin-top: -17px;"> </span><span class="prefix" style="display: block; width: 3px; margin: 0 0 0 5%; height: 3px; line-height: 3px; overflow: hidden; background-color: #000; box-shadow: 3px 0 #000, 0 3px #000, -3px 0 #000, 0 -3px #000;"></span><span class="content" style="display: block; -webkit-box-reflect: below 0em -webkit-gradient(linear,left top,left bottom, from(rgba(0,0,0,0)),to(rgba(255,255,255,0.1)));">Git 底层原理：Git 对象</span><span class="suffix" style="display: block; width: 3px; margin: 0 0 0 95%; height: 3px; line-height: 3px; overflow: hidden; background-color: #000; box-shadow: 3px 0 #000, 0 3px #000, -3px 0 #000, 0 -3px #000;"></span><span style="float: right; display: block; width: 60%; border-bottom: 1px solid #000; height: 1px; line-height: 1px; margin-right: -5px; margin-top: 16px;"> </span></h1>
 <br />
 
-> 了解 git 内部原理其实很有用，比如意外删除了分支怎么办？如何更改历史提交记录？二进制大文件占用太多磁盘空间怎么清理等等。
-
 git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。
 
 Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际上都是在操作 git 对象。比如 git add 命令，就是把文件快照存储成 `blob` 对象，`git commit` 命令，就是把提交的文件列表和提交信息分别存储成 `tree` 对象和 `commit` 对象，`git checkout -b`创建分支命令，就是创建一个指针指向 `commit` 对象。
 
 本文会从一个空的仓库开始，一步一步讲解 git 的底层对象和内部原理。
-
 
 ### <span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0x01</span> 首先初始化工程
 ```bash
@@ -159,7 +156,7 @@ $ echo "git" > README.md
 $ mkdir doc && echo "v0.0.1" > doc/changelog
 $ git add -A
 $ git commit -m "second commit"
-[master ef13f41] second commit
+[master a0e96b5] second commit
  3 files changed, 3 insertions(+)
  create mode 100644 README.md
  create mode 100644 doc/changelog
@@ -270,11 +267,11 @@ $ cat .git/refs/tags/v0.0.2
 032ddd9205d65abd773af1610038c764f46a0b12
 
 # 查看 032ddd9 的类型
-$ git cat-file -t 5cd9a3b
+$ git cat-file -t 032ddd9
 tag
 
 # 查看 032ddd9 的内容
-$ git cat-file -p 5cd9a3b
+$ git cat-file -p 032ddd9
 object a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0
 type commit
 tag v0.0.2
@@ -283,7 +280,7 @@ tagger xiaowenxia <775117471@qq.com> 1606913178 +0800
 this is annotated tag
 ```
 
-`.git/refs/tags/v0.0.2` 是 Git 的一个重要的概念：[引用](https://git-scm.com/book/en/v2/Git-Internals-Git-References)。这个引用实际上是一个指针，内容为 `5cd9a3b` 的 sha1 值，代表指向 `5cd9a3b` 。而 `5cd9a3b` 是一个 tag 对象，指向第二次提交的 commit 对象：`a0e96b5`。
+`.git/refs/tags/v0.0.2` 是 Git 的一个重要的概念：[引用](https://git-scm.com/book/en/v2/Git-Internals-Git-References)。这个引用实际上是一个指针，内容为 `032ddd9` 的 sha1 值，代表指向 `032ddd9` 。而 `032ddd9` 是一个 tag 对象，指向第二次提交的 commit 对象：`a0e96b5`。
 
 tag 对象相对比较独立，不参与构建文件系统，只是单纯的存储信息。
 
