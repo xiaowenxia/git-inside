@@ -20,26 +20,39 @@ $ find .git/objects -type f | sort
 .git/objects/ae/c2e48cbf0a881d893ccdd9c0d4bbaf011b5b23      # blob | 第二次提交 | file.txt
 ```
 
-### Git 对象存储格式
-为了减少存储大小，git 对象都是使用 [zlib](http://zlib.net/) 压缩存储的。我们可以使用 zlib 的一个解压工具：[zlib-flate](http://manpages.ubuntu.com/manpages/trusty/man1/zlib-flate.1.html) 来解压 git 对象，以 `file.txt` 第一次提交生成的 blob 对象 `6fb38b7` 为例：
+### Git 对象
+为了减少存储大小，git 对象都是使用 [zlib](http://zlib.net/) 压缩存储的。git 对象由 `<type>` + `<size>` + `<content>` 组成：
+* `<type>`: git 对象类型，有如下 4 种：`blob`、`tree`、`commit`、`tag`。
+* `<size>`: git 对象的内容大小。
+* `<content>`: git 对象内容。
 
-```bash
-$ zlib-flate -uncompress < .git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
-blob 11git-inside
-```
+如下是 4 种对象的数据存储格式：
 
-另一方面，git 也提供了cat-file 来解析 git 对象，并输出格式化可阅读的内容：
+![](git-internal.1.png)
+
+这里可能会有人有疑惑，Git 对象并没有对自身数据做校验（checksum），这样会不会有人对数据进行修改？这个其实不用担心，所有的 Git 对象都会组成一个图（Graph），按照指向关系可以这么理解：`tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`（实际上更为复杂），对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，git 就会提示 `"bad object"` 。
+#### 查看对象存储格式
+
+git 提供了 `cat-file` 来解析 git 对象，并输出格式化可阅读的内容：
 
 ```bash
 # 查看对象内容
 $ git cat-file -p 6fb38
-git-inside
+100644 blob 5664e303b5dc2e9ef8e14a0845d9486ec1920afd	README.md
+040000 tree 39fb0fbcac51f66b514fbd589a5b2bc0809ce664	doc
+100644 blob aec2e48cbf0a881d893ccdd9c0d4bbaf011b5b23	file.txt
+
 # 查看对象类型
 $ git cat-file -t 6fb38
-blob
+tree
+
 #查看对象存储的内容大小
 $ git cat-file -s 6fb38
-11
+103
+```
+
+同时，`cat-file` 也支持输出未格式化的内容：
+```bash
 # 查看未格式化的内容
 $ git cat-file tree 10da374
 100644 README.mdVd���.���E�Hn��
@@ -47,6 +60,15 @@ $ git cat-file tree 10da374
 ��<���Ի�%
 ```
 
+如果你想要不依赖 git 命令来查看 git 对象，可以使用 zlib 的一个解压工具：[zlib-flate](http://manpages.ubuntu.com/manpages/trusty/man1/zlib-flate.1.html) 来解压 git 对象，以 `file.txt` 第一次提交生成的 blob 对象 `6fb38b7` 为例：
+
+```bash
+$ zlib-flate -uncompress < .git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
+blob 11git-inside
+```
+> 根据上面的 blob 存储格式可以知道，其中 `"blob"` 是对象类型，`"11"` 是文件大小，`"git-inside"` 是文件内容。
+
+这里提供一下 4 种对象的原始数据，仅供参考：
 ```bash
 # 查看 blob 对象内容
 $ zlib-flate -uncompress < .git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
@@ -82,28 +104,25 @@ this is annotated tag
 ```
 > 这里使用到了 hexdump，[hexdump](https://www.man7.org/linux/man-pages/man1/hexdump.1.html) 是一个 UNIX 命令，用来格式化输出二进制数据。
 
-通过比较几种 git 对象的共同点可以发现，git 对象都是由 `<type>` + `<size>` + `<content>` 组成的：
-* `<type>`: git 对象类型，有如下 4 种：`blob`、`tree`、`commit`、`tag`。
-* `<size>`: git 对象的内容大小。
-* `<content>`: git 对象内容。
 
-如下是 4 种对象的数据存储格式：
+### 索引文件
+索引文件默认路径为：`.git/index`。索引文件用来存储暂存区的相关文件信息，当运行 `git add` 命令时会把工作区的变更文件信息添加到该索引文件中。索引文件以如下的格式存储暂存区内容：
 
-![](git-internal.1.png)
+![](./git-internal.2.png)
 
-### 索引文件存储格式
-索引文件默认路径为：`.git/index`。索引文件用来存储暂存区的相关文件信息，当运行 `git add` 命令时会把工作区的变更文件信息添加到该索引文件中。
-> 读过 git 源码的同学会发现，其实还有一个叫`.git/index.lock`的文件，该文件存在时表示当前工作区被锁定，代表有 git 进程正在操作该仓库。
+> 读过源码的同学会发现，其实还有一个叫`.git/index.lock`的文件，该文件存在时表示当前工作区被锁定，代表有 git 进程正在操作该仓库。
 
-使用 `ls-files` 可以读取当前工作区的文件信息：
+#### 查看索引文件存储格式
+
+使用 `ls-files` 可以读取索引文件存储的文件信息：
 ```bash
 $ git ls-files --stage
 100644 5664e303b5dc2e9ef8e14a0845d9486ec1920afd 0	README.md
 100644 45c7a584f300657dba878a542a6ab3b510b63aa3 0	doc/changelog
 100644 aec2e48cbf0a881d893ccdd9c0d4bbaf011b5b23 0	file.txt
 ```
+当然，`ls-files` 的输出内容也是经过格式化的，使用 `hexdump` 工具可以查看原始数据：
 
-使用 `hexdump` 查看 `.git/index` 文件的内容：
 ```bash
 $ hexdump -C .git/index
 00000000  44 49 52 43 00 00 00 02  00 00 00 03 5f cb 65 22  |DIRC........_.e"|
@@ -127,13 +146,9 @@ $ hexdump -C .git/index
 00000120  58 9a 5b 2b c0 80 9c e6  64 ac 8f 88 7a 1e a4 d0  |X.[+....d...z...|
 00000130  b9 83 8d 83 72 4e 7b 71  d2 d8 a0 a5 3d           |....rN{q....=|
 ```
+索引文件大部分内容都是以二进制存储的，可读性很差，喜欢钻研的同学可以去看源码。
 
-一步一步解析上面的二进制格式，可以得到：
-
-<div align="center"><img src="https://img.alicdn.com/tfs/TB1T.NsZoz1gK0jSZLeXXb9kVXa-2526-1594.png" width=900 /></div> 
-
-
-### pack 文件存储格式
+### pack 文件
 
 pack文件用来合并压缩多个object对象的，可以方便进行网络传输（推送到远程仓库）。<br />`*.pack` 文件格式：<br />![image.png](https://ucc.alicdn.com/pic/developer-ecology/d6efb1160bf74b40887a74cf1ad43c16.png)
 > 该图片来自于：[https://developer.aliyun.com/article/761663](https://developer.aliyun.com/article/761663) 。
@@ -141,15 +156,15 @@ pack文件用来合并压缩多个object对象的，可以方便进行网络传�
 <br />`*.idx` 文件格式：<br />![image.png](https://ucc.alicdn.com/pic/developer-ecology/941607f49ac44958876d511c5b831ed2.png)
 > 该图片来自于：[https://developer.aliyun.com/article/761663](https://developer.aliyun.com/article/761663) 。
 
-### HEAD 等文件存储格式
+### HEAD 等指针文件
 
-HEAD 实际上是一个指针，指向具体的引用或者 `commit-id` ，比如 HEAD 指向 `master` 分支时是如下内容：
+HEAD 具体路径为 `.git/HEAD` ，`HEAD` 实际上是一个指针，指向具体的引用或者 `commit-id` ，比如 HEAD 指向 `master` 分支时是如下内容：
 ```bash
 $ cat .git/HEAD
 ref: refs/heads/master
 ```
 
-如果我 checkout 了一个特定的 `commit-id` 时，那 HEAD 的值是这个 `commit-id`。
+如果 checkout 了一个特定的 `commit-id` 时，那 HEAD 的值是这个 `commit-id`。
 
 ```bash
 $ git checkout 523d41ce82ea993e7c7df8be1292b2eac84d4659
@@ -157,9 +172,9 @@ $ cat .git/HEAD
 523d41ce82ea993e7c7df8be1292b2eac84d4659
 ```
 另外，如果我 checkout 了指定的 `tag` 时，那 HEAD 的值是这个 `tag` 对应的 `commit-id`。
-同样的，`ORIG_HEAD` 也是这样的存储方式。
+同样的，`.git/ORIG_HEAD`、`.git/FETCH_HEAD` 也是这样的存储方式。
 
-### 引用 的存储格式
+### 引用
 
 Git 引用名义上是指针，实际上是一个很简单的文件，这个文件存储的是指向的提交的 `commit-id`：
 
@@ -177,32 +192,29 @@ a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0
     * 读取 Git 对象源码： `sha1-file.c` > [`read_object_file_extended()`](https://github.com/git/git/blob/v2.29.2/sha1-file.c#L1621)
 * 索引文件：
     * 解析 索引文件：`read-cache.c` > [`read_index_from`](https://github.com/git/git/blob/v2.29.2/read-cache.c#L2277)
-    * 工作区锁定：[lockfile.c](https://github.com/git/git/blob/v2.29.2/lockfile.c)
+    * 工作区锁定：[lockfile.c](https://github.com/git/git/blob/v2.29.2/lockfile.c)。
 
 
 ```c
-struct index_state {
-	struct cache_entry **cache;
-	unsigned int version;
-	unsigned int cache_nr, cache_alloc, cache_changed;
-	struct string_list *resolve_undo;
-	struct cache_tree *cache_tree;
-	struct split_index *split_index;
-	struct cache_time timestamp;
-	unsigned name_hash_initialized : 1,
-		 initialized : 1,
-		 drop_cache_tree : 1,
-		 updated_workdir : 1,
-		 updated_skipworktree : 1,
-		 fsmonitor_has_run_once : 1;
-	struct hashmap name_hash;
-	struct hashmap dir_hash;
-	struct object_id oid;
-	struct untracked_cache *untracked;
-	char *fsmonitor_last_update;
-	struct ewah_bitmap *fsmonitor_dirty;
-	struct mem_pool *ce_mem_pool;
-	struct progress *progress;
+/* 索引文件 header */
+struct cache_header {
+	uint32_t hdr_signature;
+	uint32_t hdr_version;
+	uint32_t hdr_entries;
+};
+
+/* 文件（entry）的存储格式 */
+struct ondisk_cache_entry {
+	struct cache_time ctime;
+	struct cache_time mtime;
+	uint32_t dev;
+	uint32_t ino;
+	uint32_t mode;
+	uint32_t uid;
+	uint32_t gid;
+	uint32_t size;
+	unsigned char data[GIT_MAX_RAWSZ + 2 * sizeof(uint16_t)];
+	char name[FLEX_ARRAY];
 };
 ```
 
