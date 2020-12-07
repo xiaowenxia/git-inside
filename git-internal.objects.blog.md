@@ -33,6 +33,7 @@ $ tree -a
 ```
 
 git 初始化时，实际上是在仓库下创建了一个 `.git` 目录的隐藏目录，以及一些默认的文件：
+
 * `HEAD`: `HEAD` 指针，指向当前的操作分支。
 * `config`: 存储的本地仓库的配置。
 * `description`: 用来存储仓库名称以及仓库的描述信息。
@@ -59,7 +60,11 @@ $ find .git/objects -type f
 ```
 
 可以看到新生成了一个 git 对象，路径为`.git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85`。
-> git 对象的文件路径和名称根据文件内容的 [sha1](https://en.wikipedia.org/wiki/SHA-1) 值决定，取 sha1 值的第一个字节的 hex 值为目录，其他字节的 hex 值为名称。
+
+git 对象的文件路径和名称根据文件内容的 [sha1](https://en.wikipedia.org/wiki/SHA-1) 值决定，取 sha1 值的第一个字节的 hex 值为目录，其他字节的 hex 值为名称。这里使用这种方式存储 Git 对象有 2 个好处：
+
+* 对Git 对象做完整性校验。
+* 快速遍历/查找 Git 对象。
 
 为了减少存储大小，git 对象都是使用 [zlib](http://zlib.net/) 压缩存储的。git 提供了 [cat-file](https://git-scm.com/docs/git-cat-file) 命令用来格式化查看 git 对象内容：
 
@@ -178,6 +183,7 @@ $ find .git/objects -type f | sort
 ```
 
 可以看到除了原先的 `6fb38b7`、`4120b5f`、`523d41c`，又新增了：
+
 * `10da374`: tree 对象，指向 `README.md` ( `5664e30` ) 、`file.txt` ( `aec2e48` )、`doc/` ( `39fb0fb` )。
 * `39fb0fb`: tree 对象，指向 `changelog` ( `45c7a58` )。
 * `45c7a58`: blob 对象， 存储 `changelog` 内容快照。
@@ -214,7 +220,7 @@ second commit
 仔细的同学会发现，`a0e96b5` 跟第一次提交生成的 commit 对象（`523d41c`）相比，多了一个 `parent` 字段。`parent` 字段是用来指向上一次提交的，一般是1个 parent ，有些情况下会是多个 parent ，比如 merge 这种情况。
 
 我们再总结一下这些对象之间的关系：
-![](https://img.alicdn.com/tfs/TB1butYtRBh1e4jSZFhXXcC9VXa-2294-1390.png)
+![](https://img.alicdn.com/tfs/TB17QMC4oY1gK0jSZFCXXcwqXXa-2748-1654.png)
 
 如图所示，每一次提交可以是一个文件，也可以是多个文件和多个目录，一次提交就是一次版本（ [revision](https://git-scm.com/docs/gitrevisions) ）。
 同时这里又引申出来了 git 的一个非常重要的概念，每一次新的提交都会指向上一个提交，这样多个提交就组成了一个提交链。这个提交链使用到了一个非常有名的算法：[merkle tree](https://baike.baidu.com/item/%E6%A2%85%E5%85%8B%E5%B0%94%E6%A0%91/22456281)，感兴趣的同学可以去深入了解，这里就不深入讲解了。`merkle tree` 有一个重要的特性就是单独更改其中一个节点的内容就会破坏掉这个tree，也就是说 `merkle tree` 的节点是不可更改的。git 就是通过 `merkle tree` 来保证每个版本都是连续有效的。
@@ -287,14 +293,19 @@ tag 对象相对比较独立，不参与构建文件系统，只是单纯的存�
 ### <span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0xFF</span> 总结
 
 到这里其实应该已经对 Git 底层对象有一个深刻的了解了。从根本上来讲，git 底层实际上是由一个个对象（object）组成的，git 底层对象分为4种：
+
 * **blob 对象**：保存着文件快照，数据结构参考： [blob 对象](https://github.com/xiaowenxia/git-first-commit#blob-%E5%AF%B9%E8%B1%A1)。
 * **tree 对象**：记录着目录结构和 blob 对象索引，其数据结构参考： [tree 对象](https://github.com/xiaowenxia/git-first-commit#tree-%E5%AF%B9%E8%B1%A1)。
 * **commit 对象**：包含着指向前述 tree 对象的指针和所有提交信息，数据结构参考：[commit 对象](https://github.com/xiaowenxia/git-first-commit#commit-%E5%AF%B9%E8%B1%A1)。
 * **tag 对象**：记录带注释的 tag 。
 
+一个仓库里面的所有 Git 对象都会组成一个图（Graph），按照指向关系可以简单的这么理解：`refs` --> `tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`，对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，[`git-fsck`](https://git-scm.com/docs/git-fsck) 时就会提示 `"hash mismatch"` 。所以这也是 Git 对象的文件存储结构里面并没有自身数据的校验（checksum）字段的原因。
+
+值得一提的是，git 正在积极推进 [sha256](https://en.wikipedia.org/wiki/SHA-256) 的方案，sha1 目前来看并不是绝对安全的，因为 [HAttered attack](https://shattered.io) 这种攻击方式能够伪造相同 sha1 值。
+
 最后，我们用一张图来总结上述的一系列步骤生成的对象之间的关系：
 
-![](https://img.alicdn.com/tfs/TB1pltF4kL0gK0jSZFAXXcA9pXa-2878-1384.png)
+![](https://img.alicdn.com/tfs/TB1g9ID4oY1gK0jSZFMXXaWcVXa-2868-1380.png)
 
 ##### git 对象的相关命令
 git 擅长的一点是提供了很多丰富抽象的子命令来操作这些 git 对象，比如上面的一系列操作：
@@ -304,6 +315,7 @@ git 擅长的一点是提供了很多丰富抽象的子命令来操作这些 git
 * `git tag -m`：保存 tag 标签的信息，产出是 tag 对象。
 
 这些是上层命令，实际上 git 还提供了非常丰富的底层命令用来操作对象：
+
 * [`git-hash-object`](https://git-scm.com/docs/git-hash-object)：把输入内容存储成 blob 对象。
 * [`git-cat-file`](https://git-scm.com/docs/git-cat-file)：读取并格式化输出对象。
 * [`git-count-objects`](https://git-scm.com/docs/git-count-objects)：计算对象数量。
