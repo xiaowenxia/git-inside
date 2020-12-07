@@ -5,7 +5,7 @@ git 实际上是一个内容文件系统，载体是 git 的对象，存储的�
 
 Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际上都是在操作 git 对象。比如 git add 命令，就是把文件快照存储成 `blob` 对象，`git commit` 命令，就是把提交的文件列表和提交信息分别存储成 `tree` 对象和 `commit` 对象，`git checkout -b`创建分支命令，就是创建一个指针指向 `commit` 对象。
 
-本文会从一个空的仓库开始，一步一步讲解 git 的底层对象和内部原理。
+本文会从一个空的仓库开始，一步一步由浅入深的展开讲解 git 的内部原理以及底层对象。
 
 ### <span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0x01</span> 首先初始化工程
 ```bash
@@ -63,10 +63,10 @@ $ find .git/objects -type f
 
 git 对象的文件路径和名称根据文件内容的 [sha1](https://en.wikipedia.org/wiki/SHA-1) 值决定，取 sha1 值的第一个字节的 hex 值为目录，其他字节的 hex 值为名称。这里使用这种方式存储 Git 对象有 2 个好处：
 
-* 对Git 对象做完整性校验。
+* 对 Git 对象做完整性校验。
 * 快速遍历/查找 Git 对象。
 
-为了减少存储大小，git 对象都是使用 [zlib](http://zlib.net/) 压缩存储的。git 对象的详细说明可以参考这里：[git 对象](./git-internal-objects.md) 。git 提供了 [cat-file](./git-internal-commands.md#git-cat-file) 命令用来格式化查看 git 对象内容：
+为了减少存储大小，**git 对象都是使用 [zlib](http://zlib.net/) 压缩存储的**。git 对象的详细说明可以参考这里：[git 对象](./git-internal-objects.md) 。git 提供了 [cat-file](./git-internal-commands.md#git-cat-file) 命令用来格式化查看 git 对象内容：
 
 ```bash
 # 查看 git 对象内容
@@ -299,9 +299,9 @@ tag 对象相对比较独立，不参与构建文件系统，只是单纯的存�
 * **commit 对象**：包含着指向前述 tree 对象的指针和所有提交信息，数据结构参考：[commit 对象](https://github.com/xiaowenxia/git-first-commit#commit-%E5%AF%B9%E8%B1%A1)。
 * **tag 对象**：记录带注释的 tag 。
 
-一个仓库里面的所有 Git 对象都会组成一个图（Graph），按照指向关系可以简单的这么理解：`refs` --> `tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`，对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，[`git-fsck`](https://git-scm.com/docs/git-fsck) 时就会提示 `"hash mismatch"` 。所以这也是 Git 对象的文件存储结构里面并没有自身数据的校验（checksum）字段的原因。
+一个仓库里面的所有 Git 对象会组成一个图（Graph），按照指向关系可以简单的这么理解：`refs` --> `tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`，对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，[`git fsck`](https://git-scm.com/docs/git-fsck) 命令就会提示 `"hash mismatch"` 。所以这也是 Git 对象的文件存储结构里面并没有自身数据的校验（checksum）字段的原因。
 
-值得一提的是，git 正在积极推进 [sha256](https://en.wikipedia.org/wiki/SHA-256) 的方案，sha1 目前来看并不是绝对安全的，因为 [HAttered attack](https://shattered.io) 这种攻击方式能够伪造相同 sha1 值。
+值得一提的是，git 社区正在积极推进 [sha256](https://en.wikipedia.org/wiki/SHA-256) 的方案，sha1 目前来看并不是绝对安全的，因为 [HAttered attack](https://shattered.io) 这种攻击方式能够伪造相同 sha1 值。
 
 最后，我们用一张图来总结上述的一系列步骤生成的对象之间的关系：
 
