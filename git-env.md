@@ -41,3 +41,11 @@ nothing to commit, working tree clean
 #### GIT_TRACE_PACKET
 
 #### GIT_TERMINAL_PROMPT
+
+#### GIT_AUTHOR_DATE
+#### GIT_AUTHOR_NAME
+#### GIT_AUTHOR_EMAIL
+
+#### GIT_COMMITTER_DATE
+#### GIT_COMMITTER_NAME
+#### GIT_COMMITTER_EMAIL
