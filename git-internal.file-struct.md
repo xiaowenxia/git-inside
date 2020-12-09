@@ -30,7 +30,7 @@ $ find .git/objects -type f | sort
 
 ![](git-internal.1.png)
 
-这里可能会有人有疑惑，Git 对象并没有对自身数据做校验（checksum），这样会不会有人对数据进行修改？这个其实不用担心，所有的 Git 对象都会组成一个图（Graph），按照指向关系可以这么理解：`tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`（实际上更为复杂），对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，git 就会提示 `"bad object"` 。
+这里可能会有人有疑惑，Git 对象并没有对自身数据做校验（checksum），这样会不会有人对数据进行修改？这个其实不用担心，所有的 Git 对象都会组成一个图（Graph），按照指向关系可以这么理解：`refs` --> `tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`（实际上更为复杂），对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，[`git fsck`](https://git-scm.com/docs/git-fsck) 命令就会提示 `"hash mismatch"`。
 #### 查看对象存储格式
 
 git 提供了 `cat-file` 来解析 git 对象，并输出格式化可阅读的内容：
@@ -121,9 +121,9 @@ $ git ls-files --stage
 100644 45c7a584f300657dba878a542a6ab3b510b63aa3 0	doc/changelog
 100644 aec2e48cbf0a881d893ccdd9c0d4bbaf011b5b23 0	file.txt
 ```
-当然，`ls-files` 的输出内容也是经过格式化的，使用 `hexdump` 工具可以查看原始数据：
+当然，`ls-files` 的输出内容也是经过格式化的。跟 Git 对象 不一样，索引文件 `.git/indx` 并没有经过 zlib 压缩，使用 `hexdump` 工具就可以直接查看原始数据：
 
-```bash
+```
 $ hexdump -C .git/index
 00000000  44 49 52 43 00 00 00 02  00 00 00 03 5f cb 65 22  |DIRC........_.e"|
 00000010  22 be 40 2c 5f cb 65 22  22 be 40 2c 01 00 00 04  |".@,_.e"".@,....|
@@ -192,7 +192,7 @@ a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0
     * 读取 Git 对象源码： `sha1-file.c` > [`read_object_file_extended()`](https://github.com/git/git/blob/v2.29.2/sha1-file.c#L1621)
 * 索引文件：
     * 解析 索引文件：`read-cache.c` > [`read_index_from`](https://github.com/git/git/blob/v2.29.2/read-cache.c#L2277)
-    * 工作区锁定：[lockfile.c](https://github.com/git/git/blob/v2.29.2/lockfile.c)。
+    * 工作区锁定：[`lockfile.c`](https://github.com/git/git/blob/v2.29.2/lockfile.c)。
 
 
 ```c
