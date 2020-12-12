@@ -209,3 +209,10 @@ git 的底层 chain 对象和区块链有异曲同工之处，都是基于 merkl
 ### git 为什么要使用sha256？
 * git hash object的作用
 * sha1的优势劣势
+
+### git gc 具体做了哪些事情？
+
+##### Git 顶层设计很优雅，Git 有140个 “小而美” 的子命令。
+
+##### 写一个工具，把git 对象绘制成图。
+##### 如何铺满整个github 的 contributions  计数面板

@@ -19,6 +19,7 @@
 * 其他
     * [git 的特殊技巧](./git-tips.md)
     * [git 术语](./git-glossary.md)
+    * [《Git 底层原理：Git 对象》](./git-internal.objects.md)
     * [git cheatsheet](./git-cheatsheet.md)
 
 
