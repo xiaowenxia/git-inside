@@ -13,8 +13,11 @@
 * [git show-ref](#git-show-ref)
 * [git update-ref](#git-update-ref)
 * [git rev-parse](#git-rev-parse)
+* [git rev-list](#git-rev-list)
+* [git for-each-ref](#git-for-each-ref)
 * [git var](#git-var)
 * [git diff-tree](#git-diff-tree)
+* [git merge-base](#git-merge-base)
 
 ## 底层命令
 <a name="h2UUt"></a>
@@ -672,4 +675,29 @@ git diff-tree a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0^{tree} 523d41ce82ea993e7c
 :100644 000000 5664e303b5dc2e9ef8e14a0845d9486ec1920afd 0000000000000000000000000000000000000000 D	README.md
 :040000 000000 39fb0fbcac51f66b514fbd589a5b2bc0809ce664 0000000000000000000000000000000000000000 D	doc
 :100644 100644 aec2e48cbf0a881d893ccdd9c0d4bbaf011b5b23 6fb38b7118b554886e96fa736051f18d63a80c85 M	file.txt
+```
+
+### git merge-base
+为合并找到共同祖先。
+
+
+<details>
+<summary>命令说明（点击展开）</summary>
+    usage: git merge-base [-a | --all] <commit> <commit>...
+    or: git merge-base [-a | --all] --octopus <commit>...
+    or: git merge-base --independent <commit>...
+    or: git merge-base --is-ancestor <commit> <commit>
+    or: git merge-base --fork-point <ref> [<commit>]
+
+        -a, --all             output all common ancestors
+        --octopus             find ancestors for a single n-way merge
+        --independent         list revs not reachable from others
+        --is-ancestor         is the first one ancestor of the other?
+        --fork-point          find where <commit> forked from reflog of <ref>
+
+</details>
+</br>
+
+```bash
+
 ```
