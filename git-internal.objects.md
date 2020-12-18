@@ -347,7 +347,10 @@ $ GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMA
 ```bash
 export GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMAIL="775117471@qq.com" GIT_COMMITTER_DATE="1606913178 +0800" GIT_COMMITTER_NAME="xiaowenxia" GIT_COMMITTER_EMAIL="775117471@qq.com"
 ```
+##### git-draw
+这里有一个很有趣的工具：[git-draw](https://github.com/sensorflo/git-draw)，这个工具会绘制 git 仓库的所有 Git 对象和引用的关系。下图使用 `git-draw` 绘制了本文的仓库：
 
+![](https://img.alicdn.com/imgextra/i4/O1CN013r001V1zJRVp9ETDH_!!6000000006693-55-tps-1412-824.svg)
 ### 参考资料
 * https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
 * https://maryrosecook.com/blog/post/git-from-the-inside-out
