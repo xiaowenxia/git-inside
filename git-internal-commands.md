@@ -680,7 +680,6 @@ git diff-tree a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0^{tree} 523d41ce82ea993e7c
 ### git merge-base
 为合并找到共同祖先。
 
-
 <details>
 <summary>命令说明（点击展开）</summary>
     usage: git merge-base [-a | --all] <commit> <commit>...
@@ -700,4 +699,24 @@ git diff-tree a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0^{tree} 523d41ce82ea993e7c
 
 ```bash
 
+```
+
+### git ref-log
+查看引用变更日志。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+    usage: git reflog [ show | expire | delete | exists ]
+
+</details>
+</br>
+
+```bash
+$ git reflog
+2c5b80 (HEAD -> main, origin/main, origin/HEAD) HEAD@{0}: commit: Update git commands
+539f806 HEAD@{1}: reset: moving to HEAD^
+bdff99c HEAD@{2}: commit: first commit
+539f806 HEAD@{3}: commit: add git-draw
+f5993a4 HEAD@{4}: commit: Add git-draw
+83c61eb HEAD@{5}: commit: Update readme.md
 ```
