@@ -720,3 +720,56 @@ bdff99c HEAD@{2}: commit: first commit
 f5993a4 HEAD@{4}: commit: Add git-draw
 83c61eb HEAD@{5}: commit: Update readme.md
 ```
+
+### git blame
+显示文件的每一个修改版本和作者。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+    usage: git blame [<options>] [<rev-opts>] [<rev>] [--] <file>
+
+        <rev-opts> are documented in git-rev-list(1)
+
+        --incremental         Show blame entries as we find them, incrementally
+        -b                    Show blank SHA-1 for boundary commits (Default: off)
+        --root                Do not treat root commits as boundaries (Default: off)
+        --show-stats          Show work cost statistics
+        --progress            Force progress reporting
+        --score-debug         Show output score for blame entries
+        -f, --show-name       Show original filename (Default: auto)
+        -n, --show-number     Show original linenumber (Default: off)
+        -p, --porcelain       Show in a format designed for machine consumption
+        --line-porcelain      Show porcelain format with per-line commit information
+        -c                    Use the same output mode as git-annotate (Default: off)
+        -t                    Show raw timestamp (Default: off)
+        -l                    Show long commit SHA1 (Default: off)
+        -s                    Suppress author name and timestamp (Default: off)
+        -e, --show-email      Show author email instead of name (Default: off)
+        -w                    Ignore whitespace differences
+        --indent-heuristic    Use an experimental heuristic to improve diffs
+        --minimal             Spend extra cycles to find better match
+        -S <file>             Use revisions from <file> instead of calling git-rev-list
+        --contents <file>     Use <file>'s contents as the final image
+        -C[<score>]           Find line copies within and across files
+        -M[<score>]           Find line movements within and across files
+        -L <n,m>              Process only line range n,m, counting from 1
+        --abbrev[=<n>]        use <n> digits to display SHA-1s
+
+</details>
+</br>
+
+```bash
+$ git blame git-refs.md
+834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800  1) 
+a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  2) Git 引用本质上是指向特定的 commit 对象，git 默认情况下都会有一个 master 引用，指向一个默认的分支。
+a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  3) > github 上已经把默认的分支从 `master` 改成了 `main` 分支。
+a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  4) 
+a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  5) Git 还存在一个 `HEAD` 引用，代表当前工作的 tree。
+a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  6) 
+a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  7) 
+834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800  8) ```
+834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800  9) $ tree .git/refs
+834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 10) .git/refs
+834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 11) ├── heads
+834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 12) │   └── master
+```
