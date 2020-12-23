@@ -18,6 +18,8 @@
 * [git var](#git-var)
 * [git diff-tree](#git-diff-tree)
 * [git merge-base](#git-merge-base)
+* [git ref-log](#git-ref-log)
+* [git blame](#git-blame)
 
 ## 底层命令
 <a name="h2UUt"></a>
