@@ -28,7 +28,7 @@ $ find .git/objects -type f | sort
 
 如下是 4 种对象的数据存储格式：
 
-![](git-internal.1.png)
+![](https://img.alicdn.com/imgextra/i3/O1CN01Prj90h1qr21f8nMgE_!!6000000005548-2-tps-2060-1784.png)
 
 这里可能会有人有疑惑，Git 对象并没有对自身数据做校验（checksum），这样会不会有人对数据进行修改？这个其实不用担心，所有的 Git 对象都会组成一个图（Graph），按照指向关系可以这么理解：`refs` --> `tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`（实际上更为复杂），对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，[`git fsck`](https://git-scm.com/docs/git-fsck) 命令就会提示 `"hash mismatch"`。
 #### 查看对象存储格式
@@ -108,7 +108,7 @@ this is annotated tag
 ### 索引文件
 索引文件默认路径为：`.git/index`。索引文件用来存储暂存区的相关文件信息，当运行 `git add` 命令时会把工作区的变更文件信息添加到该索引文件中。索引文件以如下的格式存储暂存区内容：
 
-![](./git-internal.2.png)
+![](https://img.alicdn.com/imgextra/i3/O1CN01IDu59O1U9auyFw6YI_!!6000000002475-2-tps-2414-1376.png)
 
 > 读过源码的同学会发现，其实还有一个叫`.git/index.lock`的文件，该文件存在时表示当前工作区被锁定，代表有 git 进程正在操作该仓库。
 
