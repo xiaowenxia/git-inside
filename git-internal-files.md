@@ -7,7 +7,8 @@
 > 参考官方手册：https://git-scm.com/docs/gitattributes
 
 `.gitattribute` 可以为每个目录定义想要的属性，同时也支持匹配方式来设定一组目录。一个简单的示例：
-```
+
+```bash
 a*	foo !bar -baz
 
 (in .gitattributes)
@@ -29,7 +30,7 @@ abc	-foo -bar
     也可以通过配置项 `core.attributesFile` 配置文件路径，参考 [git-config](https://git-scm.com/docs/git-config)。
 * 系统路径：/etc/gitattributes
 
-定义 gitattributes ，除了 `.gitattribute` 文件，也可以是 `$GIT_DIR/info/attributes`。
+定义 `gitattributes` ，除了 `.gitattribute` 文件，也可以是 `$GIT_DIR/info/attributes`。
 
 `.gitattribute` 格式非常简单，每一行定义一个或一组属性，中间使用空格作为分隔符：
 
@@ -37,6 +38,7 @@ abc	-foo -bar
 pattern attr1 attr2 ...
 pattern2 attr1 attr2 ...
 ```
+
 > 开头、结尾的空格都会忽略，(`#`)开头的行也会被忽略，双引号(`"`)开头的 `pattern` 使用 C 语言风格。后一行的属性会覆盖前面的属性。
 
 每个路径的属性都有如下状态：
@@ -63,7 +65,7 @@ gitattributes 支持的属性有：
 
 比如存在如下文件：
 
-```
+```bash
 # 系统
 /etc/gitattributes          #1
 
@@ -86,7 +88,7 @@ gitattributes 支持的属性有：
 
 那优先级分别是 `#3` > `#6` > `#5` > `#4` > `#2` > `#1`。
 
-通过 `git check-attr` 查看 `.gitattribute`文件内容信息
+通过 `git check-attr` 查看 `.gitattribute`文件内容信息，命令参考 [git check-attr](./git-internal-commands.md#git-check-attr)。
 
 #### .gitkeep
 了解 git 底层原理的人应该比较清楚，git 无法追踪一个空的文件夹，当用户需要追踪(track)一个空的文件夹的时候，按照惯例，大家会把一个称为 `.gitkeep` 的文件放在这些文件夹里。

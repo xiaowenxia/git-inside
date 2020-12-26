@@ -20,6 +20,7 @@
 * [git merge-base](#git-merge-base)
 * [git ref-log](#git-ref-log)
 * [git blame](#git-blame)
+* [git check-attr](#git-check-attr)
 
 ## 底层命令
 <a name="h2UUt"></a>
@@ -774,4 +775,24 @@ a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  7)
 834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 10) .git/refs
 834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 11) ├── heads
 834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 12) │   └── master
+```
+
+### git check-attr
+查看文件属性。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+usage: git check-attr [-a | --all | <attr>...] [--] <pathname>...
+   or: git check-attr --stdin [-z] [-a | --all | <attr>...]
+
+    -a, --all             report all attributes set on file
+    --cached              use .gitattributes only from the index
+    --stdin               read file names from stdin
+    -z                    terminate input and output records by a NUL character
+
+</details>
+</br>
+
+```bash
+# 待补充
 ```
