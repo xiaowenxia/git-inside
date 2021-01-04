@@ -21,6 +21,7 @@
 * [git ref-log](#git-ref-log)
 * [git blame](#git-blame)
 * [git check-attr](#git-check-attr)
+* [git count-objects](#git-count-objects)
 
 ## 底层命令
 <a name="h2UUt"></a>
@@ -795,4 +796,35 @@ usage: git check-attr [-a | --all | <attr>...] [--] <pathname>...
 
 ```bash
 # 待补充
+```
+
+### git count-objects
+
+
+<details>
+<summary>命令说明（点击展开）</summary>
+usage: git count-objects [-v] [-H | --human-readable]
+
+    -v, --verbose         be verbose
+    -H, --human-readable  print sizes in human readable format
+
+</details>
+</br>
+
+```bash
+$ git count-objects
+235 objects, 2220 kilobytes
+# 方便阅读
+$ git count-objects -H
+235 objects, 2.17 MiB
+# 详细
+$ git count-objects -Hv
+count: 235
+size: 2.17 MiB
+in-pack: 4
+packs: 1
+size-pack: 2.42 KiB
+prune-packable: 0
+garbage: 0
+size-garbage: 0 bytes
 ```
