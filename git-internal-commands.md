@@ -828,3 +828,53 @@ prune-packable: 0
 garbage: 0
 size-garbage: 0 bytes
 ```
+
+### git fsck
+校验对象链表的正确性和有效性。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+usage: git fsck [<options>] [<object>...]
+
+    -v, --verbose         be verbose
+    --unreachable         show unreachable objects
+    --dangling            show dangling objects
+    --tags                report tags
+    --root                report root nodes
+    --cache               make index objects head nodes
+    --reflogs             make reflogs head nodes (default)
+    --full                also consider packs and alternate objects
+    --connectivity-only   check only connectivity
+    --strict              enable more strict checking
+    --lost-found          write dangling objects in .git/lost-found
+    --progress            show progress
+    --name-objects        show verbose names for reachable objects
+
+</details>
+</br>
+
+```bash
+# 当前git仓库是正确的
+$ git fsck
+Checking object directories: 100% (256/256), done.
+dangling tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904
+# 查看对象
+$ find .git/objects -type f
+.git/objects/60/8aeb44e919e3ed8264754851557b6f6f70fec8
+.git/objects/5a/3c92d2bc9622c5153110fd1ff1ec43646f2d52
+.git/objects/0f/9323931dbf812ac2d08afa6b094e17b60d2872
+.git/objects/30/13a8b53d3b92eb18c04e35e0757cfc29df9677
+.git/objects/2b/3f5d9b0f1a4381742cea304817c10a229cc53b
+.git/objects/34/dc7b21ed0493fd35da77730034967dce88fdc4
+.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904
+# 改变其中一个对象
+$ echo "" > .git/objects/60/8aeb44e919e3ed8264754851557b6f6f70fec8
+# 检查对象链表发现有错误
+$ git fsck
+error: unable to unpack header of .git/objects/60/8aeb44e919e3ed8264754851557b6f6f70fec8
+error: 608aeb44e919e3ed8264754851557b6f6f70fec8: object corrupt or missing: .git/objects/60/8aeb44e919e3ed8264754851557b6f6f70fec8
+Checking object directories: 100% (256/256), done.
+error: unable to unpack 608aeb44e919e3ed8264754851557b6f6f70fec8 header
+error: unable to unpack 608aeb44e919e3ed8264754851557b6f6f70fec8 header
+fatal: loose object 608aeb44e919e3ed8264754851557b6f6f70fec8 (stored in .git/objects/60/8aeb44e919e3ed8264754851557b6f6f70fec8) is corrupt
+```
