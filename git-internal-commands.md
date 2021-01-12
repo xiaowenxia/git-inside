@@ -7,6 +7,9 @@
 * [git ls-tree](#git-ls-tree)
 * [git read-tree](#git-read-tree)
 * [git write-tree](#git-write-tree)
+* [git commit-tree](#git-commit-tree)
+* [git mktree](#git-mktree)
+* [git diff-tree](#git-diff-tree)
 * [git gc](#git-gc)
 * [git verify-pack](#git-verify-pack)
 * [git hash-object](#git-hash-object)
@@ -303,6 +306,50 @@ usage: git mktree [-z] [--missing] [--batch]
 ```bash
 # 待补充
 ```
+
+### git diff-tree
+比较 2 个tree 对象 的差异并格式化输出。
+
+<summary>命令说明（点击展开）</summary>
+
+usage: git diff-tree [--stdin] [-m] [-c] [--cc] [-s] [-v] [--pretty] [-t] [-r] [--root] [<common-diff-options>] <tree-ish> [<tree-ish>] [<path>...]
+  -r            diff recursively
+  --root        include the initial commit as diff against /dev/null
+
+common diff options:
+  -z            output diff-raw with lines terminated with NUL.
+  -p            output patch format.
+  -u            synonym for -p.
+  --patch-with-raw
+                output both a patch and the diff-raw format.
+  --stat        show diffstat instead of patch.
+  --numstat     show numeric diffstat instead of patch.
+  --patch-with-stat
+                output a patch and prepend its diffstat.
+  --name-only   show only names of changed files.
+  --name-status show names and status of changed files.
+  --full-index  show full object name on index lines.
+  --abbrev=<n>  abbreviate object names in diff-tree header and diff-raw.
+  -R            swap input file pairs.
+  -B            detect complete rewrites.
+  -M            detect renames.
+  -C            detect copies.
+  --find-copies-harder
+                try unchanged files as candidate for copy detection.
+  -l<n>         limit rename attempts up to <n> paths.
+  -O<file>      reorder diffs according to the <file>.
+  -S<string>    find filepair whose only one side contains the string.
+  --pickaxe-all
+                show all files diff when -S is used and hit is found.
+  -a  --text    treat all files as text.
+
+</details>
+
+</br>
+```bash
+# 待补充
+```
+
 
 <a name="UDzYk"></a>
 
