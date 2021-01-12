@@ -6,6 +6,7 @@
 * [git ls-files](#git-ls-files)
 * [git ls-tree](#git-ls-tree)
 * [git read-tree](#git-read-tree)
+* [git write-tree](#git-write-tree)
 * [git gc](#git-gc)
 * [git verify-pack](#git-verify-pack)
 * [git hash-object](#git-hash-object)
@@ -251,6 +252,57 @@ home.md
 main.md
 ```
 
+### git write-tree
+把存储区的文件结构存储成 tree 对象。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+usage: git write-tree [--missing-ok] [--prefix=<prefix>/]
+
+    --missing-ok          allow missing objects
+    --prefix <prefix>/    write tree object for a subdirectory <prefix>
+</details>
+
+</br>
+
+```bash
+# 待补充
+```
+
+### git commit-tree
+把 tree 对象读取到暂存区。
+
+<details>
+<summary>命令说明（点击展开）</summary>
+
+usage: git commit-tree [(-p <sha1>)...] [-S[<keyid>]] [-m <message>] [-F <file>] <sha1>
+
+</details>
+
+</br>
+
+```bash
+# 待补充
+```
+
+### git mktree
+根据输入（`ls-tree`的输出格式）来生成 tree 对象。
+
+<summary>命令说明（点击展开）</summary>
+
+usage: git mktree [-z] [--missing] [--batch]
+
+    -z                    input is NUL terminated
+    --missing             allow missing objects
+    --batch               allow creation of more than one tree
+
+</details>
+
+</br>
+```bash
+# 待补充
+```
 
 <a name="UDzYk"></a>
 
