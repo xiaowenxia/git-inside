@@ -22,6 +22,7 @@
 * [git blame](#git-blame)
 * [git check-attr](#git-check-attr)
 * [git count-objects](#git-count-objects)
+* [git fsck](#git-fsck)
 
 ## 底层命令
 <a name="h2UUt"></a>
