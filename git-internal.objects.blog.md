@@ -41,6 +41,7 @@ git 初始化时，实际上是在仓库下创建了一个 `.git` 目录的隐�
 * `info/exclude`: 该文件的功能和 [.gitignore](https://git-scm.com/docs/gitignore) 一样，都是配置 git 忽略本地文件。
 * `objects/*`: git 的底层对象。
 * `refs/heads` 和 `refs/tags` : git 引用，实现了git 的分支策略，具体看 [git 引用](https://git-scm.com/book/en/v2/Git-Internals-Git-References)。
+> 实际上还有更多不常用的文件和目录，更详细的细节可以查阅：[Git Repository Layout](https://github.com/git/git/blob/master/Documentation/gitrepository-layout.txt)。
 
 ### <span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0x02</span> 添加一个文件
 
@@ -348,9 +349,9 @@ $ GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMA
 export GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHOR_EMAIL="775117471@qq.com" GIT_COMMITTER_DATE="1606913178 +0800" GIT_COMMITTER_NAME="xiaowenxia" GIT_COMMITTER_EMAIL="775117471@qq.com"
 ```
 
-##### 本文中的git 仓库
+##### 下载本文创建的 git 仓库
 
-这里提供一份本文中创建的仓库供大家学习使用：[git-inside.tar.gz](https://aos-app-dev.oss-cn-shanghai.aliyuncs.com/git-inside.tar.gz)。
+[点击下载](https://aos-app-dev.oss-cn-shanghai.aliyuncs.com/git-inside.tar.gz)本文中创建的仓库。
 
 ##### git-draw
 这里有一个很有趣的工具：[git-draw](https://github.com/sensorflo/git-draw)，这个工具会绘制 git 仓库的所有 Git 对象和引用的关系。下图使用 `git-draw` 绘制了本文的仓库：
