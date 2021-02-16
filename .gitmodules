@@ -1,0 +1,3 @@
+[submodule "themes/pure"]
+	path = themes/pure
+	url = https://github.com/cofess/hexo-theme-pure.git
