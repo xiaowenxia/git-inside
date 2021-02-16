@@ -3,13 +3,13 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: 夏晓文的博客
 subtitle: ''
-description: ''
+description: 'keep walking'
 keywords:
-author: John Doe
-language: en
-timezone: ''
+author: 夏晓文
+language: zh
+timezone: 'shanghai'
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
