@@ -1,0 +1,26 @@
+# config
+config:
+  skin: theme-black # 主题颜色 theme-black theme-blue theme-green theme-purple
+
+# 导航菜单
+menu:
+  Home: . 
+  Archives: archives # 归档
+  Categories: categories # 分类
+  Tags: tags # 标签
+  Repository: repository # github repositories
+  Books: books     # 书单
+  Links: links # 友链
+  About: about # 关于
+
+# 导航菜单图标（font awesome）
+menu_icons:
+  enable: true # 是否启用菜单图标
+  home: icon-home-fill
+  archives: icon-archives-fill
+  categories: icon-folder
+  tags: icon-tags
+  repository: icon-project
+  books: icon-book-fill
+  links: icon-friendship
+  about: icon-cup-fill
