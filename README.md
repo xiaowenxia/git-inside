@@ -1,5 +1,7 @@
 ## git 深入理解
 
+文档地址：https://xiaowenxia.github.io/git-inside/ 
+
 * git 基本功能
     * [git 的配置说明](./git-config.md)
     * [git 环境变量说明](./git-env.md)
