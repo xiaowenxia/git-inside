@@ -8,7 +8,7 @@ branches:
     - main
 before_install:
   - npm install hexo -g
-  - git clone https://github.com/xiaowenxia/git-inside.git -b xiaowenxia.github.io/git-inside
+  - git clone --recursive https://github.com/xiaowenxia/git-inside.git -b xiaowenxia.github.io/git-inside
   - cd git-inside
 script:
   - ./fetch.sh
