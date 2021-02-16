@@ -1,0 +1,18 @@
+<% if (typeof(script) !== 'undefined' && script) { %>
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: '<%= post.title %>', 
+  owner: '<%= theme.comment.gitment.githubID %>', // 可以是你的GitHub用户名，也可以是github id
+  repo: '<%= theme.comment.gitment.repo %>',
+  oauth: {
+    client_id: '<%= theme.comment.gitment.ClientID %>',
+    client_secret: '<%= theme.comment.gitment.ClientSecret %>',
+  }
+})
+gitment.render('comments')
+</script>
+<% } %>

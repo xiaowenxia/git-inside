@@ -1,0 +1,11 @@
+<% if (page.posts.length < 2){ %>
+  <% page.posts.each(function(post){ %>
+    <%- partial('article', {post: post, index: true}) %>
+  <% }) %>
+<% } else { %>
+  <div class="content article-list">
+    <% page.posts.each(function(post, i){ %>
+      <%- partial('archive-post', {post: post, even: i % 2 == 0}) %>
+    <% }) %>
+  </div>
+<% } %>

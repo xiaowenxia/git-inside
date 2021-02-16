@@ -1,0 +1,20 @@
+<div class="panel panel-default b-no">
+    <div class="panel-heading" role="tab">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#collapse<%= page.category %>" aria-expanded="true">
+              <i class="icon icon-folder text-active"></i><i class="icon icon-folder-open text"></i>
+              <%= page.category %>
+            </a>
+            <small class="text-muted">(Total <%= page.posts.length %> articles)</small>
+        </h4>
+    </div>
+    <div id="collapse<%= page.category %>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading<%= page.category %>">
+        <div class="panel-body">
+            <div class="collection">
+              <% page.posts.each(function (post, i) { %>
+                <%- partial('_partial/item-post', {post: post, type: 'link'}) %>
+              <% }); %>
+            </div>
+        </div>
+    </div>
+</div>
