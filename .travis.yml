@@ -16,6 +16,6 @@ deploy:
   github-token: $GH_TOKEN
   keep-history: true
   on:
-    branch: main
+    branch: xiaowenxia.github.io/git-inside
   local-dir: public
   verbose: true
