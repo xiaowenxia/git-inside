@@ -25,8 +25,8 @@
 <meta property="og:site_name" content="夏晓文的博客">
 <meta property="og:description" content="git 底层命令 目录 git cat-file git ls-files git ls-tree git read-tree git write-tree git commit-tree git mktree git diff-tree git gc git verify-pack git hash-object git show-index git show-ref git update-re">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-02-16T08:33:45.312Z">
-<meta property="article:modified_time" content="2021-02-16T08:33:45.316Z">
+<meta property="article:published_time" content="2021-02-16T08:41:26.965Z">
+<meta property="article:modified_time" content="2021-02-16T08:41:26.969Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -240,7 +240,7 @@
                 <a href="/git-inside/2021/02/16/git-workflow/" class="title">Git 工作流</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T08:33:45.372Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:41:27.037Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -255,7 +255,7 @@
                 <a href="/git-inside/2021/02/16/git-tips/" class="title">git 的特殊技巧</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T08:33:45.368Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:41:27.029Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -270,7 +270,7 @@
                 <a href="/git-inside/2021/02/16/git-revisions/" class="title">git revisions</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T08:33:45.364Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:41:27.021Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -285,7 +285,7 @@
                 <a href="/git-inside/2021/02/16/git-refs/" class="title">Git 引用</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T08:33:45.356Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:41:27.017Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -300,7 +300,7 @@
                 <a href="/git-inside/2021/02/16/git-layout/" class="title">git 目录结构</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T08:33:45.352Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:41:27.009Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -334,7 +334,7 @@
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
 	<a href="/git-inside/2021/02/16/git-internal-commands/" class="article-date">
-	  <time datetime="2021-02-16T08:33:45.312Z" itemprop="datePublished">2021-02-16</time>
+	  <time datetime="2021-02-16T08:41:26.965Z" itemprop="datePublished">2021-02-16</time>
 	</a>
 </span>
         
@@ -817,13 +817,14 @@ common diff options:
 <h3 id="git-merge-base"><a href="#git-merge-base" class="headerlink" title="git merge-base"></a>git merge-base</h3><p>为合并找到共同祖先。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
-    usage: git merge-base [-a | --all] <commit> <commit>...
-    or: git merge-base [-a | --all] --octopus <commit>...
-    or: git merge-base --independent <commit>...
-    or: git merge-base --is-ancestor <commit> <commit>
-    or: git merge-base --fork-point <ref> [<commit>]
 
-<pre><code>    -a, --all             output all common ancestors
+<pre><code>usage: git merge-base [-a | --all] &lt;commit&gt; &lt;commit&gt;...
+or: git merge-base [-a | --all] --octopus &lt;commit&gt;...
+or: git merge-base --independent &lt;commit&gt;...
+or: git merge-base --is-ancestor &lt;commit&gt; &lt;commit&gt;
+or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
+
+    -a, --all             output all common ancestors
     --octopus             find ancestors for a single n-way merge
     --independent         list revs not reachable from others
     --is-ancestor         is the first one ancestor of the other?
@@ -836,8 +837,9 @@ common diff options:
 <h3 id="git-ref-log"><a href="#git-ref-log" class="headerlink" title="git ref-log"></a>git ref-log</h3><p>查看引用变更日志。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
-    usage: git reflog [ show | expire | delete | exists ]
 
+<pre><code>usage: git reflog [ show | expire | delete | exists ]
+</code></pre>
 </details>
 </br>
 
@@ -845,9 +847,10 @@ common diff options:
 <h3 id="git-blame"><a href="#git-blame" class="headerlink" title="git blame"></a>git blame</h3><p>显示文件的每一个修改版本和作者。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
-    usage: git blame [<options>] [<rev-opts>] [<rev>] [--] <file>
 
-<pre><code>    &lt;rev-opts&gt; are documented in git-rev-list(1)
+<pre><code>usage: git blame [&lt;options&gt;] [&lt;rev-opts&gt;] [&lt;rev&gt;] [--] &lt;file&gt;
+
+    &lt;rev-opts&gt; are documented in git-rev-list(1)
 
     --incremental         Show blame entries as we find them, incrementally
     -b                    Show blank SHA-1 for boundary commits (Default: off)
@@ -881,9 +884,8 @@ common diff options:
 <h3 id="git-check-attr"><a href="#git-check-attr" class="headerlink" title="git check-attr"></a>git check-attr</h3><p>查看文件属性。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
-usage: git check-attr [-a | --all | <attr>...] [--] <pathname>...
-   or: git check-attr --stdin [-z] [-a | --all | <attr>...]
 
+<p>usage: git check-attr [-a | –all | <attr>…] [–] <pathname>…<br>   or: git check-attr –stdin [-z] [-a | –all | <attr>…]</p>
 <pre><code>-a, --all             report all attributes set on file
 --cached              use .gitattributes only from the index
 --stdin               read file names from stdin
@@ -895,8 +897,8 @@ usage: git check-attr [-a | --all | <attr>...] [--] <pathname>...
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 待补充</span></span><br></pre></td></tr></table></figure>
 <h3 id="git-count-objects"><a href="#git-count-objects" class="headerlink" title="git count-objects"></a>git count-objects</h3><details>
 <summary>命令说明（点击展开）</summary>
-usage: git count-objects [-v] [-H | --human-readable]
 
+<p>usage: git count-objects [-v] [-H | –human-readable]</p>
 <pre><code>-v, --verbose         be verbose
 -H, --human-readable  print sizes in human readable format
 </code></pre>
@@ -907,8 +909,8 @@ usage: git count-objects [-v] [-H | --human-readable]
 <h3 id="git-fsck"><a href="#git-fsck" class="headerlink" title="git fsck"></a>git fsck</h3><p>校验对象链表的正确性和有效性。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
-usage: git fsck [<options>] [<object>...]
 
+<p>usage: git fsck [<options>] [<object>…]</p>
 <pre><code>-v, --verbose         be verbose
 --unreachable         show unreachable objects
 --dangling            show dangling objects
