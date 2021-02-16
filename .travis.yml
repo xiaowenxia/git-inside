@@ -11,14 +11,14 @@ before_install:
   - git clone https://github.com/xiaowenxia/git-inside.git -b xiaowenxia.github.io/git-inside
   - cd git-inside
 script:
-  - 
+  - ./fetch.sh
   - hexo generate # generate static files
 deploy:
   provider: pages
   skip-cleanup: true
   github-token: $GH_TOKEN
   keep-history: true
-  on:
-    branch: xiaowenxia.github.io/git-inside
+  # on:
+  #   branch: xiaowenxia.github.io/git-inside
   local-dir: git-inside/public
   verbose: true
