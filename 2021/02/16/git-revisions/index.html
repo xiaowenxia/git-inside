@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>git revisions | Hexo</title>
+  <meta name="description" content="git revisions 参考原文链接：https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;gitrevisions 。  git revisions （Git 修订版本）代表特定的版本或范围，git 命令很多参数都是支持 revisions 的。revisions 可以 高效的定位你想要的提交。revisions 的具体格式有一整套匹配规则： 12345678910111213141516171">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git revisions">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/16/git-revisions/index.html">
+<meta property="og:site_name" content="夏晓文的博客">
+<meta property="og:description" content="git revisions 参考原文链接：https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;gitrevisions 。  git revisions （Git 修订版本）代表特定的版本或范围，git 命令很多参数都是支持 revisions 的。revisions 可以 高效的定位你想要的提交。revisions 的具体格式有一整套匹配规则： 12345678910111213141516171">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-02-16T07:41:28.613Z">
+<meta property="article:modified_time" content="2021-02-16T07:41:28.613Z">
+<meta property="article:author" content="夏晓文">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2021/02/16/git-revisions/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/git-inside/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/git-inside/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/git-inside/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/git-inside/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/git-inside/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/git-inside/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/git-inside/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/git-inside/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/git-inside/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/git-inside/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/git-inside/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+
+    
+      
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2021/02/">February 2021</a><span class="archive-list-count">18</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-workflow/" class="title">Git 工作流</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T07:41:28.625Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-tips/" class="title">git 的特殊技巧</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T07:41:28.621Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-revisions/" class="title">git revisions</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T07:41:28.613Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-refs/" class="title">Git 引用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T07:41:28.609Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-layout/" class="title">git 目录结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T07:41:28.601Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-git-revisions" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      git revisions
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/git-inside/2021/02/16/git-revisions/" class="article-date">
+	  <time datetime="2021-02-16T07:41:28.613Z" itemprop="datePublished">2021-02-16</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/16/git-revisions/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="git-revisions"><a href="#git-revisions" class="headerlink" title="git revisions"></a>git revisions</h2><blockquote>
+<p>参考原文链接：<a target="_blank" rel="noopener" href="https://git-scm.com/docs/gitrevisions">https://git-scm.com/docs/gitrevisions</a> 。</p>
+</blockquote>
+<p><code>git revisions</code> （Git 修订版本）代表特定的版本或范围，git 命令很多参数都是支持 revisions 的。revisions 可以 高效的定位你想要的提交。revisions 的具体格式有一整套匹配规则：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">----------------------------------------------------------------------</span><br><span class="line">|    Commit-ish/Tree-ish    |                Examples</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">|  1. &lt;sha1&gt;                | dae86e1950b1277e545cee180551750029cfe735</span><br><span class="line">|  2. &lt;describeOutput&gt;      | v1.7.4.2-679-g3bee7fb</span><br><span class="line">|  3. &lt;refname&gt;             | master, heads/master, refs/heads/master</span><br><span class="line">|  4. &lt;refname&gt;@&#123;&lt;date&gt;&#125;    | master@&#123;yesterday&#125;, HEAD@&#123;5 minutes ago&#125;</span><br><span class="line">|  5. &lt;refname&gt;@&#123;&lt;n&gt;&#125;       | master@&#123;1&#125;</span><br><span class="line">|  6. @&#123;&lt;n&gt;&#125;                | @&#123;1&#125;</span><br><span class="line">|  7. @&#123;-&lt;n&gt;&#125;               | @&#123;-1&#125;</span><br><span class="line">|  8. &lt;refname&gt;@&#123;upstream&#125;  | master@&#123;upstream&#125;, @&#123;u&#125;</span><br><span class="line">|  9. &lt;rev&gt;^                | HEAD^, v1.5.1^0</span><br><span class="line">| 10. &lt;rev&gt;~&lt;n&gt;             | master~3</span><br><span class="line">| 11. &lt;rev&gt;^&#123;&lt;<span class="built_in">type</span>&gt;&#125;        | v0.99.8^&#123;commit&#125;</span><br><span class="line">| 12. &lt;rev&gt;^&#123;&#125;              | v0.99.8^&#123;&#125;</span><br><span class="line">| 13. &lt;rev&gt;^&#123;/&lt;text&gt;&#125;       | HEAD^&#123;/fix nasty bug&#125;</span><br><span class="line">| 14. :/&lt;text&gt;              | :/fix nasty bug</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">|       Tree-ish only       |                Examples</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">| 15. &lt;rev&gt;:&lt;path&gt;          | HEAD:README.txt, master:sub-directory/</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">|         Tree-ish?         |                Examples</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">| 16. :&lt;n&gt;:&lt;path&gt;           | :0:README, :README</span><br><span class="line">----------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>来自 StackOverflow 的 一份回答：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/23303549/what-are-commit-ish-and-tree-ish-in-git">What are commit-ish and tree-ish in Git?</a> 。</p>
+</blockquote>
+<p><a name="Tzw4g"></a></p>
+<h4 id="lt-sha1-gt"><a href="#lt-sha1-gt" class="headerlink" title="&lt;sha1&gt;"></a><em><code>&lt;sha1&gt;</code></em></h4><p>object 对象名称。<br />示例：</p>
+<ul>
+<li><em><code>dae86e1950b1277e545cee180551750029cfe735</code></em></li>
+<li><em><code>dae86e</code></em></li>
+</ul>
+<p><a name="LhzBD"></a></p>
+<h4 id="lt-describeOutput-gt"><a href="#lt-describeOutput-gt" class="headerlink" title="&lt;describeOutput&gt;"></a><em><code>&lt;describeOutput&gt;</code></em></h4><p><code>git describe</code> 的输出。<br />示例：</p>
+<ul>
+<li><em><code>v1.7.4.2-679-g3bee7fb</code></em></li>
+</ul>
+<p><a name="8TTJk"></a></p>
+<h4 id="lt-refname-gt"><a href="#lt-refname-gt" class="headerlink" title="&lt;refname&gt;"></a><em><code>&lt;refname&gt;</code></em></h4><p>引用名称。<br />示例：</p>
+<ul>
+<li><em><code>master</code></em></li>
+<li><em><code>heads/master</code></em></li>
+<li><em><code>refs/heads/master</code></em></li>
+</ul>
+<p><a name="EUJYt"></a></p>
+<h4 id=""><a href="#" class="headerlink" title="@"></a><em><code>@</code></em></h4><p>单独一个 <code>@</code> 表示 <code>HEAD</code> ，及当前分支。<br /></p>
+<p><a name="C6WC8"></a></p>
+<h4 id="lt-refname-gt-lt-date-gt"><a href="#lt-refname-gt-lt-date-gt" class="headerlink" title="[&lt;refname&gt;]@{&lt;date&gt;}"></a><em><code>[&lt;refname&gt;]@&#123;&lt;date&gt;&#125;</code></em></h4><p>设置引用名称，同时设置时间过滤条件。<br />示例：</p>
+<ul>
+<li><em><code>master@&#123;yesterday&#125;</code></em></li>
+<li><em><code>HEAD@&#123;5 minutes ago&#125;</code></em></li>
+<li><em><code>refs/heads/master@&#123;1979-02-26 18:30:00&#125;</code></em></li>
+</ul>
+<p><a name="lIBAJ"></a></p>
+<h4 id="lt-refname-gt-lt-n-gt"><a href="#lt-refname-gt-lt-n-gt" class="headerlink" title="&lt;refname&gt;@{&lt;n&gt;}"></a><em><code>&lt;refname&gt;@&#123;&lt;n&gt;&#125;</code></em></h4><p>设置引用名称，同时设置倒数第 n 个版本。 0 代表最新的版本。</p>
+<ul>
+<li><em><code>HEAD@&#123;0&#125;</code></em></li>
+<li><em><code>master@&#123;1&#125;</code></em></li>
+<li><em><code>refs/heads/master@&#123;10&#125;</code></em></li>
+</ul>
+<p><a name="n1Fqp"></a></p>
+<h4 id="lt-n-gt"><a href="#lt-n-gt" class="headerlink" title="@{&lt;n&gt;}"></a><em><code>@&#123;&lt;n&gt;&#125;</code></em></h4><p>跟 <em><code>&lt;refname&gt;@&#123;&lt;n&gt;&#125;</code></em> 一样，省略了 refname 表示 refname 默认为 HEAD 。<br /></p>
+<p><a name="q9SPm"></a></p>
+<h4 id="lt-n-gt-1"><a href="#lt-n-gt-1" class="headerlink" title="@{-&lt;n&gt;}"></a><em><code>@&#123;-&lt;n&gt;&#125;</code></em></h4><p><a name="nGG81"></a></p>
+<h4 id="lt-branchname-gt-upstream"><a href="#lt-branchname-gt-upstream" class="headerlink" title="[&lt;branchname&gt;]@{upstream}"></a><em><code>[&lt;branchname&gt;]@&#123;upstream&#125;</code></em></h4><p>指定远程仓库分支名称。<em><code>@&#123;upstream&#125;</code></em> 可以简化成 <em><code>@&#123;u&#125;</code></em> 。<br />示例：</p>
+<ul>
+<li><em><code>master@&#123;upstream&#125;</code></em></li>
+<li><em><code>@&#123;u&#125;</code></em></li>
+</ul>
+<p><a name="GvzyB"></a></p>
+<h4 id="lt-branchname-gt-push"><a href="#lt-branchname-gt-push" class="headerlink" title="[&lt;branchname&gt;]@{push}"></a><em><code>[&lt;branchname&gt;]@&#123;push&#125;</code></em></h4><p>指定分支名称，指示该分支将会push到远程仓库中。<br />示例：</p>
+<ul>
+<li><em><code>master@&#123;push&#125;</code></em></li>
+<li><em><code>@&#123;push&#125;</code></em></li>
+</ul>
+<p><a name="xqLMn"></a></p>
+<h4 id="lt-rev-gt-lt-n-gt"><a href="#lt-rev-gt-lt-n-gt" class="headerlink" title="&lt;__rev&gt;^[&lt;n&gt;]"></a><em><code>&lt;__rev&gt;^[&lt;n&gt;]</code></em></h4><p><em>在 revision 后面添加 <em><code>_^_</code></em> 符号，表示获取第 n 个父级对象( parent )，没有设置 n 时，表示第一个父级对象，</em><code>_^0_</code>_ 表示 commit 本身。_<br />示例：</p>
+<ul>
+<li><em><code>HEAD^</code></em></li>
+<li><em><code>v1.5.1^0</code></em></li>
+<li><em><code>HEAD^3</code></em></li>
+</ul>
+<p><a name="Lmz0z"></a></p>
+<h4 id="lt-rev-gt-lt-n-gt-1"><a href="#lt-rev-gt-lt-n-gt-1" class="headerlink" title="&lt;rev__&gt;~[&lt;n&gt;]"></a><em><code>&lt;rev__&gt;~[&lt;n&gt;]</code></em></h4><p><a name="j8eSv"></a></p>
+<h4 id="lt-rev-gt-lt-type-gt"><a href="#lt-rev-gt-lt-type-gt" class="headerlink" title="&lt;rev&gt;^{&lt;type&gt;}"></a><em><code>&lt;rev&gt;^&#123;&lt;type&gt;&#125;</code></em></h4><p>在 revision 后面添加 <em><code>^&#123;&lt;type&gt;&#125;</code></em> 符号表示递归该引用直到找到对应类型（_<code>&lt;type&gt;</code>_）的 object 对象。<br />示例：</p>
+<ul>
+<li><em><code>v0.99.8^&#123;commit&#125;</code></em></li>
+<li><em><code>dae86e1950b1277e545cee180551750029cfe735^&#123;tree&#125;</code></em></li>
+</ul>
+<p>_<br><a name="5KW1F"></a></p>
+<h4 id="lt-rev-gt"><a href="#lt-rev-gt" class="headerlink" title="&lt;rev&gt;^{}"></a><em><code>&lt;rev&gt;^&#123;&#125;</code></em></h4><p>表示递归该引用直到找到类型为tag的 object 对象。<br />示例：</p>
+<ul>
+<li><em><code>v0.99.8^&#123;&#125;</code></em></li>
+<li><em><code>dae86e1950b1277e545cee180551750029cfe735^&#123;&#125;</code></em></li>
+</ul>
+<p>_<br><a name="WCF12"></a></p>
+<h4 id="lt-rev-gt-lt-text-gt"><a href="#lt-rev-gt-lt-text-gt" class="headerlink" title="&lt;rev&gt;^{/&lt;text&gt;}"></a><em><code>&lt;rev&gt;^&#123;/&lt;text&gt;&#125;</code></em></h4><p>匹配<em><code>&lt;text&gt;</code><em>，等效于</em><code>:/&lt;text&gt;</code></em> 。<br />示例：</p>
+<ul>
+<li><em><code>HEAD^&#123;/fix nasty bug&#125;</code></em></li>
+</ul>
+<p><a name="3t0Rk"></a></p>
+<h4 id="lt-text-gt"><a href="#lt-text-gt" class="headerlink" title=":/&lt;text&gt;"></a><em><code>:/&lt;text&gt;</code></em></h4><p>正则表达式匹配字符串。<br />示例：</p>
+<ul>
+<li><em><code>:/fix nasty bug</code></em></li>
+<li><em><code>:/^foo</code></em></li>
+</ul>
+<p><a name="Y1HIj"></a></p>
+<h4 id="lt-rev-gt-lt-path-gt"><a href="#lt-rev-gt-lt-path-gt" class="headerlink" title="&lt;rev&gt;:&lt;path&gt;"></a><em><code>&lt;rev&gt;:&lt;path&gt;</code></em></h4><p>匹配文件/目录名称。<br />示例：</p>
+<ul>
+<li><em><code>HEAD:README</code></em></li>
+<li><em><code>master:./README</code></em></li>
+</ul>
+<p><a name="nNeEK"></a></p>
+<h4 id="lt-n-gt-lt-path-gt"><a href="#lt-n-gt-lt-path-gt" class="headerlink" title=":[&lt;n&gt;:]&lt;path&gt;"></a><em><code>:[&lt;n&gt;:]&lt;path&gt;</code></em></h4>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://xiaowenxia.github.io/git-inside/2021/02/16/git-revisions/" title="git revisions" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/16/git-revisions/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/git-inside/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/git-inside/2021/02/16/git-tips/" title="git 的特殊技巧"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/git-inside/2021/02/16/git-refs/" title="Git 引用"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/git-inside/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/git-inside/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/git-inside/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/git-inside/js/plugin.min.js"></script>
+
+
+<script src="/git-inside/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/git-inside/',
+        CONTENT_URL: '/git-inside/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/git-inside/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
