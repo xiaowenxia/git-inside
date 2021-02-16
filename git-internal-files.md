@@ -94,7 +94,7 @@ gitattributes 支持的属性有：
 了解 git 底层原理的人应该比较清楚，git 无法追踪一个空的文件夹，当用户需要追踪(track)一个空的文件夹的时候，按照惯例，大家会把一个称为 `.gitkeep` 的文件放在这些文件夹里。
 
 #### .gitmodules
-
+git 子仓库（submodules）。
 
 #### .git/description
 `.git/description` 文件用来存储仓库名称以及仓库的描述信息。默认的值为：
