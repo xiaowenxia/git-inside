@@ -1,4 +1,4 @@
-## git revisions
+## Git Revisions
 
 > 参考原文链接：[https://git-scm.com/docs/gitrevisions](https://git-scm.com/docs/gitrevisions) 。
 

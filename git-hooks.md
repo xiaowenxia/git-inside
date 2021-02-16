@@ -1,4 +1,4 @@
-## git hooks
+## Git Hooks
 
 > 官方Git 钩子说明：[https://git-scm.com/docs/githooks](https://git-scm.com/docs/githooks) 。
 
