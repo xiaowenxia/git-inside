@@ -18,21 +18,21 @@
   
   
   <title>Git 底层原理：Git 对象 | Hexo</title>
-  <meta name="description" content="Git 底层原理：Git 对象 Git 底层原理：Git 对象    git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。 Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际上都是在操作 git 对象。比如 git">
+  <meta name="description" content="Git 底层原理：Git 对象git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。 Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际上都是在操作 git 对象。比如 git add 命令，就是把文件快照存储成 bl">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git 底层原理：Git 对象">
 <meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/16/git-internal.objects/index.html">
 <meta property="og:site_name" content="夏晓文的博客">
-<meta property="og:description" content="Git 底层原理：Git 对象 Git 底层原理：Git 对象    git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。 Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际上都是在操作 git 对象。比如 git">
-<meta property="og:locale">
+<meta property="og:description" content="Git 底层原理：Git 对象git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。 Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际上都是在操作 git 对象。比如 git add 命令，就是把文件快照存储成 bl">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img.alicdn.com/tfs/TB1UzBK4XP7gK0jSZFjXXc5aXXa-1818-608.png">
 <meta property="og:image" content="https://img.alicdn.com/tfs/TB17QMC4oY1gK0jSZFCXXcwqXXa-2748-1654.png">
 <meta property="og:image" content="https://img.alicdn.com/tfs/TB1U3NZuP39YK4jSZPcXXXrUFXa-2140-1356.png">
 <meta property="og:image" content="https://img.alicdn.com/tfs/TB1LU0F4kL0gK0jSZFAXXcA9pXa-496-208.png">
 <meta property="og:image" content="https://img.alicdn.com/tfs/TB1g9ID4oY1gK0jSZFMXXaWcVXa-2868-1380.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i4/O1CN013r001V1zJRVp9ETDH_!!6000000006693-55-tps-1412-824.svg">
-<meta property="article:published_time" content="2021-02-16T07:41:28.585Z">
-<meta property="article:modified_time" content="2021-02-16T07:41:28.585Z">
+<meta property="article:published_time" content="2021-02-16T08:33:45.332Z">
+<meta property="article:modified_time" content="2021-02-16T08:33:45.332Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.alicdn.com/tfs/TB1UzBK4XP7gK0jSZFjXXc5aXXa-1818-608.png">
@@ -54,26 +54,26 @@
 <meta name="generator" content="Hexo 5.3.0"></head>
 
 
-<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
   <header class="header" itemscope itemtype="http://schema.org/WPHeader">
   <div class="slimContent">
     <div class="navbar-header">
       
       
       <div class="profile-block text-center">
-        <a id="avatar" href="https://github.com/cofess" target="_blank">
-          <img class="img-circle img-rotate" src="/git-inside/images/avatar.jpg" width="200" height="200">
+        <a id="avatar" href="https://github.com/xiaowenxia" target="_blank">
+          <img class="img-circle img-rotate" src="/git-inside/images/avatar.png" width="200" height="200">
         </a>
-        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+        <h2 id="name" class="hidden-xs hidden-sm">夏晓文</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HangZhou, China</small>
       </div>
       
       <div class="search" id="search-form-wrap">
 
     <form class="search-form sidebar-form">
         <div class="input-group">
-            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
             <span class="input-group-btn">
                 <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
             </span>
@@ -83,7 +83,7 @@
   <div class="ins-search-mask"></div>
   <div class="ins-search-container">
     <div class="ins-input-wrapper">
-      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
       <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
     </div>
     <div class="ins-section-wrapper">
@@ -110,7 +110,7 @@
             
             <i class="icon icon-home-fill"></i>
             
-            <span class="menu-title">Home</span>
+            <span class="menu-title">首页</span>
           </a>
         </li>
         
@@ -120,7 +120,7 @@
             
             <i class="icon icon-archives-fill"></i>
             
-            <span class="menu-title">Archives</span>
+            <span class="menu-title">归档</span>
           </a>
         </li>
         
@@ -130,7 +130,7 @@
             
             <i class="icon icon-folder"></i>
             
-            <span class="menu-title">Categories</span>
+            <span class="menu-title">分类</span>
           </a>
         </li>
         
@@ -140,7 +140,7 @@
             
             <i class="icon icon-tags"></i>
             
-            <span class="menu-title">Tags</span>
+            <span class="menu-title">标签</span>
           </a>
         </li>
         
@@ -150,7 +150,7 @@
             
             <i class="icon icon-project"></i>
             
-            <span class="menu-title">Repository</span>
+            <span class="menu-title">项目</span>
           </a>
         </li>
         
@@ -160,7 +160,7 @@
             
             <i class="icon icon-book-fill"></i>
             
-            <span class="menu-title">Books</span>
+            <span class="menu-title">书单</span>
           </a>
         </li>
         
@@ -170,7 +170,7 @@
             
             <i class="icon icon-friendship"></i>
             
-            <span class="menu-title">Links</span>
+            <span class="menu-title">友链</span>
           </a>
         </li>
         
@@ -180,7 +180,7 @@
             
             <i class="icon icon-cup-fill"></i>
             
-            <span class="menu-title">About</span>
+            <span class="menu-title">关于</span>
           </a>
         </li>
         
@@ -189,15 +189,7 @@
 	
     <ul class="social-links">
     	
-        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
-        
-        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
-        
-        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
-        
-        <li><a href="/git-inside/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
         
     </ul>
 
@@ -210,7 +202,7 @@
   <div class="slimContent">
     
       <div class="widget">
-    <h3 class="widget-title">Board</h3>
+    <h3 class="widget-title">公告</h3>
     <div class="widget-body">
         <div id="board">
             <div class="content">
@@ -231,9 +223,9 @@
     
       
   <div class="widget">
-    <h3 class="widget-title">Archive</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2021/02/">February 2021</a><span class="archive-list-count">18</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2021/02/">二月 2021</a><span class="archive-list-count">17</span></li></ul>
     </div>
   </div>
 
@@ -241,7 +233,7 @@
     
       
   <div class="widget">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">最新文章</h3>
     <div class="widget-body">
       <ul class="recent-post-list list-unstyled no-thumbnail">
         
@@ -255,7 +247,7 @@
                 <a href="/git-inside/2021/02/16/git-workflow/" class="title">Git 工作流</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T07:41:28.625Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:33:45.372Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -270,7 +262,7 @@
                 <a href="/git-inside/2021/02/16/git-tips/" class="title">git 的特殊技巧</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T07:41:28.621Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:33:45.368Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -285,7 +277,7 @@
                 <a href="/git-inside/2021/02/16/git-revisions/" class="title">git revisions</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T07:41:28.613Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:33:45.364Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -300,7 +292,7 @@
                 <a href="/git-inside/2021/02/16/git-refs/" class="title">Git 引用</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T07:41:28.609Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:33:45.356Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -315,7 +307,7 @@
                 <a href="/git-inside/2021/02/16/git-layout/" class="title">git 目录结构</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-16T07:41:28.601Z" itemprop="datePublished">2021-02-16</time>
+                <time datetime="2021-02-16T08:33:45.352Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -349,7 +341,7 @@
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
 	<a href="/git-inside/2021/02/16/git-internal.objects/" class="article-date">
-	  <time datetime="2021-02-16T07:41:28.585Z" itemprop="datePublished">2021-02-16</time>
+	  <time datetime="2021-02-16T08:33:45.332Z" itemprop="datePublished">2021-02-16</time>
 	</a>
 </span>
         
@@ -357,16 +349,13 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/16/git-internal.objects/#comments" class="article-comment-link">Comments</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/16/git-internal.objects/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="Git-底层原理：Git-对象"><a href="#Git-底层原理：Git-对象" class="headerlink" title="Git 底层原理：Git 对象"></a>Git 底层原理：Git 对象</h2><h1 style="margin-top: 30px; margin-bottom: 15px; padding: 0px 100px; font-size: 22px; text-align: center; position: relative; font-weight: bold; color: black; line-height: 1.1em; padding-top: 12px; padding-bottom: 12px; margin: 70px 30px 30px; border: 1px solid #000; width: 60%; margin: 0 auto" data-id="heading-2"><span style="float: left; display: block; width: 60%; border-top: 1px solid #000; height: 1px; line-height: 1px; margin-left: -5px; margin-top: -17px;"> </span><span class="prefix" style="display: block; width: 3px; margin: 0 0 0 5%; height: 3px; line-height: 3px; overflow: hidden; background-color: #000; box-shadow: 3px 0 #000, 0 3px #000, -3px 0 #000, 0 -3px #000;"></span><span class="content" style="display: block; -webkit-box-reflect: below 0em -webkit-gradient(linear,left top,left bottom, from(rgba(0,0,0,0)),to(rgba(255,255,255,0.1)));">Git 底层原理：Git 对象</span><span class="suffix" style="display: block; width: 3px; margin: 0 0 0 95%; height: 3px; line-height: 3px; overflow: hidden; background-color: #000; box-shadow: 3px 0 #000, 0 3px #000, -3px 0 #000, 0 -3px #000;"></span><span style="float: right; display: block; width: 60%; border-bottom: 1px solid #000; height: 1px; line-height: 1px; margin-right: -5px; margin-top: 16px;"> </span></h1>
-<br />
-
-<p>git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。</p>
+        <h2 id="Git-底层原理：Git-对象"><a href="#Git-底层原理：Git-对象" class="headerlink" title="Git 底层原理：Git 对象"></a>Git 底层原理：Git 对象</h2><p>git 实际上是一个内容文件系统，载体是 git 的对象，存储的是一个个的内容版本。git 仓库就像一个书架，书架上放着的是一本本书，对于 git 来讲，这一本本书就是 git 对象，存储的是书的每一个版本的内容。</p>
 <p>Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际上都是在操作 git 对象。比如 git add 命令，就是把文件快照存储成 <code>blob</code> 对象，<code>git commit</code> 命令，就是把提交的文件列表和提交信息分别存储成 <code>tree</code> 对象和 <code>commit</code> 对象，<code>git checkout -b</code>创建分支命令，就是创建一个指针指向 <code>commit</code> 对象。</p>
 <p>本文会从一个空的仓库开始，一步一步由浅入深的展开讲解 git 的内部原理以及底层对象。</p>
 <h3 id="0x01-首先初始化工程"><a href="#0x01-首先初始化工程" class="headerlink" title="0x01 首先初始化工程"></a><span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0x01</span> 首先初始化工程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化工程</span></span><br><span class="line">$ git init</span><br><span class="line">Initialized empty Git repository <span class="keyword">in</span> /Users/xxx/workspace/git-inside/.git/</span><br><span class="line"><span class="comment"># 查看目录结构</span></span><br><span class="line">$ tree -a</span><br><span class="line">└── .git</span><br><span class="line">    ├── HEAD</span><br><span class="line">    ├── config</span><br><span class="line">    ├── description</span><br><span class="line">    ├── hooks</span><br><span class="line">    │   ├── applypatch-msg.sample</span><br><span class="line">    │   ├── ......                  <span class="comment"># 省略</span></span><br><span class="line">    │   └── update.sample</span><br><span class="line">    ├── info</span><br><span class="line">    │   └── exclude</span><br><span class="line">    ├── objects</span><br><span class="line">    │   ├── info</span><br><span class="line">    │   └── pack</span><br><span class="line">    └── refs</span><br><span class="line">        ├── heads</span><br><span class="line">        └── tags</span><br></pre></td></tr></table></figure>
@@ -522,9 +511,9 @@
       <a href="https://xiaowenxia.github.io/git-inside/2021/02/16/git-internal.objects/" title="Git 底层原理：Git 对象" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/16/git-internal.objects/</a>
     </li>
     
-    <li class="post-copyright-license">
+    <!-- <li class="post-copyright-license">
       <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
-    </li>
+    </li> -->
   </ul>
 </blockquote>
 
@@ -533,13 +522,13 @@
   <div class="panel-body">
     <figure class="media">
       <div class="media-left">
-        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
-          <img src="/git-inside/images/avatar.jpg" class="img-rounded w-full" alt="">
+        <a href="https://github.com/xiaowenxia" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/git-inside/images/avatar.png" class="img-rounded w-full" alt="">
         </a>
       </div>
       <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
-        <div>个人简介。</div>
+        <h3 class="media-heading"><a href="https://github.com/xiaowenxia" target="_blank"><span class="text-dark">夏晓文</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Git 开发</div>
       </div>
     </figure>
   </div>
@@ -566,12 +555,12 @@
   <ul class="pager pull-left">
     
     <li class="prev">
-      <a href="/git-inside/2021/02/16/git-internal-operations/" title="git 常用命令底层原理"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+      <a href="/git-inside/2021/02/16/git-internal-operations/" title="git 常用命令底层原理"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
     </li>
     
     
     <li class="next">
-      <a href="/git-inside/2021/02/16/git-internal.objects.blog/" title="Git 底层原理：Git 对象"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/git-inside/2021/02/16/git-internal.file-struct/" title="Git 底层原理：Git 底层文件存储格式"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
@@ -579,7 +568,7 @@
   
   
   <!-- Button trigger modal -->
-  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
   <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
     <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
   </div> -->
@@ -601,31 +590,31 @@
       <div class="modal-body">
         <div class="donate-box">
           <div class="donate-head">
-            <p>Maybe you could buy me a cup of coffee.</p>
+            <p>感谢您的支持，我会继续努力的!</p>
           </div>
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade active in" id="alipay">
               <div class="donate-payimg">
-                <img src="/git-inside/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+                <img src="/git-inside/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
               </div>
-              <p class="text-muted mv">Scan this qrcode</p>
-              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="wechatpay">
               <div class="donate-payimg">
-                <img src="/git-inside/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+                <img src="/git-inside/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
               </div>
-              <p class="text-muted mv">Scan this qrcode</p>
-              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
             </div>
           </div>
           <div class="donate-footer">
             <ul class="nav nav-tabs nav-justified" role="tablist">
               <li role="presentation" class="active">
-                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
               </li>
               <li role="presentation" class="">
-                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
               </li>
             </ul>
           </div>
@@ -644,15 +633,7 @@
 	
     <ul class="social-links">
     	
-        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
-        
-        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
-        
-        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
-        
-        <li><a href="/git-inside/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
         
     </ul>
 
@@ -678,11 +659,11 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
         },
         ROOT_URL: '/git-inside/',
         CONTENT_URL: '/git-inside/content.json',
