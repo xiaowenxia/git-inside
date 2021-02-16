@@ -1,3 +1,4 @@
+## Git 引用
 
 Git 引用本质上是指向特定的 commit 对象，git 默认情况下都会有一个 master 引用，指向一个默认的分支。
 > github 上已经把默认的分支从 `master` 改成了 `main` 分支。

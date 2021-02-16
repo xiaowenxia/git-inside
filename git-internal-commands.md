@@ -1,4 +1,4 @@
-# git 底层命令
+## git 底层命令
 
 <a name="OS6wF"></a>
 ## 目录
@@ -27,9 +27,6 @@
 * [git check-attr](#git-check-attr)
 * [git count-objects](#git-count-objects)
 * [git fsck](#git-fsck)
-
-## 底层命令
-<a name="h2UUt"></a>
 
 ### git cat-file
 查看objects文件。

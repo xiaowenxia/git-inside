@@ -1,4 +1,4 @@
-# git cheatsheet
+## git cheatsheet
 
 > 更多 git cheatsheet 可以看 https://github.com/arslanbilal/git-cheat-sheet 。
 
