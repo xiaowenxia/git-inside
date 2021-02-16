@@ -18,7 +18,7 @@ deploy:
   skip-cleanup: true
   github-token: $GH_TOKEN
   keep-history: true
-  # on:
-  #   branch: xiaowenxia.github.io/git-inside
+  on:
+    branch: main
   local-dir: git-inside/public
   verbose: true
