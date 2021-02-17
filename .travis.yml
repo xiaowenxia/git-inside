@@ -3,6 +3,8 @@ language: node_js
 node_js:
   - 10 # use nodejs v10 LTS
 cache: npm
+git:
+  depth: false
 branches:
   only:
     - main
@@ -12,6 +14,7 @@ before_install:
 script:
   - ./git-inside/fetch.sh
   - cd git-inside/
+  - npm install
   - hexo generate # generate static files
 deploy:
   provider: pages
