@@ -1,4 +1,4 @@
-# git 底层命令
+## Git 底层命令
 
 <a name="OS6wF"></a>
 ## 目录
@@ -27,9 +27,6 @@
 * [git check-attr](#git-check-attr)
 * [git count-objects](#git-count-objects)
 * [git fsck](#git-fsck)
-
-## 底层命令
-<a name="h2UUt"></a>
 
 ### git cat-file
 查看objects文件。
@@ -786,6 +783,7 @@ git diff-tree a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0^{tree} 523d41ce82ea993e7c
 
 <details>
 <summary>命令说明（点击展开）</summary>
+
     usage: git merge-base [-a | --all] <commit> <commit>...
     or: git merge-base [-a | --all] --octopus <commit>...
     or: git merge-base --independent <commit>...
@@ -810,6 +808,7 @@ git diff-tree a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0^{tree} 523d41ce82ea993e7c
 
 <details>
 <summary>命令说明（点击展开）</summary>
+
     usage: git reflog [ show | expire | delete | exists ]
 
 </details>
@@ -830,6 +829,7 @@ f5993a4 HEAD@{4}: commit: Add git-draw
 
 <details>
 <summary>命令说明（点击展开）</summary>
+
     usage: git blame [<options>] [<rev-opts>] [<rev>] [--] <file>
 
         <rev-opts> are documented in git-rev-list(1)
@@ -883,6 +883,7 @@ a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  7)
 
 <details>
 <summary>命令说明（点击展开）</summary>
+
 usage: git check-attr [-a | --all | <attr>...] [--] <pathname>...
    or: git check-attr --stdin [-z] [-a | --all | <attr>...]
 
@@ -903,6 +904,7 @@ usage: git check-attr [-a | --all | <attr>...] [--] <pathname>...
 
 <details>
 <summary>命令说明（点击展开）</summary>
+
 usage: git count-objects [-v] [-H | --human-readable]
 
     -v, --verbose         be verbose
@@ -934,7 +936,8 @@ size-garbage: 0 bytes
 
 <details>
 <summary>命令说明（点击展开）</summary>
-usage: git fsck [<options>] [<object>...]
+
+usage: git fsck [options] [object...]
 
     -v, --verbose         be verbose
     --unreachable         show unreachable objects

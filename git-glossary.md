@@ -1,4 +1,4 @@
-## git 术语
+## Git 术语
 > 翻译自 [Git Glossary](https://git-scm.com/docs/gitglossary)。
 
 #### alternate object database

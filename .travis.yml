@@ -1,0 +1,27 @@
+sudo: false
+language: node_js
+node_js:
+  - 10 # use nodejs v10 LTS
+cache: npm
+git:
+  depth: false
+branches:
+  only:
+    - main
+before_install:
+  - npm install hexo -g
+  - git clone --recursive https://github.com/xiaowenxia/git-inside.git -b xiaowenxia.github.io/git-inside
+script:
+  - ./git-inside/fetch.sh
+  - cd git-inside/
+  - npm install
+  - hexo generate # generate static files
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GH_TOKEN
+  keep-history: true
+  on:
+    branch: main
+  local-dir: git-inside/public
+  verbose: true
