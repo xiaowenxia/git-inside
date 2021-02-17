@@ -21,16 +21,16 @@
   <meta name="description" content="Git 的特殊文件.gitignore配置忽略的文件或目录 .gitattribute 参考官方手册：https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;gitattributes  .gitattribute 可以为每个目录定义想要的属性，同时也支持匹配方式来设定一组目录。一个简单的示例： 12345678910a*	foo !bar -baz(in .gitattributes)abc	foo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git 的特殊文件">
-<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/16/git-internal-files/index.html">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-files/index.html">
 <meta property="og:site_name" content="夏晓文的博客">
 <meta property="og:description" content="Git 的特殊文件.gitignore配置忽略的文件或目录 .gitattribute 参考官方手册：https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;gitattributes  .gitattribute 可以为每个目录定义想要的属性，同时也支持匹配方式来设定一组目录。一个简单的示例： 12345678910a*	foo !bar -baz(in .gitattributes)abc	foo">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-02-16T08:42:24.000Z">
-<meta property="article:modified_time" content="2021-02-17T03:34:03.805Z">
+<meta property="article:published_time" content="2021-02-17T05:52:40.000Z">
+<meta property="article:modified_time" content="2021-02-17T05:54:03.157Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2021/02/16/git-internal-files/index.html">
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-files/index.html">
   
     <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
   
@@ -177,6 +177,21 @@
                 
               </p>
               <p class="item-title">
+                <a href="/git-inside/2021/02/17/git-internal-files/" class="title">Git 的特殊文件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-17T05:52:40.000Z" itemprop="datePublished">2021-02-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
                 <a href="/git-inside/2021/02/17/git-revisions/" class="title">Git Revisions</a>
               </p>
               <p class="item-date">
@@ -196,21 +211,6 @@
               </p>
               <p class="item-date">
                 <time datetime="2021-02-17T03:20:27.000Z" itemprop="datePublished">2021-02-17</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/git-inside/2021/02/16/git-config/" class="title">Git 的配置说明</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-02-16T08:42:24.000Z" itemprop="datePublished">2021-02-16</time>
               </p>
             </div>
           </li>
@@ -273,8 +273,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/git-inside/2021/02/16/git-internal-files/" class="article-date">
-	  <time datetime="2021-02-16T08:42:24.000Z" itemprop="datePublished">2021-02-16</time>
+	<a href="/git-inside/2021/02/17/git-internal-files/" class="article-date">
+	  <time datetime="2021-02-17T05:52:40.000Z" itemprop="datePublished">2021-02-17</time>
 	</a>
 </span>
         
@@ -282,7 +282,7 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/16/git-internal-files/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/17/git-internal-files/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
@@ -333,7 +333,8 @@
 <p>那优先级分别是 <code>#3</code> &gt; <code>#6</code> &gt; <code>#5</code> &gt; <code>#4</code> &gt; <code>#2</code> &gt; <code>#1</code>。</p>
 <p>通过 <code>git check-attr</code> 查看 <code>.gitattribute</code>文件内容信息，命令参考 <a href="./git-internal-commands.md#git-check-attr">git check-attr</a>。</p>
 <h4 id="gitkeep"><a href="#gitkeep" class="headerlink" title=".gitkeep"></a>.gitkeep</h4><p>了解 git 底层原理的人应该比较清楚，git 无法追踪一个空的文件夹，当用户需要追踪(track)一个空的文件夹的时候，按照惯例，大家会把一个称为 <code>.gitkeep</code> 的文件放在这些文件夹里。</p>
-<h4 id="gitmodules"><a href="#gitmodules" class="headerlink" title=".gitmodules"></a>.gitmodules</h4><h4 id="git-description"><a href="#git-description" class="headerlink" title=".git/description"></a>.git/description</h4><p><code>.git/description</code> 文件用来存储仓库名称以及仓库的描述信息。默认的值为：</p>
+<h4 id="gitmodules"><a href="#gitmodules" class="headerlink" title=".gitmodules"></a>.gitmodules</h4><p>git 子仓库（submodules）。</p>
+<h4 id="git-description"><a href="#git-description" class="headerlink" title=".git/description"></a>.git/description</h4><p><code>.git/description</code> 文件用来存储仓库名称以及仓库的描述信息。默认的值为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unnamed repository; edit this file &#39;description&#39; to name the repository.</span><br></pre></td></tr></table></figure>
 <p>也可以改成类似如下的值：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git-inside This is git-inside</span><br></pre></td></tr></table></figure>
@@ -347,7 +348,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://xiaowenxia.github.io/git-inside/2021/02/16/git-internal-files/" title="Git 的特殊文件" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/16/git-internal-files/</a>
+      <a href="https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-files/" title="Git 的特殊文件" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-files/</a>
     </li>
     
     <!-- <li class="post-copyright-license">
@@ -393,13 +394,9 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/git-inside/2021/02/16/git-hooks/" title="Git Hooks"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/git-inside/2021/02/16/git-internal-operations/" title="Git 常用命令底层原理"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/git-inside/2021/02/17/git-revisions/" title="Git Revisions"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
