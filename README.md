@@ -1,6 +1,6 @@
 ## git 深入理解
 
-文档地址：https://xiaowenxia.github.io/git-inside/ 
+> 文档地址：[git-inside](https://xiaowenxia.github.io/git-inside/) 或者 [国内地址](https://xiaowenxia.gitee.io/git-inside/)。
 
 * git 基本功能
     * [git 的配置说明](./git-config.md)
@@ -24,7 +24,6 @@
     * 《[Git 底层原理：Git 对象](./git-internal.objects.md)》
     * 《[git 底层文件存储格式](./git-internal.file-struct.md)》
     * [git cheatsheet](./git-cheatsheet.md)
-
 
 ## 参考手册
 
