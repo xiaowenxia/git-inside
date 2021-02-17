@@ -937,7 +937,7 @@ size-garbage: 0 bytes
 <details>
 <summary>命令说明（点击展开）</summary>
 
-usage: git fsck [<options>] [<object>...]
+usage: git fsck [options] [object...]
 
     -v, --verbose         be verbose
     --unreachable         show unreachable objects
