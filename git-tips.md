@@ -216,3 +216,27 @@ git 的底层 chain 对象和区块链有异曲同工之处，都是基于 merkl
 
 ##### 写一个工具，把git 对象绘制成图。
 ##### 如何铺满整个github 的 contributions  计数面板
+
+
+### 定义你的 github 贡献日历图
+
+![](https://img.alicdn.com/imgextra/i2/O1CN01yMq5Ev1XRrZFPf1zc_!!6000000002921-2-tps-1850-410.png)
+
+代码如下：
+```bash
+timestampFile=timestamp.log
+touch $timestampFile
+
+for ((k=0; k<365; k++))
+do
+    # 生成过去一年的随机时间
+    timestamp=`date -d "-$[RANDOM%365] day -$[RANDOM%24] hour -$[RANDOM%60] minute -$[RANDOM%60] second " "+%Y-%m-%d %H:%M:%S"`
+    # 随机提交 1~5 次
+    for ((i=0; i<=$[RANDOM%5]; i++))
+    do
+        echo $timestamp >> $timestampFile
+        git add $timestampFile
+        git commit --date="{$i}${timestamp}" -m "{$i}${timestamp}"
+    done
+done
+```
