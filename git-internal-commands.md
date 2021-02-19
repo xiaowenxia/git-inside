@@ -28,6 +28,39 @@
 * [git count-objects](#git-count-objects)
 * [git fsck](#git-fsck)
 
+### git 的子命令
+可以通过 `git --exec-path` 可以获取到 git 的子命令存储目录，如下显示：
+
+```bash
+$ ls `git --exec-path`
+git                   git-count-objects             git-help                git-mergetool            git-remote-fd          git-stash
+git-add               git-credential                git-http-backend        git-mergetool--lib       git-remote-ftp         git-status
+git-add--interactive  git-credential-cache          git-http-fetch          git-mktag                git-remote-ftps        git-stripspace
+git-am                git-credential-cache--daemon  git-http-push           git-mktree               git-remote-http        git-submodule
+git-annotate          git-credential-store          git-imap-send           git-mv                   git-remote-https       git-submodule--helper
+git-apply             git-daemon                    git-index-pack          git-name-rev             git-remote-testsvn     git-subtree
+git-archive           git-describe                  git-init                git-notes                git-repack             git-symbolic-ref
+git-bisect            git-diff                      git-init-db             git-pack-objects         git-replace            git-tag
+git-bisect--helper    git-diff-files                git-instaweb            git-pack-redundant       git-request-pull       git-unpack-file
+git-blame             git-diff-index                git-interpret-trailers  git-pack-refs            git-rerere             git-unpack-objects
+git-branch            git-diff-tree                 git-log                 git-parse-remote         git-reset              git-update-index
+git-bundle            git-difftool                  git-ls-files            git-patch-id             git-rev-list           git-update-ref
+git-cat-file          git-difftool--helper          git-ls-remote           git-prune                git-rev-parse          git-update-server-info
+git-check-attr        git-fast-export               git-ls-tree             git-prune-packed         git-revert             git-upload-archive
+git-check-ignore      git-fast-import               git-mailinfo            git-pull                 git-rm                 git-upload-pack
+git-check-mailmap     git-fetch                     git-mailsplit           git-push                 git-send-pack          git-var
+git-check-ref-format  git-fetch-pack                git-merge               git-quiltimport          git-sh-i18n            git-verify-commit
+git-checkout          git-filter-branch             git-merge-base          git-read-tree            git-sh-i18n--envsubst  git-verify-pack
+git-checkout-index    git-fmt-merge-msg             git-merge-file          git-rebase               git-sh-prompt          git-verify-tag
+git-cherry            git-for-each-ref              git-merge-index         git-rebase--am           git-sh-setup           git-web--browse
+git-cherry-pick       git-format-patch              git-merge-octopus       git-rebase--helper       git-shell              git-whatchanged
+git-clean             git-fsck                      git-merge-one-file      git-rebase--interactive  git-shortlog           git-worktree
+git-clone             git-fsck-objects              git-merge-ours          git-rebase--merge        git-show               git-write-tree
+git-column            git-gc                        git-merge-recursive     git-receive-pack         git-show-branch        mergetools
+git-commit            git-get-tar-commit-id         git-merge-resolve       git-reflog               git-show-index
+git-commit-tree       git-grep                      git-merge-subtree       git-remote               git-show-ref
+git-config            git-hash-object               git-merge-tree          git-remote-ext           git-stage
+```
 ### git cat-file
 查看objects文件。
 
