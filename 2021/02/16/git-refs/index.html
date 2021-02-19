@@ -26,7 +26,7 @@
 <meta property="og:description" content="Git 引用Git 引用本质上是指向特定的 commit 对象，git 默认情况下都会有一个 master 引用，指向一个默认的分支。  github 上已经把默认的分支从 master 改成了 main 分支。  Git 还存在一个 HEAD 引用，代表当前工作的 tree。 1234567891011$ tree .git&#x2F;refs.git&#x2F;refs├── heads│">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-02-16T07:00:09.000Z">
-<meta property="article:modified_time" content="2021-02-19T07:37:25.093Z">
+<meta property="article:modified_time" content="2021-02-19T11:36:48.061Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -180,7 +180,22 @@
                 <a href="/git-inside/2021/02/19/git-internal-protocol/" class="title">Git 底层协议分析</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-19T07:36:16.000Z" itemprop="datePublished">2021-02-19</time>
+                <time datetime="2021-02-19T11:36:24.000Z" itemprop="datePublished">2021-02-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/19/git-internal-commands/" class="title">Git 底层命令</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-19T11:35:46.000Z" itemprop="datePublished">2021-02-19</time>
               </p>
             </div>
           </li>
@@ -226,21 +241,6 @@
               </p>
               <p class="item-date">
                 <time datetime="2021-02-17T05:52:40.000Z" itemprop="datePublished">2021-02-17</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/git-inside/2021/02/17/git-revisions/" class="title">Git Revisions</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-02-17T03:33:02.000Z" itemprop="datePublished">2021-02-17</time>
               </p>
             </div>
           </li>
@@ -378,12 +378,6 @@
   </ul>
   
   
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
-  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
-    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
-  </div> -->
-  
   
   <div class="bar-right">
     
@@ -393,48 +387,6 @@
   </div>
 </nav>
   
-<!-- Modal -->
-<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content donate">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <div class="modal-body">
-        <div class="donate-box">
-          <div class="donate-head">
-            <p>感谢您的支持，我会继续努力的!</p>
-          </div>
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
-              <div class="donate-payimg">
-                <img src="/git-inside/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
-              </div>
-              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
-              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
-              <div class="donate-payimg">
-                <img src="/git-inside/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
-              </div>
-              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
-              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
-            </div>
-          </div>
-          <div class="donate-footer">
-            <ul class="nav nav-tabs nav-justified" role="tablist">
-              <li role="presentation" class="active">
-                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
-              </li>
-              <li role="presentation" class="">
-                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 
 </main>

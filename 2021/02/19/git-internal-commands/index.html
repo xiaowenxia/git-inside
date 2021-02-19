@@ -21,16 +21,16 @@
   <meta name="description" content="Git 底层命令 目录 git cat-file git ls-files git ls-tree git read-tree git write-tree git commit-tree git mktree git diff-tree git gc git verify-pack git hash-object git show-index git show-ref git update-re">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git 底层命令">
-<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-commands/index.html">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-commands/index.html">
 <meta property="og:site_name" content="夏晓文的博客">
 <meta property="og:description" content="Git 底层命令 目录 git cat-file git ls-files git ls-tree git read-tree git write-tree git commit-tree git mktree git diff-tree git gc git verify-pack git hash-object git show-index git show-ref git update-re">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-02-17T03:20:27.000Z">
-<meta property="article:modified_time" content="2021-02-19T07:37:25.037Z">
+<meta property="article:published_time" content="2021-02-19T11:35:46.000Z">
+<meta property="article:modified_time" content="2021-02-19T11:36:47.997Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-commands/index.html">
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-commands/index.html">
   
     <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
   
@@ -180,7 +180,22 @@
                 <a href="/git-inside/2021/02/19/git-internal-protocol/" class="title">Git 底层协议分析</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-19T07:36:16.000Z" itemprop="datePublished">2021-02-19</time>
+                <time datetime="2021-02-19T11:36:24.000Z" itemprop="datePublished">2021-02-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/19/git-internal-commands/" class="title">Git 底层命令</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-19T11:35:46.000Z" itemprop="datePublished">2021-02-19</time>
               </p>
             </div>
           </li>
@@ -230,21 +245,6 @@
             </div>
           </li>
           
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/git-inside/2021/02/17/git-revisions/" class="title">Git Revisions</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-02-17T03:33:02.000Z" itemprop="datePublished">2021-02-17</time>
-              </p>
-            </div>
-          </li>
-          
       </ul>
     </div>
   </div>
@@ -273,8 +273,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/git-inside/2021/02/17/git-internal-commands/" class="article-date">
-	  <time datetime="2021-02-17T03:20:27.000Z" itemprop="datePublished">2021-02-17</time>
+	<a href="/git-inside/2021/02/19/git-internal-commands/" class="article-date">
+	  <time datetime="2021-02-19T11:35:46.000Z" itemprop="datePublished">2021-02-19</time>
 	</a>
 </span>
         
@@ -282,7 +282,7 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/17/git-internal-commands/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/19/git-internal-commands/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
@@ -316,6 +316,8 @@
 <li><a href="#git-count-objects">git count-objects</a></li>
 <li><a href="#git-fsck">git fsck</a></li>
 </ul>
+<h3 id="git-的子命令"><a href="#git-的子命令" class="headerlink" title="git 的子命令"></a>git 的子命令</h3><p>可以通过 <code>git --exec-path</code> 可以获取到 git 的子命令存储目录，如下显示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">$ ls `git --exec-path`</span><br><span class="line">git                   git-count-objects             git-help                git-mergetool            git-remote-fd          git-stash</span><br><span class="line">git-add               git-credential                git-http-backend        git-mergetool--lib       git-remote-ftp         git-status</span><br><span class="line">git-add--interactive  git-credential-cache          git-http-fetch          git-mktag                git-remote-ftps        git-stripspace</span><br><span class="line">git-am                git-credential-cache--daemon  git-http-push           git-mktree               git-remote-http        git-submodule</span><br><span class="line">git-annotate          git-credential-store          git-imap-send           git-mv                   git-remote-https       git-submodule--helper</span><br><span class="line">git-apply             git-daemon                    git-index-pack          git-name-rev             git-remote-testsvn     git-subtree</span><br><span class="line">git-archive           git-describe                  git-init                git-notes                git-repack             git-symbolic-ref</span><br><span class="line">git-bisect            git-diff                      git-init-db             git-pack-objects         git-replace            git-tag</span><br><span class="line">git-bisect--helper    git-diff-files                git-instaweb            git-pack-redundant       git-request-pull       git-unpack-file</span><br><span class="line">git-blame             git-diff-index                git-interpret-trailers  git-pack-refs            git-rerere             git-unpack-objects</span><br><span class="line">git-branch            git-diff-tree                 git-log                 git-parse-remote         git-reset              git-update-index</span><br><span class="line">git-bundle            git-difftool                  git-ls-files            git-patch-id             git-rev-list           git-update-ref</span><br><span class="line">git-cat-file          git-difftool--helper          git-ls-remote           git-prune                git-rev-parse          git-update-server-info</span><br><span class="line">git-check-attr        git-fast-export               git-ls-tree             git-prune-packed         git-revert             git-upload-archive</span><br><span class="line">git-check-ignore      git-fast-import               git-mailinfo            git-pull                 git-rm                 git-upload-pack</span><br><span class="line">git-check-mailmap     git-fetch                     git-mailsplit           git-push                 git-send-pack          git-var</span><br><span class="line">git-check-ref-format  git-fetch-pack                git-merge               git-quiltimport          git-sh-i18n            git-verify-commit</span><br><span class="line">git-checkout          git-filter-branch             git-merge-base          git-read-tree            git-sh-i18n--envsubst  git-verify-pack</span><br><span class="line">git-checkout-index    git-fmt-merge-msg             git-merge-file          git-rebase               git-sh-prompt          git-verify-tag</span><br><span class="line">git-cherry            git-for-each-ref              git-merge-index         git-rebase--am           git-sh-setup           git-web--browse</span><br><span class="line">git-cherry-pick       git-format-patch              git-merge-octopus       git-rebase--helper       git-shell              git-whatchanged</span><br><span class="line">git-clean             git-fsck                      git-merge-one-file      git-rebase--interactive  git-shortlog           git-worktree</span><br><span class="line">git-clone             git-fsck-objects              git-merge-ours          git-rebase--merge        git-show               git-write-tree</span><br><span class="line">git-column            git-gc                        git-merge-recursive     git-receive-pack         git-show-branch        mergetools</span><br><span class="line">git-commit            git-get-tar-commit-id         git-merge-resolve       git-reflog               git-show-index</span><br><span class="line">git-commit-tree       git-grep                      git-merge-subtree       git-remote               git-show-ref</span><br><span class="line">git-config            git-hash-object               git-merge-tree          git-remote-ext           git-stage</span><br></pre></td></tr></table></figure>
 <h3 id="git-cat-file"><a href="#git-cat-file" class="headerlink" title="git cat-file"></a>git cat-file</h3><p>查看objects文件。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -877,7 +879,7 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-commands/" title="Git 底层命令" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/17/git-internal-commands/</a>
+      <a href="https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-commands/" title="Git 底层命令" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-commands/</a>
     </li>
     
     <!-- <li class="post-copyright-license">
@@ -924,23 +926,17 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
   <ul class="pager pull-left">
     
     <li class="prev">
-      <a href="/git-inside/2021/02/17/git-revisions/" title="Git Revisions"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+      <a href="/git-inside/2021/02/19/git-internal-protocol/" title="Git 底层协议分析"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
     </li>
     
     
     <li class="next">
-      <a href="/git-inside/2021/02/16/git-internal-operations/" title="Git 常用命令底层原理"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/git-inside/2021/02/17/git-layout/" title="Git 目录结构"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
   </ul>
   
-  
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
-  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
-    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
-  </div> -->
   
   
   <div class="bar-right">
@@ -951,48 +947,6 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
   </div>
 </nav>
   
-<!-- Modal -->
-<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content donate">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <div class="modal-body">
-        <div class="donate-box">
-          <div class="donate-head">
-            <p>感谢您的支持，我会继续努力的!</p>
-          </div>
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
-              <div class="donate-payimg">
-                <img src="/git-inside/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
-              </div>
-              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
-              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
-              <div class="donate-payimg">
-                <img src="/git-inside/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
-              </div>
-              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
-              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
-            </div>
-          </div>
-          <div class="donate-footer">
-            <ul class="nav nav-tabs nav-justified" role="tablist">
-              <li role="presentation" class="active">
-                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
-              </li>
-              <li role="presentation" class="">
-                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 
 </main>
