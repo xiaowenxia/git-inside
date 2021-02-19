@@ -18,19 +18,19 @@
   
   
   <title>Git 底层协议 | Hexo</title>
-  <meta name="description" content="Git 底层协议wireshark 抓包一步步分析 git 传输协议庖丁解牛 https:&#x2F;&#x2F;github.com&#x2F;gcla&#x2F;termshark http(s):&#x2F;&#x2F;，ssh:&#x2F;&#x2F;，git:&#x2F;&#x2F;">
+  <meta name="description" content="Git 底层协议使用 wireshark 抓包分析 git 传输协议SSL 能通过SSLKEYLOGFILE 记录 shared secret key庖丁解牛 https:&#x2F;&#x2F;github.com&#x2F;gcla&#x2F;termshark 查看服务器ip地址 12host codeup.aliyun.comcodeup.aliyun.com has address 118.31.165.50  菜单 &gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git 底层协议">
-<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/18/git-internal-protocol/index.html">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-protocol/index.html">
 <meta property="og:site_name" content="夏晓文的博客">
-<meta property="og:description" content="Git 底层协议wireshark 抓包一步步分析 git 传输协议庖丁解牛 https:&#x2F;&#x2F;github.com&#x2F;gcla&#x2F;termshark http(s):&#x2F;&#x2F;，ssh:&#x2F;&#x2F;，git:&#x2F;&#x2F;">
+<meta property="og:description" content="Git 底层协议使用 wireshark 抓包分析 git 传输协议SSL 能通过SSLKEYLOGFILE 记录 shared secret key庖丁解牛 https:&#x2F;&#x2F;github.com&#x2F;gcla&#x2F;termshark 查看服务器ip地址 12host codeup.aliyun.comcodeup.aliyun.com has address 118.31.165.50  菜单 &gt;">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-02-18T08:55:08.000Z">
-<meta property="article:modified_time" content="2021-02-18T08:56:16.240Z">
+<meta property="article:published_time" content="2021-02-19T02:47:47.000Z">
+<meta property="article:modified_time" content="2021-02-19T02:48:44.413Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2021/02/18/git-internal-protocol/index.html">
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-protocol/index.html">
   
     <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
   
@@ -177,10 +177,10 @@
                 
               </p>
               <p class="item-title">
-                <a href="/git-inside/2021/02/18/git-internal-protocol/" class="title">Git 底层协议</a>
+                <a href="/git-inside/2021/02/19/git-internal-protocol/" class="title">Git 底层协议</a>
               </p>
               <p class="item-date">
-                <time datetime="2021-02-18T08:55:08.000Z" itemprop="datePublished">2021-02-18</time>
+                <time datetime="2021-02-19T02:47:47.000Z" itemprop="datePublished">2021-02-19</time>
               </p>
             </div>
           </li>
@@ -273,8 +273,8 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/git-inside/2021/02/18/git-internal-protocol/" class="article-date">
-	  <time datetime="2021-02-18T08:55:08.000Z" itemprop="datePublished">2021-02-18</time>
+	<a href="/git-inside/2021/02/19/git-internal-protocol/" class="article-date">
+	  <time datetime="2021-02-19T02:47:47.000Z" itemprop="datePublished">2021-02-19</time>
 	</a>
 </span>
         
@@ -282,14 +282,27 @@
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/18/git-internal-protocol/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2021/02/19/git-internal-protocol/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="Git-底层协议"><a href="#Git-底层协议" class="headerlink" title="Git 底层协议"></a>Git 底层协议</h2><h2 id="wireshark-抓包一步步分析-git-传输协议"><a href="#wireshark-抓包一步步分析-git-传输协议" class="headerlink" title="wireshark 抓包一步步分析 git 传输协议"></a>wireshark 抓包一步步分析 git 传输协议</h2><p>庖丁解牛 <a target="_blank" rel="noopener" href="https://github.com/gcla/termshark">https://github.com/gcla/termshark</a></p>
+        <h2 id="Git-底层协议"><a href="#Git-底层协议" class="headerlink" title="Git 底层协议"></a>Git 底层协议</h2><h2 id="使用-wireshark-抓包分析-git-传输协议"><a href="#使用-wireshark-抓包分析-git-传输协议" class="headerlink" title="使用 wireshark 抓包分析 git 传输协议"></a>使用 wireshark 抓包分析 git 传输协议</h2><p>SSL 能通过SSLKEYLOGFILE 记录 shared secret key<br>庖丁解牛 <a target="_blank" rel="noopener" href="https://github.com/gcla/termshark">https://github.com/gcla/termshark</a></p>
+<p>查看服务器ip地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">host codeup.aliyun.com</span><br><span class="line">codeup.aliyun.com has address 118.31.165.50</span><br></pre></td></tr></table></figure>
+
+<p><code>菜单</code> &gt;<code>Performances</code>，在对话框中选择 <code>Protocol</code> &gt; <code>TLS</code>，设置 <code>(Pre)-Master-Secret log filename</code> 为你的 <code>SSLKEYLOGFILE</code> 文件路径：</p>
+<p>wireshark 过滤条件<br>tls &amp;&amp; ip.addr == 118.31.165.50</p>
+<p>github 使用的是http2的协议。</p>
+<p><a target="_blank" rel="noopener" href="https://wangdoc.com/ssh/client.html">https://wangdoc.com/ssh/client.html</a></p>
 <p>http(s)://，ssh://，git://</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 200 OK</span><br><span class="line">Server: Tengine</span><br><span class="line">Date: Thu, 18 Feb 2021 12:48:44 GMT</span><br><span class="line">Content-Type: application&#x2F;x-git-upload-pack-advertisement</span><br><span class="line">Content-Length: 1015</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line"></span><br><span class="line">001e# service&#x3D;git-upload-pack</span><br><span class="line">000001163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEADmulti_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref&#x3D;HEAD:refs&#x2F;heads&#x2F;master object-format&#x3D;sha1 agent&#x3D;git&#x2F;2.28.0.agit.6.0</span><br><span class="line">0040f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea refs&#x2F;heads&#x2F;develop</span><br><span class="line">004961ee902744d1f5a480e607856d44b104602d6b13 refs&#x2F;heads&#x2F;feature&#x2F;p3c_scan</span><br><span class="line">004fae02248d14bfdc9d4d38b1532cab278d179bc863 refs&#x2F;heads&#x2F;feature&#x2F;sensitive_scan</span><br><span class="line">003f3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 refs&#x2F;heads&#x2F;master</span><br><span class="line">00676508471ba8d143e1bfc41c391280a7ef533be57b refs&#x2F;keep-around&#x2F;6508471ba8d143e1bfc41c391280a7ef533be57b</span><br><span class="line">0067fe94112642bb8c57f6d08309f376135744fcb24e refs&#x2F;keep-around&#x2F;fe94112642bb8c57f6d08309f376135744fcb24e</span><br><span class="line">004d6508471ba8d143e1bfc41c391280a7ef533be57b refs&#x2F;merge-requests&#x2F;267112&#x2F;head</span><br><span class="line">004dfe94112642bb8c57f6d08309f376135744fcb24e refs&#x2F;merge-requests&#x2F;267123&#x2F;head</span><br><span class="line">003c3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 refs&#x2F;tags&#x2F;v1.0</span><br><span class="line">0000</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">00a8want f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea multi_ack_detailed no-done side-band-64k thin-pack ofs-delta deepen-since deepen-not agent&#x3D;git&#x2F;2.24.3.(Apple.Git-128)</span><br><span class="line">0032want 61ee902744d1f5a480e607856d44b104602d6b13</span><br><span class="line">0032want ae02248d14bfdc9d4d38b1532cab278d179bc863</span><br><span class="line">0032want 3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12</span><br><span class="line">0032want 3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12</span><br><span class="line">00000009done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>ssh 是建立在tcp之上的。<br>最后协商成功之后，将会生成一个对称加密 会话密钥key 以及一个 会话ID ，在这里要特别强调，这个是对称加密密钥key，</p>
 
       
     </div>
@@ -299,7 +312,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://xiaowenxia.github.io/git-inside/2021/02/18/git-internal-protocol/" title="Git 底层协议" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/18/git-internal-protocol/</a>
+      <a href="https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-protocol/" title="Git 底层协议" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2021/02/19/git-internal-protocol/</a>
     </li>
     
     <!-- <li class="post-copyright-license">
