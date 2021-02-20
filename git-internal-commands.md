@@ -29,7 +29,7 @@
 * [git fsck](#git-fsck)
 
 ### git 的子命令
-可以通过 `git --exec-path` 可以获取到 git 的子命令存储目录，如下显示：
+git 的子命令目前有 140+ 个，可以通过 `git --exec-path` 获取到 git 的子命令存储目录，如下显示：
 
 ```bash
 $ ls `git --exec-path`
