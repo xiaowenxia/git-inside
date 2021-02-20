@@ -23,7 +23,7 @@ $ git clone https://user:token@server/project.git
 
 #### 准备工作
 本文使用阿里云的代码托管平台 [Codeup](https://codeup.aliyun.com/) 来分析传输协议。当然，你也可以使用 [Github](https://github.com) 或者 [Gitee](https://gitee.com/) 。
-> github 使用的是 [http/2 协议](https://developers.google.com/web/fundamentals/performance/http2?hl=zh-cn)。 http/2 协议因为数据帧是二进制格式，对于分析 https 交互并不直观，所以本文使用了 Codeup 作为示例，Codeup 使用的是 http/1.1 协议。
+> github 使用更高效的 [http/2 协议](https://developers.google.com/web/fundamentals/performance/http2?hl=zh-cn)。 http/2 协议因为数据帧是二进制格式，对于分析 https 交互并不直观，所以本文使用基于 http/1.1 协议的 Codeup 作为示例。
 
 ##### 1. 查看服务器 ip 地址
 ```c
@@ -97,8 +97,9 @@ GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
 
-服务端返回的信息具有一定的格式（ [pkt-line 格式](#pkt-line-数据流) ），每一行都以一个四位的十六进制值开始，用于指明本行的长度。第二行的 0000 和结尾 0000 告诉 git 已经完成了一个过程。
+客户端发起的 GET 请求，URL 为 `$GIT_URL/info/refs?service=git-upload-pack`。
 
+服务端返回的信息按照 pkt-line 格式编排，信息主要是远程仓库的引用信息。pkt-line 格式定义每一行的前四个字节代表这一行的十六进制编码的长度，同时也定义前四个字节 0000 为一点消息的结束。详细说明见文末的 [pkt-line 格式](#pkt-line-格式)。
 这次交互里面，根据 0000 出现的位置，可以知道服务端返回的信息里面包含了2部分，第一部分是：
 
 ```
@@ -116,21 +117,10 @@ GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack
 
 第二部分第二行开始的信息则是 `info/refs` 文件内容。`info/refs` 文件描述了仓库里面的引用信息，包括分支、 tag ，以及一些自定义引用等。
 
-> 值得一提的是，服务器回复的 `info/refs` 文件内容里，除了 `refs/heads/*` 和 `refs/tags/*`，还存在 `refs/keep-around/*` 和 `refs/merge-requests/*` 等引用，这些是 Codeup 平台特有的引用。
+> * 值得一提的是，服务器回复的 `info/refs` 文件内容里，除了 `refs/heads/*` 和 `refs/tags/*`，还存在 `refs/keep-around/*` 和 `refs/merge-requests/*` 等引用，这些是 Codeup 平台特有的引用。
+> * 你也可以使用`` `git --exec-path`/git-update-server-info`` 命令来生成 `info/refs` 文件。
 
-你也可以使用`` `git --exec-path`/git-update-server-info`` 命令来生成 `info/refs` 文件：
-```bash
-$ `git --exec-path`/git-update-server-info && cat .git/info/refs
-3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/heads/master
-3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/remotes/origin/HEAD
-f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea	refs/remotes/origin/develop
-61ee902744d1f5a480e607856d44b104602d6b13	refs/remotes/origin/feature/p3c_scan
-ae02248d14bfdc9d4d38b1532cab278d179bc863	refs/remotes/origin/feature/sensitive_scan
-3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/remotes/origin/master
-3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/tags/v1.0
-```
-
-实际上这一段的数据流及格式官方文档里面有详细的说明： [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)，也可以参考本文末的 [git 传输协议格式](#git-传输协议格式)。
+实际上这一段的数据流及格式官方文档里面有详细的说明： [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)，也可以参考本文末的 [引用数据流](#git-传输协议格式)。
 
 ##### 第二次交互：请求数据
 第二次交互里，客户端把想要的数据告诉给服务端，服务端然后把 pack 包推送回来。
@@ -152,33 +142,98 @@ POST /5ed5e6f717b522454a36976e/Codeup-Demo.git/git-upload-pack
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 0008NAK
 0024\0x02Enumerating objects: 48, done.
-0023.Counting objects:   2% (1/48)
-0023.Counting objects:   4% (2/48)
+0023\0x02Counting objects:   2% (1/48)
+0023\0x02Counting objects:   4% (2/48)
 ...省略...
-0024.Counting objects:  97% (47/48)
-0024.Counting objects: 100% (48/48)
-002b.Counting objects: 100% (48/48), done.
-2004.PACK.......0..x...... ....O.}!81.
+0024\0x02Counting objects:  97% (47/48)
+0024\0x02Counting objects: 100% (48/48)
+002b\0x02Counting objects: 100% (48/48), done.
+2004\0x01PACK.......0..x...... ....O.}!81.
 KY..OQ.q.)....}..C...>..Et,."..)........O.b :o..2G...uhK.s.. 3.+N.	</P..a..L.Y.1...k.r..71..........X...X.......m.B{Z....m.hp......2..u.}.C>/+.Y.j..k...m.>=.M....Z...x...Aj.!.....{.`....B`...m...2.....G.Z..Z.....
 ....E.O&D"g.V.
 ...省略...
-......,.....$.....x.}Q=k.1...+.MI...,.Ph.PH...OM..,W..A...}M..J5........{.Em....9...a...T.A..G.+..H,.x.)...w6=......I..ay.....7.q......G....1...X.G..s0'H....;..O%.....".....:......d1V....fJ...d....pd..j1JV1o...z..~C_l......%...N..z.L....@.+.V+'...|.=..c:&}'..T....r~...9F+.......7....V(s3....uQ....T7.=F..Gt`i.Z.	n..Vn0006..003b.Total 48 (delta 0), reused 0 (delta 0), pack-reused 0
+......,.....$.....x.}Q=k.1...+.MI...,.Ph.PH...OM..,W..A...}M..J5........{.Em....9...a...T.A..G.+..H,.x.)...w6=......I..ay.....7.q......G....1...X.G..s0'H....;..O%.....".....:......d1V....fJ...d....pd..j1JV1o...z..~C_l......%...N..z.L....@.+.V+'...|.=..c:&}'..T....r~...9F+.......7....V(s3....uQ....T7.=F..Gt`i.Z.	n..Vn0006..003b\0x02Total 48 (delta 0), reused 0 (delta 0), pack-reused 0
 0000
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
 
-通过第一次交互里，客户端拿到了远程仓库的引用列表，然后把想要的 `commit-id` （及其提交链）发送给服务端。具体点其实就是 branch 和 tag 对应的 `commit-id` 。数据格式跟上面的服务端回复的引用列表格式类似。
+通过第一次交互里，**客户端**拿到了远程仓库的引用列表，然后在第二次交互里把想要的 `commit-id` （及其提交链）发送给服务端。
+客户端发起的是 POST 请求，URL 为 `$GIT_URL/git-upload-pack` ，POST 内容为想要的 `commit-id` 和已有的 `commit-id`，其实就是 branch 和 tag 对应的 `commit-id` 。数据格式跟上面的服务端回复的引用列表格式类似，具体见 [请求数据格式](#请求数据格式)。
 
-服务器回复的是 HTTP 数据流格式，其中包括了进度、pack 二进制数据等，其第一行的 `NAK` 代表数据开始，
+**服务端** 会根据 "want" 和 "have" 的情况来决定回复最小可用的数据包给客户端，这也是智能（smart）协议的作用所在，相关的机制见 [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L420) 。
+服务端回复的是 HTTP 数据流格式，其中包括了进度、pack 二进制数据等。第一行的 `NAK` 代表数据开始，后面的数据则使用了 side-band 格式（类似于 pkg-line 格式），来描述传输进度、数据包等。 side-band 格式前四个字节也是用于表示长度，第五个字节用于标志消息类型，_`0x01`_ 代表是packfile 数据，_`0x02`_ 代表是进度消息，_`0x03`_ 代表是错误信息。
+
+#### git fetch
+
+用 Wireshark 抓包看看 git fetch 过程：
+
+![](https://img.alicdn.com/imgextra/i2/O1CN01RnN1z21QUQTWDXiAY_!!6000000001979-2-tps-3654-440.png)
+
+
+```
+客户端请求引用信息
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack HTTP/1.1
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+服务端返回引用数据
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+001e# service=git-upload-pack
+00000116113cc207f5a226e066f1119b51e57e2b8fbd8e28 HEAD.multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
+0040f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea refs/heads/develop
+004961ee902744d1f5a480e607856d44b104602d6b13 refs/heads/feature/p3c_scan
+004fae02248d14bfdc9d4d38b1532cab278d179bc863 refs/heads/feature/sensitive_scan
+003f113cc207f5a226e066f1119b51e57e2b8fbd8e28 refs/heads/master
+00676508471ba8d143e1bfc41c391280a7ef533be57b refs/keep-around/6508471ba8d143e1bfc41c391280a7ef533be57b
+0067fe94112642bb8c57f6d08309f376135744fcb24e refs/keep-around/fe94112642bb8c57f6d08309f376135744fcb24e
+004d6508471ba8d143e1bfc41c391280a7ef533be57b refs/merge-requests/267112/head
+004dfe94112642bb8c57f6d08309f376135744fcb24e refs/merge-requests/267123/head
+003c3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 refs/tags/v1.0
+005a113cc207f5a226e066f1119b51e57e2b8fbd8e28 refs/tmp/6FB7257932D03A834B8318CF60D8DD/head
+0000
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+客户端请求数据
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /5ed5e6f717b522454a36976e/Codeup-Demo.git/git-upload-pack HTTP/1.1
+
+00b4want 113cc207f5a226e066f1119b51e57e2b8fbd8e28 multi_ack_detailed no-done side-band-64k thin-pack include-tag ofs-delta deepen-since deepen-not agent=git/2.24.3.(Apple.Git-128)
+00000032have 61ee902744d1f5a480e607856d44b104602d6b13
+0032have ae02248d14bfdc9d4d38b1532cab278d179bc863
+0032have f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea
+0009done
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+服务端返回数据
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+0038ACK 61ee902744d1f5a480e607856d44b104602d6b13 common
+0038ACK ae02248d14bfdc9d4d38b1532cab278d179bc863 common
+0038ACK f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea common
+0031ACK f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea
+0023.Enumerating objects: 3, done.
+0022.Counting objects:  33% (1/3)
+0022.Counting objects:  66% (2/3)
+0022.Counting objects: 100% (3/3)
+0029.Counting objects: 100% (3/3), done.
+01d4.PACK..........x...K.. ...=.{c..<...U^.UH,5....x..z.=.=...d..D.\.i:. 8..h..CT.(.h
+...省略...
+...Bs.n.u....zup'T..$......T....y....{]7Ox;.c.{..}..
+.MM.r...../.k	......^.........P.@.z.@3Z.q.1.-....a.s..+g.6k@.....U..0..Sd._.H..lU.Q.=f....&.@.P\......b..7./..?{..t.V).7..Ndz5x.+I-.....L..6.B......./m...X.A.003a.Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+0006..0000
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+```
+可以看到，交互过程和 `git clone` 是一样的，不同的是，客户端请求数据时，带上了已有（ "have" ）的 commit-id ，
 
 #### git 传输协议格式
-##### pkt-line 数据流
+##### pkt-line 格式
 pkt-line 数据流用来描述引用信息，每一行的前四个字节代表这一行的十六进制编码的长度，包括这四个字节和数据在内。因为包括自身四个字节，前四个直接一定大于0004，所以 pkt-line 格式定义了3个特殊的编码：
 * _**0000**_ ( `flush-pkt` )：代表一段消息的结束。
 * _**0001**_ ( `delim-pkt` )：代表一段消息的分节符。
 * _**0002**_ ( `response-end-pkt` )：无状态会话时响应结束。
 
-整体来讲，一个 pkt-line 数据流一般由如下几部分组成：
+##### 引用数据格式
+_`引用数据`_ 由服务端发送给客户端。整体来讲，一个**引用数据格式**一般由如下几部分组成：
 ```
 PKT-LINE("# service=$servicename" LF)
 "0000"
@@ -187,16 +242,17 @@ ref_list
 ```
 
 其中
-* _**`PKT-LINE`**_ 代表这一行是 pkt-line 格式的。
-* _**`servicename`**_ 是服务类型，git clone、git fetch 时是 `git-upload-pack`，git push 则是 `git-receive-pack`。
-* _**`ref_list`**_ 是引用信息列表，一定是按照引用名称排序的。
+* _`PKT-LINE`_ 代表这一行是 pkt-line 格式的。
+* _`servicename`_ 是服务类型，git clone、git fetch 时是 `git-upload-pack`，git push 则是 `git-receive-pack`。
+* _`ref_list`_ 是引用信息列表，一定是按照引用名称排序的。
 
-_**`ref_list`**_ 第一个引用一定是 `HEAD` ， `HEAD` 后面一定有支持的功能说明（ capability declarations ）第一条引用信息格式为：
+_`ref_list`_ 第一个引用一定是 `HEAD` ， `HEAD` 后面一定有支持的功能说明（ capability declarations ）第一条引用信息格式为：
 
 ```
 PKT-LINE(obj-id SP name NUL cap_list LF)
 ```
-> `cap_list` 是支持的功能列表。
+> 其中 `cap_list` 是支持的功能列表（ capability list ）。
+
 后面的引用信息格式为：
 
 ```
@@ -206,10 +262,25 @@ PKT-LINE(obj-id SP name LF)
 PKT-LINE(obj-id SP name LF)
 PKT-LINE(obj-id SP name "^{}" LF)
 ```
-> 其中 `name^{}` 是 [git revision](https://git-scm.com/docs/gitrevisions ) 中定义的格式，表示递归该引用找到非 tag 类型的 object 。
-> 另外，如果该仓库没有引用时，那 `ref_list` 的内容则是：`PKT-LINE(zero-id SP "capabilities^{}" NUL cap-list LF)` 。
+
+> * 其中 `name^{}` 是 [git revision](https://git-scm.com/docs/gitrevisions ) 中定义的格式，表示递归该引用找到非 tag 类型的 object 。
+> * 另外，如果该仓库没有引用时，那 `ref_list` 的内容则是：`PKT-LINE(zero-id SP "capabilities^{}" NUL cap-list LF)` 。
 
 pkt-line 官方说明见：[http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)。
+
+##### 请求数据格式
+_`请求数据`_ 由客户端发送给服务端，表示客户端需要（ "want" ）哪些 `commit-id` ，同时也会说明自己有（ "have" ）哪些 `commit-id`。**请求数据格式** 相对简单，请求数据一定会有个 "want" ，且第一条需要带上功能说明（ capability declarations ）：
+
+```
+PKT-LINE("want" SP obj-id SP cap_list LF)
+PKT-LINE("want" SP obj-id LF)
+PKT-LINE("want" SP obj-id LF)
+...
+PKT-LINE("have" SP obj-id LF)
+PKT-LINE("have" SP obj-id LF)
+...
+"0000" / "done"
+```
 
 ##### sideband 格式
 前四个字节和 pkt-line 格式相同，代表这一行的数据长度。第五位用于标志消息类型，_`0x01`_ 代表是packfile 数据，_`0x02`_ 代表是进度消息，_`0x03`_ 代表是错误信息。
