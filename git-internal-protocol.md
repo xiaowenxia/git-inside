@@ -1,7 +1,7 @@
-## Git 底层协议分析
+## Git 传输协议分析
 
 ### 概要
-Git 客户端和服务端交互的协议支持很多种，本地协议、HTTP 协议、SSH 协议、 Git 协议，在我们的日常开发过程中，接触最多的是 HTTP 协议和 SSH 协议。一般通过如下命令和服务器进行交互：
+Git 客户端和服务端交互的协议支持 4 种：本地协议、HTTP 协议、SSH 协议、 Git 协议，在我们的日常开发过程中，接触最多的是 HTTP 协议和 SSH 协议。一般通过如下命令和服务器进行交互：
 
 ```bash
 # ssh 协议
@@ -16,12 +16,10 @@ $ git clone https://user:token@server/project.git
 
 ```
 
-
-
 > 参考文章：[Git on the Server - The Protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)。
 ### Wireshark 抓包分析 git https 传输协议
 
-Wireshark 是一个抓包工具，该工具分析协议流很直观准确。
+[Wireshark](https://www.wireshark.org/) 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。
 
 #### 准备工作
 本文使用阿里云的代码托管平台 [Codeup](https://codeup.aliyun.com/) 来分析传输协议。当然，你也可以使用 [Github](https://github.com) 或者 [Gitee](https://gitee.com/) 。
@@ -81,7 +79,7 @@ GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack
 服务端认证用户信息，然后返回 info/refs 内容
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 001e# service=git-upload-pack
-000001163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD.multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
+000001163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD\0multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
 0040f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea refs/heads/develop
 004961ee902744d1f5a480e607856d44b104602d6b13 refs/heads/feature/p3c_scan
 004fae02248d14bfdc9d4d38b1532cab278d179bc863 refs/heads/feature/sensitive_scan
@@ -96,26 +94,27 @@ GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack
 ```
 
 服务端返回的信息具有一定的格式，每一行都以一个四位的十六进制值开始，用于指明本行的长度。第二行的 0000 和结尾 0000 告诉 git 已经完成了一个过程。
+
 这次交互里面，根据 0000 出现的位置，可以知道服务端返回的信息里面包含了2部分，第一部分是：
 
 ```
 001e# service=git-upload-pack
 0000
 ```
-表示这次回复的类型是 `git-upload-pack`。
+表示这次回复的数据类型是 `git-upload-pack`。
 
 第二部分的第一行内容信息比较多：
 ```
-01163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD.multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
+01163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD\0multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
 ```
 
-这段信息主要描述 HEAD 指针信息，以及仓库相关信息，比如 `symref=HEAD:refs/heads/master` 表示默认分支为 `master` ，`object-format=sha1` 表示对象使用 `sha1` 校验对象，`agent=git/2.28.0.agit.6.0` 服务器 git 版本信息。
+这段信息主要描述 HEAD 指针信息，以及功能列表信息，比如 `symref=HEAD:refs/heads/master` 表示默认分支为 `master` ，`object-format=sha1` 表示对象使用 `sha1` 校验对象，`agent=git/2.28.0.agit.6.0` 服务器 git 版本信息。
 
-第二部分第二行开始的信息则是 `info/refs` 文件内容。`info/refs` 文件描述了仓库里面的引用信息，包括 分支、 tag ，以及一些自定义引用等。
+第二部分第二行开始的信息则是 `info/refs` 文件内容。`info/refs` 文件描述了仓库里面的引用信息，包括分支、 tag ，以及一些自定义引用等。
 
 > 值得一提的是，服务器回复的 `info/refs` 文件内容里，除了 `refs/heads/*` 和 `refs/tags/*`，还存在 `refs/keep-around/*` 和 `refs/merge-requests/*` 等引用，这些是 Codeup 平台特有的引用。
 
-你可以使用`` `git --exec-path`/git-update-server-info`` 名称生成 `info/refs` 文件：
+你也可以使用`` `git --exec-path`/git-update-server-info`` 命令来生成 `info/refs` 文件：
 ```bash
 $ `git --exec-path`/git-update-server-info && cat .git/info/refs
 3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/heads/master
@@ -126,6 +125,8 @@ ae02248d14bfdc9d4d38b1532cab278d179bc863	refs/remotes/origin/feature/sensitive_s
 3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/remotes/origin/master
 3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/tags/v1.0
 ```
+
+实际上这一段的数据流及格式官方文档里面有详细的说明： [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)，也可以参考本文末的 [git 传输协议格式](#git-传输协议格式)。
 
 ##### 第二次交互
 第二次交互里，客户端把想要的数据告诉给服务端，服务端然后把 pack 包推送回来。
@@ -146,7 +147,7 @@ POST /5ed5e6f717b522454a36976e/Codeup-Demo.git/git-upload-pack
 服务器回复 pack 包
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 0008NAK
-0024.Enumerating objects: 48, done.
+0024\0x02Enumerating objects: 48, done.
 0023.Counting objects:   2% (1/48)
 0023.Counting objects:   4% (2/48)
 ...省略...
@@ -164,7 +165,52 @@ KY..OQ.q.)....}..C...>..Et,."..)........O.b :o..2G...uhK.s.. 3.+N.	</P..a..L.Y.1
 
 客户端发送的数据主要是想要的 `commit-id` 及其提交链的数据。具体点其实就是 branch 和 tag 对应的 `commit-id` 。
 
-服务器回复的是 HTTP 数据流格式，其中包括了进度、pack 二进制数据等，
+服务器回复的是 HTTP 数据流格式，其中包括了进度、pack 二进制数据等，其第一行的 `NAK` 代表数据开始，
+
+#### git 传输协议格式
+##### pkt-line 数据流
+pkt-line 数据流用来描述引用信息，每一行的前四个字节代表这一行的十六进制编码的长度，包括这四个字节和数据在内。因为包括自身四个字节，前四个直接一定大于0004，所以 pkt-line 格式定义了3个特殊的编码：
+* _**0000**_ ( `flush-pkt` )：代表一段消息的结束。
+* _**0001**_ ( `delim-pkt` )：代表一段消息的分节符。
+* _**0002**_ ( `response-end-pkt` )：无状态会话时响应结束。
+
+整体来讲，一个 pkt-line 数据流一般由如下几部分组成：
+```
+PKT-LINE("# service=$servicename" LF)
+"0000"
+ref_list
+"0000"
+```
+
+其中
+* _**`PKT-LINE`**_ 代表这一行是 pkt-line 格式的。
+* _**`servicename`**_ 是服务类型，git clone、git fetch 时是 `git-upload-pack`，git push 则是 `git-receive-pack`。
+* _**`ref_list`**_ 是引用信息列表，一定是按照引用名称排序的。
+
+_**`ref_list`**_ 第一个引用一定是 `HEAD` ， `HEAD` 后面一定有支持的功能说明（ capability declarations ）第一条引用信息格式为：
+
+```
+PKT-LINE(obj-id SP name NUL cap_list LF)
+```
+> `cap_list` 是支持的功能列表。
+后面的引用信息格式为：
+
+```
+PKT-LINE(obj-id SP name LF)
+
+# 或者
+PKT-LINE(obj-id SP name LF)
+PKT-LINE(obj-id SP name "^{}" LF)
+```
+> 其中 `name^{}` 是 [git revision](https://git-scm.com/docs/gitrevisions ) 中定义的格式，表示递归该引用找到非 tag 类型的 object 。
+> 另外，如果该仓库没有引用时，那 `ref_list` 的内容则是：`PKT-LINE(zero-id SP "capabilities^{}" NUL cap-list LF)` 。
+
+pkt-line 官方说明见：[http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)。
+
+##### sideband 格式
+前四个字节和 pkt-line 格式相同，代表这一行的数据长度。第五位用于标志消息类型，_`0x01`_ 代表是packfile 数据，_`0x02`_ 代表是进度消息，_`0x03`_ 代表是错误信息。
+
+
 如下绘制了git clone 的 https 协议交互图：
 
 #### git fetch
