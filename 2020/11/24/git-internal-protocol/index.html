@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png">
 <meta property="article:published_time" content="2020-11-24T02:28:13.000Z">
-<meta property="article:modified_time" content="2021-02-20T10:17:45.000Z">
+<meta property="article:modified_time" content="2021-02-20T10:19:46.000Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png">
@@ -323,7 +323,7 @@
 </blockquote>
 <h3 id="git-https-传输协议分析"><a href="#git-https-传输协议分析" class="headerlink" title="git https 传输协议分析"></a>git https 传输协议分析</h3><p><a target="_blank" rel="noopener" href="https://www.wireshark.org/">Wireshark</a> 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。</p>
 <blockquote>
-<p>不借助 Wireshark ，设置 <code>GIT_TRACE_CURL</code> 环境变量也能够查看到 Git 的传输协议过程，看下文的 <a href="#%E7%9B%B8%E5%85%B3%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">相关环境变量</a>。</p>
+<p>不借助 Wireshark ，设置 <code>GIT_TRACE_CURL</code> 环境变量也能够查看到 Git 的传输协议过程，看下文的 <a href="#%E7%9B%B8%E5%85%B3%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">相关环境变量</a> 。</p>
 </blockquote>
 <h4 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h4><p>本文使用阿里云的代码托管平台 <a target="_blank" rel="noopener" href="https://codeup.aliyun.com/">Codeup</a> 来分析传输协议。当然，你也可以使用 <a target="_blank" rel="noopener" href="https://github.com/">Github</a> 或者 <a target="_blank" rel="noopener" href="https://gitee.com/">Gitee</a> 。</p>
 <blockquote>
@@ -423,13 +423,13 @@
 <h4 id="相关环境变量"><a href="#相关环境变量" class="headerlink" title="相关环境变量"></a>相关环境变量</h4><p>Git 提供了几个非常有意思的环境变量用于查看和调试传输协议。</p>
 <h5 id="GIT-TRACE-PACKET"><a href="#GIT-TRACE-PACKET" class="headerlink" title="GIT_TRACE_PACKET"></a><code>GIT_TRACE_PACKET</code></h5><p><code>GIT_TRACE_PACKET=true</code>：显示协议交互数据，不过不会显示 PACK 包内容。输出的信息是经过格式化的，并不是原始数据，不过这个比较容易理解和阅读。</p>
 <div align="center">
-<img src="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png" width="600"/>
+<img src="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png" width="800"/>
 </div>
 
 <h5 id="GIT-TRACE-PACKFILE"><a href="#GIT-TRACE-PACKFILE" class="headerlink" title="GIT_TRACE_PACKFILE"></a><code>GIT_TRACE_PACKFILE</code></h5><p><code>GIT_TRACE_PACKFILE=&lt;file-path&gt;</code>：把协议交互中的 PACK 包保存到指定文件中，如果设置为 <code>GIT_TRACE_PACKFILE=true</code> ，那就显示在标准输出。</p>
 <h5 id="GIT-TRACE-CURL"><a href="#GIT-TRACE-CURL" class="headerlink" title="GIT_TRACE_CURL"></a><code>GIT_TRACE_CURL</code></h5><p>显示 curl 交互信息，包括 <code>TLS</code> + <code>HTTP</code> + <code>Git 协议</code>，该数据和使用 Wireshark 抓到的信息基本相同。</p>
 <div align="center">
-<img src="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png" width="600"/>
+<img src="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png" width="800"/>
 </div>
 
 <h4 id="相关子命令"><a href="#相关子命令" class="headerlink" title="相关子命令"></a>相关子命令</h4><h5 id="git-update-server-info"><a href="#git-update-server-info" class="headerlink" title="git-update-server-info"></a>git-update-server-info</h5><p>该命令可以生成 <code>info/refs</code> 引用信息。</p>
