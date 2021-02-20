@@ -13,7 +13,6 @@ $ git clone user@server:project.git
 $ git clone https://server/project.git
 # 或者带上用户名密码
 $ git clone https://user:token@server/project.git
-
 ```
 
 > 参考文章：[Git on the Server - The Protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)。
@@ -23,7 +22,7 @@ $ git clone https://user:token@server/project.git
 
 #### 准备工作
 本文使用阿里云的代码托管平台 [Codeup](https://codeup.aliyun.com/) 来分析传输协议。当然，你也可以使用 [Github](https://github.com) 或者 [Gitee](https://gitee.com/) 。
-> github 使用的是 [http/2 协议](https://developers.google.com/web/fundamentals/performance/http2?hl=zh-cn)。 http/2 协议因为数据帧是二进制格式，对于分析 https 交互并不直观，所以本文使用了Codeup作为示例，Codeup 使用的是 http/1.1 协议。
+> github 使用的是 [http/2 协议](https://developers.google.com/web/fundamentals/performance/http2?hl=zh-cn)。 http/2 协议因为数据帧是二进制格式，对于分析 https 交互并不直观，所以本文使用了 Codeup 作为示例，Codeup 使用的是 http/1.1 协议。
 
 ##### 1. 查看服务器 ip 地址
 ```c
@@ -33,7 +32,7 @@ codeup.aliyun.com has address 118.31.165.50
 服务器 ip 地址为 `118.31.165.50` 。
 
 ##### 2. 设置 `SSLKEYLOGFILE` 环境变量
-通过设置 `SSLKEYLOGFILE`环境变量，可以保存 TLS 的会话钥匙（Session Key），wireshark 再读取 Session Key 然后实时解析https数据流，具体可以参考这篇文章：[Walkthrough: Decrypt SSL/TLS traffic (HTTPS and HTTP/2) in Wireshark](https://joji.me/en-us/blog/walkthrough-decrypt-ssl-tls-traffic-https-and-http2-in-wireshark/#:~:text=The%20second%20method%20to%20decrypt%20SSL%2FTLS%20packets%20is,generate%20TLS%20session%20keys%20out%20to%20that%20file.)。
+通过设置 `SSLKEYLOGFILE`环境变量，可以保存 TLS 的会话钥匙（Session Key），wireshark 再读取 Session Key 然后实时解析 https 数据流，具体可以参考这篇文章：[Walkthrough: Decrypt SSL/TLS traffic (HTTPS and HTTP/2) in Wireshark](https://joji.me/en-us/blog/walkthrough-decrypt-ssl-tls-traffic-https-and-http2-in-wireshark/#:~:text=The%20second%20method%20to%20decrypt%20SSL%2FTLS%20packets%20is,generate%20TLS%20session%20keys%20out%20to%20that%20file.)。
 
 ```bash
 export SSLKEYLOGFILE=~/sslkeylog.log
@@ -42,7 +41,11 @@ export SSLKEYLOGFILE=~/sslkeylog.log
 ##### 3. 设置 Wireshark
 首先让 Wireshark 读取 `sslkeylog.log`，打开 Wireshark，点击 `菜单` >`Performances`，在对话框中选择 `Protocol` > `TLS`，设置 `(Pre)-Master-Secret log filename` 为你的 `SSLKEYLOGFILE` 文件路径：
 
-![](./res/wireshark-perferences.png)
+<div align="center">
+<img src="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png" height=400 />
+</div>
+
+<!-- ![](./res/wireshark-perferences.png) -->
 
 启动wireshark 监听网卡，设置过滤规则为`tls && http && ip.addr == 118.31.165.50`，其中 `118.31.165.50`就是获取到的服务器 ip 地址。
 
@@ -57,11 +60,11 @@ $ git clone https://codeup.aliyun.com/5ed5e6f717b522454a36976e/Codeup-Demo.git
 ```
 Wireshark 抓包得到如下数据包：
 
-![](./res/wireshark-clone.png)
+![](https://img.alicdn.com/imgextra/i4/O1CN019piDk81N0hvSwYyKK_!!6000000001508-2-tps-3654-446.png)
 
-点击 `菜单` > `Analyze` > `Follow` > `HTTP Stream` 可以更直观的查看交互流：
+点击 `菜单` > `Analyze` > `Follow` > `HTTP Stream` 可以更直观的查看数据交互流：
 
-![](./res/wireshark-clone-stream.png)
+![](https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png)
 
 接下来分析一下 `git clone` 的交互过程。
 
@@ -76,7 +79,7 @@ GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack
 >>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
-服务端认证用户信息，然后返回 info/refs 内容
+服务端认证用户信息，然后返回引用列表
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 001e# service=git-upload-pack
 000001163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD\0multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
