@@ -1,7 +1,7 @@
 ## Git 底层原理：传输协议分析
 
 ### 概要
-Git 客户端和服务端交互的协议支持 4 种：本地协议、HTTP 协议、SSH 协议、 Git 协议，在我们的日常开发过程中，接触最多的是 HTTP 协议和 SSH 协议。一般通过如下命令和服务器进行交互：
+Git 客户端和服务端交互的协议支持 4 种：本地协议、 http 协议、 ssh 协议、 git 协议，在我们的日常开发过程中，接触最多的是 http 协议和 ssh 协议。一般通过如下命令和服务器进行交互：
 
 ```bash
 # ssh 协议
@@ -15,7 +15,9 @@ $ git clone https://server/project.git
 $ git clone https://user:token@server/project.git
 ```
 
+
 > 参考文章：[Git on the Server - The Protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)。
+> Git 目前已经支持新的 protocol v2 协议。
 
 ### Wireshark 抓包分析 git https 传输协议
 
@@ -157,10 +159,10 @@ KY..OQ.q.)....}..C...>..Et,."..)........O.b :o..2G...uhK.s.. 3.+N.	</P..a..L.Y.1
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
 
-通过第一次交互里，**客户端**拿到了远程仓库的引用列表，然后在第二次交互里把想要的 `commit-id` （及其提交链）发送给服务端。
-客户端发起的是 POST 请求，URL 为 `$GIT_URL/git-upload-pack` ，POST 内容为想要的 `commit-id` 和已有的 `commit-id`，其实就是 branch 和 tag 对应的 `commit-id` 。数据格式跟上面的服务端回复的引用列表格式类似，具体见 [请求数据格式](#请求数据格式)。
+通过第一次交互里，**客户端** 拿到了远程仓库的引用列表，然后在第二次交互里把想要的 `commit-id` （及其提交链）发送给服务端。
+客户端发起的是 POST 请求，URL 为 `$GIT_URL/git-upload-pack` ，POST 内容为想要（ _`"want"`_ ）的 `commit-id` 和已有（ _`"have"`_ ）的 `commit-id`，其实就是 branch 和 tag 对应的 `commit-id` 。数据格式跟上面的服务端回复的引用列表格式类似，具体见 [请求数据格式](#请求数据格式)。
 
-**服务端** 会根据 "want" 和 "have" 的情况来决定回复最小可用的数据包给客户端，这也是智能（smart）协议的作用所在，相关的机制见 [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L420) 。
+**服务端** 会根据 _`"want"`_ 和 _`"have"`_ 的情况来决定回复最小可用的数据包给客户端，这也是智能（smart）协议的作用所在，相关的机制见 [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L420) 。
 服务端回复的是 HTTP 数据流格式，其中包括了进度、pack 二进制数据等。第一行的 `NAK` 代表数据开始，后面的数据则使用了 side-band 格式（类似于 pkg-line 格式），来描述传输进度、数据包等。 side-band 格式前四个字节也是用于表示长度，第五个字节用于标志消息类型，_`0x01`_ 代表是packfile 数据，_`0x02`_ 代表是进度消息，_`0x03`_ 代表是错误信息。
 
 #### git fetch
@@ -169,31 +171,9 @@ KY..OQ.q.)....}..C...>..Et,."..)........O.b :o..2G...uhK.s.. 3.+N.	</P..a..L.Y.1
 
 ![](https://img.alicdn.com/imgextra/i2/O1CN01RnN1z21QUQTWDXiAY_!!6000000001979-2-tps-3654-440.png)
 
+可以看到，交互过程和 `git clone` 是一样的，不同的是，客户端请求数据时，除了想要（ _`"want"`_ ）的 commit-id ，还带上了已有（ _`"have"`_ ）的 commit-id ，服务端回复数据时，也添加了 `ACK` 字段来告诉客户端我回复的是哪些数据。
 
 ```
-客户端请求引用信息
->>>>>>>>>>>>>>>>>>>>>>>>>>>
-GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack HTTP/1.1
->>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-服务端返回引用数据
-<<<<<<<<<<<<<<<<<<<<<<<<<<<
-001e# service=git-upload-pack
-00000116113cc207f5a226e066f1119b51e57e2b8fbd8e28 HEAD.multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
-0040f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea refs/heads/develop
-004961ee902744d1f5a480e607856d44b104602d6b13 refs/heads/feature/p3c_scan
-004fae02248d14bfdc9d4d38b1532cab278d179bc863 refs/heads/feature/sensitive_scan
-003f113cc207f5a226e066f1119b51e57e2b8fbd8e28 refs/heads/master
-00676508471ba8d143e1bfc41c391280a7ef533be57b refs/keep-around/6508471ba8d143e1bfc41c391280a7ef533be57b
-0067fe94112642bb8c57f6d08309f376135744fcb24e refs/keep-around/fe94112642bb8c57f6d08309f376135744fcb24e
-004d6508471ba8d143e1bfc41c391280a7ef533be57b refs/merge-requests/267112/head
-004dfe94112642bb8c57f6d08309f376135744fcb24e refs/merge-requests/267123/head
-003c3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 refs/tags/v1.0
-005a113cc207f5a226e066f1119b51e57e2b8fbd8e28 refs/tmp/6FB7257932D03A834B8318CF60D8DD/head
-0000
-<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-
 客户端请求数据
 >>>>>>>>>>>>>>>>>>>>>>>>>>>
 POST /5ed5e6f717b522454a36976e/Codeup-Demo.git/git-upload-pack HTTP/1.1
@@ -223,7 +203,60 @@ POST /5ed5e6f717b522454a36976e/Codeup-Demo.git/git-upload-pack HTTP/1.1
 0006..0000
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
-可以看到，交互过程和 `git clone` 是一样的，不同的是，客户端请求数据时，带上了已有（ "have" ）的 commit-id ，
+
+#### git push
+
+用 Wireshark 抓包看看 `git push` 过程：
+
+![](https://img.alicdn.com/imgextra/i4/O1CN01N6XA251GnzEOtt5PY_!!6000000000668-2-tps-3654-440.png)
+
+##### 第一次交互：引用发现
+
+```
+客户端发起引用发现请求
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-receive-pack HTTP/1.1
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+服务端返回引用信息列表
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+001f# service=git-receive-pack
+000000caf82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea refs/heads/develop.report-status report-status-v2 delete-refs side-band-64k quiet atomic ofs-delta push-options object-format=sha1 agent=git/2.28.0.agit.6.0
+004961ee902744d1f5a480e607856d44b104602d6b13 refs/heads/feature/p3c_scan
+004fae02248d14bfdc9d4d38b1532cab278d179bc863 refs/heads/feature/sensitive_scan
+003f113cc207f5a226e066f1119b51e57e2b8fbd8e28 refs/heads/master
+00676508471ba8d143e1bfc41c391280a7ef533be57b refs/keep-around/6508471ba8d143e1bfc41c391280a7ef533be57b
+0067fe94112642bb8c57f6d08309f376135744fcb24e refs/keep-around/fe94112642bb8c57f6d08309f376135744fcb24e
+004d6508471ba8d143e1bfc41c391280a7ef533be57b refs/merge-requests/267112/head
+004dfe94112642bb8c57f6d08309f376135744fcb24e refs/merge-requests/267123/head
+003c3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 refs/tags/v1.0
+005a113cc207f5a226e066f1119b51e57e2b8fbd8e28 refs/tmp/6FB7257932D03A834B8318CF60D8DD/head
+0000
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+```
+
+引用发现交互和 `git clone` 是类似的，不同的地方是服务类型为 `git-receive-pack`，请求的 URL 为 `$GIT_URL/info/refs?service=git-receive-pack`。
+
+##### 第二次交互：推送数据
+```
+客户端推送数据
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+POST /5ed5e6f717b522454a36976e/Codeup-Demo.git/git-receive-pack HTTP/1.1
+
+00a5113cc207f5a226e066f1119b51e57e2b8fbd8e28 b4a87307c6b56064d623851fe018b94d25e68e13 refs/heads/master. report-status side-band-64k agent=git/2.24.3.(Apple.Git-128)0000PACK.........
+x...K
+.0.@.9E...L&3).x.|&.E[..=.......o.f.LJm.P.....(1..M$...s.P.#.....j%..3...tD.JD.jTR/-.%......;..c.!.Q.......\...Q0$.B.O...Q.y..{t......pj<0....'.....R....2....J.x...........`...v....m.f..9..R.R.	.t..g....x.+I-..K.,...+.LI5...;*....1.:.I.;.9...p.v.Bg
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+服务端返回成功
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+0030.000eunpack ok
+0019ok refs/heads/master
+00000000
+<<<<<<<<<<<<<<<<<<<<<<<<<<<
+```
 
 #### git 传输协议格式
 ##### pkt-line 格式
@@ -233,7 +266,7 @@ pkt-line 数据流用来描述引用信息，每一行的前四个字节代表�
 * _**0002**_ ( `response-end-pkt` )：无状态会话时响应结束。
 
 ##### 引用数据格式
-_`引用数据`_ 由服务端发送给客户端。整体来讲，一个**引用数据格式**一般由如下几部分组成：
+_`引用数据`_ 由服务端发送给客户端。整体来讲，一个 **引用数据格式** 一般由如下几部分组成：
 ```
 PKT-LINE("# service=$servicename" LF)
 "0000"
@@ -269,22 +302,20 @@ PKT-LINE(obj-id SP name "^{}" LF)
 pkt-line 官方说明见：[http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)。
 
 ##### 请求数据格式
-_`请求数据`_ 由客户端发送给服务端，表示客户端需要（ "want" ）哪些 `commit-id` ，同时也会说明自己有（ "have" ）哪些 `commit-id`。**请求数据格式** 相对简单，请求数据一定会有个 "want" ，且第一条需要带上功能说明（ capability declarations ）：
+_`请求数据`_ 由客户端发送给服务端，表示客户端需要（ _`"want"`_ ）哪些 `commit-id` ，同时也会说明自己有（ _`"have"`_ ）哪些 `commit-id`。**请求数据格式** 相对简单，请求数据一定会有个 _`"want"`_ ，且第一条需要带上功能说明（ capability declarations ）：
 
 ```
 PKT-LINE("want" SP obj-id SP cap_list LF)
 PKT-LINE("want" SP obj-id LF)
 PKT-LINE("want" SP obj-id LF)
-...
+"0000"
 PKT-LINE("have" SP obj-id LF)
 PKT-LINE("have" SP obj-id LF)
-...
 "0000" / "done"
 ```
 
-##### sideband 格式
-前四个字节和 pkt-line 格式相同，代表这一行的数据长度。第五位用于标志消息类型，_`0x01`_ 代表是packfile 数据，_`0x02`_ 代表是进度消息，_`0x03`_ 代表是错误信息。
-
+##### side-band 格式
+side-band 格式用来传递 pack 包数据和进度的。前四个字节和 pkt-line 格式相同，代表这一行的数据长度。第五位用于标志消息类型，_`0x01`_ 代表是packfile 数据，_`0x02`_ 代表是进度消息，_`0x03`_ 代表是错误信息。
 
 如下绘制了git clone 的 https 协议交互图：
 
@@ -367,6 +398,9 @@ ae02248d14bfdc9d4d38b1532cab278d179bc863	refs/remotes/origin/feature/sensitive_s
 ```
 
 上面使用wireshark 抓取到的协议叫智能（smart）协议，实际上 Git 1.6.6 之前的版本（2010年前）一直使用哑(Dumb)协议。使用哑协议的版本库很难保证安全性和私有化，而且只能架设只读版本库，目前已经很少使用了，哑协议的交互过程可以参考《[Git Internals - Transfer Protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols)》。
+
+### 相关子命令
+
 ### 参考资料
 
 * https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols
