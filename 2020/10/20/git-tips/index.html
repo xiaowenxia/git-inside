@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Git 的特殊技巧 | Hexo</title>
+  <meta name="description" content="Git 的特殊技巧 可以 clone 本地仓库1$ git clone &#x2F;home&#x2F;git&#x2F;repositories&#x2F;801&#x2F;038&#x2F;000&#x2F;38801.git  修改本地提交者信息  本地有 Untracked Files 时，如何做一个 patch 包123456# -N 表示实际上并没有把文件添加到暂存区$ git add -N .# git diff 生成 patch 文件$ git di">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 的特殊技巧">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2020/10/20/git-tips/index.html">
+<meta property="og:site_name" content="夏晓文的博客">
+<meta property="og:description" content="Git 的特殊技巧 可以 clone 本地仓库1$ git clone &#x2F;home&#x2F;git&#x2F;repositories&#x2F;801&#x2F;038&#x2F;000&#x2F;38801.git  修改本地提交者信息  本地有 Untracked Files 时，如何做一个 patch 包123456# -N 表示实际上并没有把文件添加到暂存区$ git add -N .# git diff 生成 patch 文件$ git di">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.alicdn.com/tfs/TB1VW780hD1gK0jSZFsXXbldVXa-2484-1884.png">
+<meta property="og:image" content="https://img.alicdn.com/tfs/TB1A08J2AL0gK0jSZFtXXXQCXXa-3092-2098.png">
+<meta property="og:image" content="https://img.alicdn.com/tfs/TB1YCyVjrr1gK0jSZR0XXbP8XXa-967-534.gif">
+<meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01yMq5Ev1XRrZFPf1zc_!!6000000002921-2-tps-1850-410.png">
+<meta property="article:published_time" content="2020-10-20T01:57:37.000Z">
+<meta property="article:modified_time" content="2021-02-17T07:55:20.000Z">
+<meta property="article:author" content="夏晓文">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.alicdn.com/tfs/TB1VW780hD1gK0jSZFsXXbldVXa-2484-1884.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2020/10/20/git-tips/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/git-inside/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/xiaowenxia" target="_blank">
+          <img class="img-circle img-rotate" src="/git-inside/images/avatar.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">夏晓文</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HangZhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/git-inside/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/git-inside/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+
+    
+      
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/12/">十二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/10/">十月 2020</a><span class="archive-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-layout/" class="title">Git 目录结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T03:56:24.000Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.file-struct/" class="title">Git 底层原理：Git 底层文件存储格式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:12:56.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.objects/" class="title">Git 底层原理：Git 对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:05:03.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-protocol/" class="title">Git 传输协议分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-operations/" class="title">Git 常用命令底层原理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-git-tips" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git 的特殊技巧
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/git-inside/2020/10/20/git-tips/" class="article-date">
+	  <time datetime="2020-10-20T01:57:37.000Z" itemprop="datePublished">2020-10-20</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2020/10/20/git-tips/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Git-的特殊技巧"><a href="#Git-的特殊技巧" class="headerlink" title="Git 的特殊技巧"></a>Git 的特殊技巧</h2><p><a name="BVhPV"></a></p>
+<h3 id="可以-clone-本地仓库"><a href="#可以-clone-本地仓库" class="headerlink" title="可以 clone 本地仓库"></a>可以 clone 本地仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> /home/git/repositories/801/038/000/38801.git</span><br></pre></td></tr></table></figure>
+<p><a name="ZrIcR"></a></p>
+<h3 id="修改本地提交者信息"><a href="#修改本地提交者信息" class="headerlink" title="修改本地提交者信息"></a>修改本地提交者信息</h3><br />
+
+<h3 id="本地有-Untracked-Files-时，如何做一个-patch-包"><a href="#本地有-Untracked-Files-时，如何做一个-patch-包" class="headerlink" title="本地有 Untracked Files 时，如何做一个 patch 包"></a>本地有 Untracked Files 时，如何做一个 patch 包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -N 表示实际上并没有把文件添加到暂存区</span></span><br><span class="line">$ git add -N .</span><br><span class="line"><span class="comment"># git diff 生成 patch 文件</span></span><br><span class="line">$ git diff &gt; xxx.patch</span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line">$ git reset</span><br></pre></td></tr></table></figure>
+<p>如下显示：<br><img src="https://img.alicdn.com/tfs/TB1VW780hD1gK0jSZFsXXbldVXa-2484-1884.png"></p>
+<h3 id="git-clone-–bare"><a href="#git-clone-–bare" class="headerlink" title="git clone –bare"></a>git clone –bare</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> --bare git@github.com:xiaowenxia/git-inside.git</span><br><span class="line">Cloning into bare repository <span class="string">&#x27;git-inside.git&#x27;</span>...</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看目录</span></span><br><span class="line">$ tree git-inside.git </span><br><span class="line">git-inside.git</span><br><span class="line">|-- HEAD</span><br><span class="line">|-- branches</span><br><span class="line">|-- config</span><br><span class="line">|-- description</span><br><span class="line">|-- hooks</span><br><span class="line">|   |-- applypatch-msg.sample</span><br><span class="line">|   |-- ......</span><br><span class="line">|   |-- prepare-commit-msg.sample</span><br><span class="line">|   `-- update.sample</span><br><span class="line">|-- info</span><br><span class="line">|   `-- exclude</span><br><span class="line">|-- objects</span><br><span class="line">|   |-- info</span><br><span class="line">|   `-- pack</span><br><span class="line">|       |-- pack-0381ae2bc198d3ad1f6483eaf2ebf80fe6cd9b26.idx</span><br><span class="line">|       `-- pack-0381ae2bc198d3ad1f6483eaf2ebf80fe6cd9b26.pack</span><br><span class="line">|-- packed-refs</span><br><span class="line">`-- refs</span><br><span class="line">    |-- heads</span><br><span class="line">    `-- tags</span><br><span class="line"></span><br><span class="line">9 directories, 18 files</span><br></pre></td></tr></table></figure>
+<h3 id="查看-commit-id-属于哪个分支"><a href="#查看-commit-id-属于哪个分支" class="headerlink" title="查看 commit-id 属于哪个分支"></a>查看 commit-id 属于哪个分支</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -r --contains e784be434c9133cef107185925af22cd620a8e5e</span><br><span class="line">origin/feature/wiki</span><br><span class="line">origin/releases/20201015194918032_r_release_62648_t-force-stone-code</span><br></pre></td></tr></table></figure>
+<h3 id="查看某人的所有提交（所有分支）"><a href="#查看某人的所有提交（所有分支）" class="headerlink" title="查看某人的所有提交（所有分支）"></a>查看某人的所有提交（所有分支）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --all --author=<span class="string">&quot;775117471@qq.com&quot;</span></span><br><span class="line">commit 59cabcd911a3a7460d53c850ee2c69372397cec9 (HEAD -&gt; main, origin/main, origin/HEAD)</span><br><span class="line">Author: xiaowenxia &lt;775117471@qq.com&gt;</span><br><span class="line">Date:   Tue Nov 3 20:07:30 2020 +0800</span><br><span class="line"></span><br><span class="line">    add some git tips</span><br><span class="line"></span><br><span class="line">commit 834afb32e8e9825e80c7910dbd9379e1be77629a</span><br><span class="line">Author: xiaowenxia &lt;775117471@qq.com&gt;</span><br><span class="line">Date:   Mon Nov 2 15:09:43 2020 +0800</span><br><span class="line"></span><br><span class="line">    Add `git-refs`.</span><br></pre></td></tr></table></figure>
+<h3 id="如何在-vscode-中查看已经提交的代码-diff"><a href="#如何在-vscode-中查看已经提交的代码-diff" class="headerlink" title="如何在 vscode 中查看已经提交的代码 diff"></a>如何在 vscode 中查看已经提交的代码 diff</h3><p>因为 vscode 查看代码 diff 非常方便，比 git 默认的编辑器查看 diff 方便很多。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># reset 到前面 7 个提交</span></span><br><span class="line">$ git reset --soft HEAD~7</span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line">$ git pull</span><br></pre></td></tr></table></figure>
+<p>如下所示：<br><img src="https://img.alicdn.com/tfs/TB1A08J2AL0gK0jSZFtXXXQCXXa-3092-2098.png"></p>
+<h3 id="cherry-pick-多个提交"><a href="#cherry-pick-多个提交" class="headerlink" title="cherry-pick 多个提交"></a>cherry-pick 多个提交</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 中间使用三个点（...）代表 pick 多个提交，这些提交必须是连续的</span></span><br><span class="line">$ git cherry-pick 33fbcded...4f17fa9f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不连续的提交则需要单独指定 commit-id</span></span><br><span class="line">$ git cherry-pick 33fbcded 4f17fa9f 820b38b4</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定-git-仓库路径"><a href="#指定-git-仓库路径" class="headerlink" title="指定 git 仓库路径"></a>指定 git 仓库路径</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git -C ~/workspace/github/git-inside status</span><br></pre></td></tr></table></figure>
+<h3 id="指定-git-的工作目录"><a href="#指定-git-的工作目录" class="headerlink" title="指定 git 的工作目录"></a>指定 git 的工作目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git --git-dir=~/workspace/github/git-inside/.git status</span><br></pre></td></tr></table></figure>
+<h3 id="git-的一些数据统计命令"><a href="#git-的一些数据统计命令" class="headerlink" title="git 的一些数据统计命令"></a>git 的一些数据统计命令</h3><blockquote>
+<p>统计的是 git 的仓库：<a target="_blank" rel="noopener" href="https://github.com/git/git">https://github.com/git/git</a> 。</p>
+</blockquote>
+<h4 id="统计仓库里面提交次数"><a href="#统计仓库里面提交次数" class="headerlink" title="统计仓库里面提交次数"></a>统计仓库里面提交次数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计每个人的提交次数</span></span><br><span class="line">$ git <span class="built_in">log</span> | grep <span class="string">&quot;^Author: &quot;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | sort | uniq -c | sort -k1,1nr</span><br><span class="line">22110 Junio</span><br><span class="line">3685 Jeff</span><br><span class="line">1824 Nguyễn</span><br><span class="line">...... <span class="comment"># 省略</span></span><br><span class="line"> 680 Brandon</span><br><span class="line"> 524 Jakub</span><br><span class="line">...... <span class="comment"># 省略</span></span><br><span class="line">   1 Андрей</span><br><span class="line"></span><br><span class="line"><span class="comment"># 统计 Junio 的提交次数</span></span><br><span class="line">$ git <span class="built_in">log</span> | grep <span class="string">&quot;^Author: .*&lt;gitster@pobox.com&gt;&quot;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | sort | uniq -c | sort -k1,1nr</span><br><span class="line">22110 Junio</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">$ git <span class="built_in">log</span> --author=gitster@pobox.com --oneline |  wc -l</span><br><span class="line">   22110</span><br></pre></td></tr></table></figure>
+<h4 id="按月统计指定用户的提交次数"><a href="#按月统计指定用户的提交次数" class="headerlink" title="按月统计指定用户的提交次数"></a>按月统计指定用户的提交次数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --author=gitster@pobox.com --since=<span class="string">&quot;2020-07-01&quot;</span> --no-merges | grep -e <span class="string">&#x27;commit [a-zA-Z0-9]*&#x27;</span> | wc -l</span><br><span class="line">      79</span><br></pre></td></tr></table></figure>
+<h4 id="统计仓库所有提交次数"><a href="#统计仓库所有提交次数" class="headerlink" title="统计仓库所有提交次数"></a>统计仓库所有提交次数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 统计指定分支的提交次数</span></span><br><span class="line">$ git <span class="built_in">log</span> --oneline | wc -l</span><br><span class="line">   61128</span><br><span class="line"></span><br><span class="line"><span class="comment"># 统计所有分支的提交次数</span></span><br><span class="line">$ git <span class="built_in">log</span> --oneline --all | wc -l</span><br><span class="line">   63541</span><br></pre></td></tr></table></figure>
+<h4 id="统计指定用户的代码量"><a href="#统计指定用户的代码量" class="headerlink" title="统计指定用户的代码量"></a>统计指定用户的代码量</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前分支</span></span><br><span class="line">$ git <span class="built_in">log</span> --author=<span class="string">&quot;gitster@pobox.com&quot;</span> --pretty=tformat: --numstat | awk <span class="string">&#x27;&#123; add += $1; subs += $2; loc += $1 - $2 &#125; END &#123; printf &quot;added lines: %s, removed lines: %s, total lines: %s\n&quot;, add, subs, loc &#125;&#x27;</span> -</span><br><span class="line">added lines: 232482, removed lines: 101841, total lines: 130641</span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有分支</span></span><br><span class="line">$ git <span class="built_in">log</span> --author=<span class="string">&quot;gitster@pobox.com&quot;</span> --pretty=tformat: --numstat --all | awk <span class="string">&#x27;&#123; add += $1; subs += $2; loc += $1 - $2 &#125; END &#123; printf &quot;added lines: %s, removed lines: %s, total lines: %s\n&quot;, add, subs, loc &#125;&#x27;</span> -</span><br><span class="line">added lines: 549564, removed lines: 376991, total lines: 172573</span><br></pre></td></tr></table></figure>
+<h3 id="如何快速克隆-github-上的源码"><a href="#如何快速克隆-github-上的源码" class="headerlink" title="如何快速克隆 github 上的源码"></a>如何快速克隆 github 上的源码</h3><p>github 在国内的 clone 速度是非常慢的，速率一般在100k以下，如果要 clone 相对比较大的项目那会非常痛苦，而且git clone 没有断点续传功能，网络中断的话则需要重新clone。<br>此时可以利用 <a target="_blank" rel="noopener" href="https://gitee.com/">gitee</a>。<a target="_blank" rel="noopener" href="https://gitee.com/">gitee</a> 在国内的访问速度非常快，达到 <code>4~5M</code> 的 clone 速率，而且针对 github 上部分大型且比较有名的项目，gitee都会做一个仓库镜像，该镜像会每日同步，具体可以访问 <a target="_blank" rel="noopener" href="https://gitee.com/mirrors">Gitee 极速下载</a>。<br>所以要快速克隆 github 上的源码，可以进行如下操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先 git clone gitee 的国内 git 镜像仓库。</span></span><br><span class="line">$ git <span class="built_in">clone</span> git@gitee.com:mirrors/AliOS-Things.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再添加一个新的 remote 仓库为 github 的仓库。</span></span><br><span class="line">$ <span class="built_in">cd</span> AliOS-Things</span><br><span class="line">$ git remote add github git@github.com:alibaba/AliOS-Things.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后 git fetch --all 就可以把 github 的仓库快速 clone 下来。</span></span><br><span class="line">$ git fetch –all</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建 github 的本地分支，也可以删除掉 gitee 远程仓库。</span></span><br><span class="line">$ git checkout –b github_rel_3.0.0 –track github/rel_3.0.0</span><br></pre></td></tr></table></figure>
+<p>操作示例如下：<br><img src="https://img.alicdn.com/tfs/TB1YCyVjrr1gK0jSZR0XXbP8XXa-967-534.gif"></p>
+<h3 id="为什么-git-仓库提交历史很难篡改？"><a href="#为什么-git-仓库提交历史很难篡改？" class="headerlink" title="为什么 git 仓库提交历史很难篡改？"></a>为什么 git 仓库提交历史很难篡改？</h3><p>git 的底层 chain 对象和区块链有异曲同工之处，都是基于 merkle tree 的链式。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.tangshuang.net/4117.html">区块链如何运用merkle tree验证交易真实性</a></p>
+</blockquote>
+<h3 id="vscode-里面的git-管理具体是怎么实现的？"><a href="#vscode-里面的git-管理具体是怎么实现的？" class="headerlink" title="vscode 里面的git 管理具体是怎么实现的？"></a>vscode 里面的git 管理具体是怎么实现的？</h3><h3 id="git-为什么要使用sha256？"><a href="#git-为什么要使用sha256？" class="headerlink" title="git 为什么要使用sha256？"></a>git 为什么要使用sha256？</h3><ul>
+<li>git hash object的作用</li>
+<li>sha1的优势劣势</li>
+</ul>
+<h3 id="git-gc-具体做了哪些事情？"><a href="#git-gc-具体做了哪些事情？" class="headerlink" title="git gc 具体做了哪些事情？"></a>git gc 具体做了哪些事情？</h3><h5 id="Git-顶层设计很优雅，Git-有140个-“小而美”-的子命令。"><a href="#Git-顶层设计很优雅，Git-有140个-“小而美”-的子命令。" class="headerlink" title="Git 顶层设计很优雅，Git 有140个 “小而美” 的子命令。"></a>Git 顶层设计很优雅，Git 有140个 “小而美” 的子命令。</h5><h5 id="写一个工具，把git-对象绘制成图。"><a href="#写一个工具，把git-对象绘制成图。" class="headerlink" title="写一个工具，把git 对象绘制成图。"></a>写一个工具，把git 对象绘制成图。</h5><h5 id="如何铺满整个github-的-contributions-计数面板"><a href="#如何铺满整个github-的-contributions-计数面板" class="headerlink" title="如何铺满整个github 的 contributions  计数面板"></a>如何铺满整个github 的 contributions  计数面板</h5><h3 id="定义你的-github-贡献日历图"><a href="#定义你的-github-贡献日历图" class="headerlink" title="定义你的 github 贡献日历图"></a>定义你的 github 贡献日历图</h3><p><img src="https://img.alicdn.com/imgextra/i2/O1CN01yMq5Ev1XRrZFPf1zc_!!6000000002921-2-tps-1850-410.png"></p>
+<p>代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">timestampFile=timestamp.log</span><br><span class="line">touch <span class="variable">$timestampFile</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ((k=0; k&lt;365; k++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment"># 生成过去一年的随机时间</span></span><br><span class="line">    timestamp=`date -d <span class="string">&quot;-$[RANDOM%365] day -$[RANDOM%24] hour -$[RANDOM%60] minute -$[RANDOM%60] second &quot;</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>`</span><br><span class="line">    <span class="comment"># 随机提交 1~5 次</span></span><br><span class="line">    <span class="keyword">for</span> ((i=0; i&lt;=$[RANDOM%5]; i++))</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$timestamp</span> &gt;&gt; <span class="variable">$timestampFile</span></span><br><span class="line">        git add <span class="variable">$timestampFile</span></span><br><span class="line">        git commit --date=<span class="string">&quot;&#123;<span class="variable">$i</span>&#125;<span class="variable">$&#123;timestamp&#125;</span>&quot;</span> -m <span class="string">&quot;&#123;<span class="variable">$i</span>&#125;<span class="variable">$&#123;timestamp&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://xiaowenxia.github.io/git-inside/2020/10/20/git-tips/" title="Git 的特殊技巧" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2020/10/20/git-tips/</a>
+    </li>
+    
+    <!-- <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li> -->
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/xiaowenxia" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/git-inside/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/xiaowenxia" target="_blank"><span class="text-dark">夏晓文</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Git 开发</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/git-inside/2020/10/20/git-revisions/" title="Git Revisions"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/git-inside/2020/10/20/git-workflow/" title="Git 工作流"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/git-inside/js/plugin.min.js"></script>
+
+
+<script src="/git-inside/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/git-inside/',
+        CONTENT_URL: '/git-inside/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/git-inside/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

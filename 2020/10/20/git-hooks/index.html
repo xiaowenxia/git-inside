@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Git Hooks | Hexo</title>
+  <meta name="description" content="Git Hooks 官方Git 钩子说明：https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;githooks 。     Git 能在特定的重要动作发生时触发自定义脚本，该脚本可以是Shell、Ruby、Python等，这些脚本就是 Git Hooks（git 钩子）。钩子都被存储在 Git 工作目录下的 hooks 子目录中： 12345678910111213141516$ tree .git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git Hooks">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2020/10/20/git-hooks/index.html">
+<meta property="og:site_name" content="夏晓文的博客">
+<meta property="og:description" content="Git Hooks 官方Git 钩子说明：https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;githooks 。     Git 能在特定的重要动作发生时触发自定义脚本，该脚本可以是Shell、Ruby、Python等，这些脚本就是 Git Hooks（git 钩子）。钩子都被存储在 Git 工作目录下的 hooks 子目录中： 12345678910111213141516$ tree .git">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.alicdn.com/tfs/TB1587tZBr0gK0jSZFnXXbRRXXa-1020-767.png">
+<meta property="article:published_time" content="2020-10-20T01:57:37.000Z">
+<meta property="article:modified_time" content="2021-02-16T08:42:24.000Z">
+<meta property="article:author" content="夏晓文">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.alicdn.com/tfs/TB1587tZBr0gK0jSZFnXXbRRXXa-1020-767.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2020/10/20/git-hooks/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/git-inside/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/xiaowenxia" target="_blank">
+          <img class="img-circle img-rotate" src="/git-inside/images/avatar.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">夏晓文</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HangZhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/git-inside/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/git-inside/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+
+    
+      
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/12/">十二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/10/">十月 2020</a><span class="archive-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-layout/" class="title">Git 目录结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T03:56:24.000Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.file-struct/" class="title">Git 底层原理：Git 底层文件存储格式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:12:56.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.objects/" class="title">Git 底层原理：Git 对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:05:03.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-protocol/" class="title">Git 传输协议分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-operations/" class="title">Git 常用命令底层原理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-git-hooks" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git Hooks
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/git-inside/2020/10/20/git-hooks/" class="article-date">
+	  <time datetime="2020-10-20T01:57:37.000Z" itemprop="datePublished">2020-10-20</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2020/10/20/git-hooks/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Git-Hooks"><a href="#Git-Hooks" class="headerlink" title="Git Hooks"></a>Git Hooks</h2><blockquote>
+<p>官方Git 钩子说明：<a target="_blank" rel="noopener" href="https://git-scm.com/docs/githooks">https://git-scm.com/docs/githooks</a> 。</p>
+</blockquote>
+<br />
+
+
+<p>Git 能在特定的重要动作发生时触发自定义脚本，该脚本可以是Shell、Ruby、Python等，这些脚本就是 Git Hooks（git 钩子）。钩子都被存储在 Git 工作目录下的 <code>hooks</code> 子目录中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ tree .git/hooks</span><br><span class="line">.git/hooks</span><br><span class="line">├── applypatch-msg.sample</span><br><span class="line">├── commit-msg.sample</span><br><span class="line">├── fsmonitor-watchman.sample</span><br><span class="line">├── post-update.sample</span><br><span class="line">├── pre-applypatch.sample</span><br><span class="line">├── pre-commit.sample</span><br><span class="line">├── pre-merge-commit.sample</span><br><span class="line">├── pre-push.sample</span><br><span class="line">├── pre-rebase.sample</span><br><span class="line">├── pre-receive.sample</span><br><span class="line">├── prepare-commit-msg.sample</span><br><span class="line">└── update.sample</span><br><span class="line"></span><br><span class="line">0 directories, 12 files</span><br></pre></td></tr></table></figure>
+<p>git hooks 的生命周期图解：<br />       <img src="https://img.alicdn.com/tfs/TB1587tZBr0gK0jSZFnXXbRRXXa-1020-767.png" alt="image.png"></p>
+<blockquote>
+<p>该图片来自：<a target="_blank" rel="noopener" href="https://delicious-insights.com/fr/articles/git-hooks/">https://delicious-insights.com/fr/articles/git-hooks/</a> 。</p>
+</blockquote>
+<p><a name="7q280"></a></p>
+<h4 id="提交工作流的钩子"><a href="#提交工作流的钩子" class="headerlink" title="提交工作流的钩子"></a>提交工作流的钩子</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>hook</strong></th>
+<th><strong>触发点</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>pre-commit</code></td>
+<td>提交信息<strong>前</strong>运行</td>
+<td>它用于检查即将提交的快照，如果该钩子以非零值退出，Git 将放弃此次提交，不过你可以用 <code>git commit --no-verify</code> 来绕过这个环节。</td>
+</tr>
+<tr>
+<td align="center"><code>prepare-commit-msg</code></td>
+<td>在启动提交信息编辑器之前，默认信息被创建之后运行</td>
+<td>它允许你编辑提交者所看到的默认信息。 该钩子接收一些选项：存有当前提交信息的文件的路径、提交类型和修补提交的提交的 SHA-1 校验。 它对一般的提交来说并没有什么用；然而对那些会自动产生默认信息的提交，如提交信息模板、合并提交、压缩提交和修订提交等非常实用。 你可以结合提交模板来使用它，动态地插入信息。</td>
+</tr>
+<tr>
+<td align="center"><code>commit-msg</code></td>
+<td>提交信息时运行</td>
+<td>钩子接收一个参数，此参数即上文提到的，存有当前提交信息的临时文件的路径。 如果该钩子脚本以非零值退出，Git 将放弃提交，因此，可以用来在提交通过前验证项目状态或提交信息。 在本章的最后一节，我们将展示如何使用该钩子来核对提交信息是否遵循指定的模板。</td>
+</tr>
+<tr>
+<td align="center"><code>post-commit</code></td>
+<td>整个提交过程完成后运行</td>
+<td>它不接收任何参数，但你可以很容易地通过运行 <code>git log -1 HEAD</code> 来获得最后一次的提交信息。 该钩子一般用于通知之类的事情。</td>
+</tr>
+</tbody></table>
+<p><a name="ebpZR"></a></p>
+<h4 id="电子邮件工作流钩子"><a href="#电子邮件工作流钩子" class="headerlink" title="电子邮件工作流钩子"></a>电子邮件工作流钩子</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>hook</strong></th>
+<th><strong>触发点</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>applypatch-msg</code></td>
+<td>应用补丁前运行</td>
+<td>它接收单个参数：包含请求合并信息的临时文件的名字。 如果脚本返回非零值，Git 将放弃该补丁。 你可以用该脚本来确保提交信息符合格式，或直接用脚本修正格式错误。</td>
+</tr>
+<tr>
+<td align="center"><code>pre-applypatch</code></td>
+<td>应用补丁后、产生提交之前运</td>
+<td>你可以用这个脚本运行测试或检查工作区。 如果有什么遗漏，或测试未能通过，脚本会以非零值退出，中断 <code>git am</code> 的运行，这样补丁就不会被提交。</td>
+</tr>
+<tr>
+<td align="center"><code>post-applypatch</code></td>
+<td>提交产生后运行</td>
+<td><code>git am</code> 运行期间最后被调用的钩子。 你可以用它把结果通知给一个小组或所拉取的补丁的作者。 但你没办法用它停止打补丁的过程。</td>
+</tr>
+</tbody></table>
+<p><a name="Oeeq0"></a></p>
+<h4 id="其他客户端钩子"><a href="#其他客户端钩子" class="headerlink" title="其他客户端钩子"></a>其他客户端钩子</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>hook</strong></th>
+<th><strong>触发点</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>pre-rebase</code></td>
+<td>rebase 前</td>
+<td>以非零值退出可以中止变基的过程。 你可以使用这个钩子来禁止对已经推送的提交变基。</td>
+</tr>
+<tr>
+<td align="center"><code>post-rewrite</code></td>
+<td>运行会替换提交记录的命令时调用</td>
+<td>比如：<code>git commit --amend</code> 和 <code>git rebase</code>。它唯一的参数是触发重写的命令名，同时从标准输入中接受一系列重写的提交记录。 这个钩子的用途很大程度上跟 <code>post-checkout</code> 和 <code>post-merge</code> 差不多。</td>
+</tr>
+<tr>
+<td align="center"><code>post-checkout</code></td>
+<td>在 <code>git checkout</code> 成功运行后</td>
+<td>你可以根据你的项目环境用它调整你的工作目录。 其中包括放入大的二进制文件、自动生成文档或进行其他类似这样的操作。</td>
+</tr>
+<tr>
+<td align="center"><code>post-merge</code></td>
+<td>在 <code>git merge</code> 成功运行后</td>
+<td>你可以用它恢复 Git 无法跟踪的工作区数据，比如权限数据。 这个钩子也可以用来验证某些在 Git 控制之外的文件是否存在，这样你就能在工作区改变时，把这些文件复制进来。</td>
+</tr>
+<tr>
+<td align="center"><code>pre-push</code></td>
+<td>在 <code>git push</code> 运行期间， 更新了远程引用但尚未传送对象时被调用</td>
+<td>它接受远程分支的名字和位置作为参数，同时从标准输入中读取一系列待更新的引用。 你可以在推送开始之前，用它验证对引用的更新操作（一个非零的退出码将终止推送过程）。</td>
+</tr>
+<tr>
+<td align="center"><code>pre-auto-gc</code></td>
+<td>在垃圾回收（<code>git gc --auto</code>）开始之前被调用</td>
+<td>可以用它来提醒你现在要回收垃圾了，或者依情形判断是否要中断回收。</td>
+</tr>
+</tbody></table>
+<p><a name="Kt210"></a></p>
+<h4 id="服务端钩子"><a href="#服务端钩子" class="headerlink" title="服务端钩子"></a>服务端钩子</h4><table>
+<thead>
+<tr>
+<th align="center"><strong>hook</strong></th>
+<th><strong>触发点</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>pre-receive</code></td>
+<td>来自客户端的推送操作时</td>
+<td>它从标准输入获取一系列被推送的引用。如果它以非零值退出，所有的推送内容都不会被接受。 你可以用这个钩子阻止对引用进行非快进（<code>non-fast-forward</code>）的更新，或者对该推送所修改的所有引用和文件进行访问控制。</td>
+</tr>
+<tr>
+<td align="center"><code>update</code></td>
+<td>update 脚本和 pre-receive 脚本十分类似，不同之处在于它会为每一个准备更新的分支各运行一次。</td>
+<td>假如推送者同时向多个分支推送内容，<code>pre-receive</code> 只运行一次，相比之下 <code>update</code> 则会为每一个被推送的分支各运行一次。 它不会从标准输入读取内容，而是接受三个参数：引用的名字（分支），推送前的引用指向的内容的 <code>SHA-1</code> 值，以及用户准备推送的内容的 <code>SHA-1</code> 值。 如果 <code>update</code> 脚本以非零值退出，只有相应的那一个引用会被拒绝；其余的依然会被更新。</td>
+</tr>
+<tr>
+<td align="center"><code>post-receive</code></td>
+<td>整个接收过程完结以后运行</td>
+<td>可以用来更新其他系统服务或者通知用户。 它接受与 <code>pre-receive</code> 相同的标准输入数据。 它的用途包括给某个邮件列表发信，通知持续集成（<code>continous integration</code>）的服务器， 或者更新问题追踪系统（<code>ticket-tracking system</code>） —— 甚至可以通过分析提交信息来决定某个问题（<code>ticket</code>）是否应该被开启，修改或者关闭。 该脚本无法终止推送进程，不过客户端在它结束运行之前将保持连接状态， 所以如果你想做其他操作需谨慎使用它，因为它将耗费你很长的一段时间。</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://xiaowenxia.github.io/git-inside/2020/10/20/git-hooks/" title="Git Hooks" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2020/10/20/git-hooks/</a>
+    </li>
+    
+    <!-- <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li> -->
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/xiaowenxia" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/git-inside/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/xiaowenxia" target="_blank"><span class="text-dark">夏晓文</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Git 开发</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/git-inside/2020/10/20/git-cheatsheet/" title="Git Cheatsheet"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/git-inside/2020/10/20/git-revisions/" title="Git Revisions"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/git-inside/js/plugin.min.js"></script>
+
+
+<script src="/git-inside/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/git-inside/',
+        CONTENT_URL: '/git-inside/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/git-inside/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

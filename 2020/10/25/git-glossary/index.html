@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Git 术语 | Hexo</title>
+  <meta name="description" content="Git 术语 翻译自 Git Glossary。  alternate object databaseVia the alternates mechanism, a repository can inherit part of its object database from another object database, which is called an “alternate”. bare">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 术语">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2020/10/25/git-glossary/index.html">
+<meta property="og:site_name" content="夏晓文的博客">
+<meta property="og:description" content="Git 术语 翻译自 Git Glossary。  alternate object databaseVia the alternates mechanism, a repository can inherit part of its object database from another object database, which is called an “alternate”. bare">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-25T14:50:02.000Z">
+<meta property="article:modified_time" content="2021-02-16T08:42:24.000Z">
+<meta property="article:author" content="夏晓文">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2020/10/25/git-glossary/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/git-inside/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/xiaowenxia" target="_blank">
+          <img class="img-circle img-rotate" src="/git-inside/images/avatar.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">夏晓文</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HangZhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/git-inside/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/git-inside/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+
+    
+      
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/12/">十二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/10/">十月 2020</a><span class="archive-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-layout/" class="title">Git 目录结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T03:56:24.000Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.file-struct/" class="title">Git 底层原理：Git 底层文件存储格式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:12:56.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.objects/" class="title">Git 底层原理：Git 对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:05:03.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-protocol/" class="title">Git 传输协议分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-operations/" class="title">Git 常用命令底层原理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-git-glossary" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git 术语
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/git-inside/2020/10/25/git-glossary/" class="article-date">
+	  <time datetime="2020-10-25T14:50:02.000Z" itemprop="datePublished">2020-10-25</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2020/10/25/git-glossary/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Git-术语"><a href="#Git-术语" class="headerlink" title="Git 术语"></a>Git 术语</h2><blockquote>
+<p>翻译自 <a target="_blank" rel="noopener" href="https://git-scm.com/docs/gitglossary">Git Glossary</a>。</p>
+</blockquote>
+<h4 id="alternate-object-database"><a href="#alternate-object-database" class="headerlink" title="alternate object database"></a>alternate object database</h4><p>Via the alternates mechanism, a repository can inherit part of its object database from another object database, which is called an “alternate”.</p>
+<h4 id="bare-repository"><a href="#bare-repository" class="headerlink" title="bare repository"></a>bare repository</h4><p>空仓库，刚初始化完的仓库。</p>
+<h4 id="blob-object"><a href="#blob-object" class="headerlink" title="blob object"></a>blob object</h4><p>数据对象，存储当前版本下的文件内容。</p>
+<h4 id="branch"><a href="#branch" class="headerlink" title="branch"></a>branch</h4><p>分支，代表当前时间线的开发代码。</p>
+<h4 id="cache"><a href="#cache" class="headerlink" title="cache"></a>cache</h4><p>git 初期的叫法，现在叫索引（index）。</p>
+<h4 id="chain"><a href="#chain" class="headerlink" title="chain"></a>chain</h4><p>commit 链，这些链则组成一个个分支。</p>
+<h4 id="changeset"><a href="#changeset" class="headerlink" title="changeset"></a>changeset</h4><p>BitKeeper/cvsps 对 提交（commit）的叫法。</p>
+<h4 id="checkout"><a href="#checkout" class="headerlink" title="checkout"></a>checkout</h4><p>从 git 文件系统中检出对应的版本或文件到工作目录，如果检出的是分支则会更新索引（index）和 HEAD。</p>
+<h4 id="cherry-picking"><a href="#cherry-picking" class="headerlink" title="cherry-picking"></a>cherry-picking</h4><p>提取某些 commit 到当前分支。</p>
+<h4 id="clean"><a href="#clean" class="headerlink" title="clean"></a>clean</h4><p>清理当前工作区。</p>
+<h4 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h4><p>提交。</p>
+<h4 id="commit-object"><a href="#commit-object" class="headerlink" title="commit object"></a>commit object</h4><p>一次提交会生成一份 commit 对象，该对象包括committer、 author、date、 tree-id 等信息。</p>
+<h4 id="commit-ish-also-committish"><a href="#commit-ish-also-committish" class="headerlink" title="commit-ish (also committish)"></a>commit-ish (also committish)</h4><p>A commit object or an object that can be recursively dereferenced to a commit object. The following are all commit-ishes: a commit object, a tag object that points to a commit object, a tag object that points to a tag object that points to a commit object, etc.</p>
+<h4 id="core-Git"><a href="#core-Git" class="headerlink" title="core Git"></a>core Git</h4><p>git 底层的数据结构和对象，以及很丰富的底层命令。</p>
+<h4 id="DAG"><a href="#DAG" class="headerlink" title="DAG"></a>DAG</h4><p>Directed acyclic graph. The commit objects form a directed acyclic graph, because they have parents (directed), and the graph of commit objects is acyclic (there is no chain which begins and ends with the same object).</p>
+<h4 id="dangling-object"><a href="#dangling-object" class="headerlink" title="dangling object"></a>dangling object</h4><p>An unreachable object which is not reachable even from other unreachable objects; a dangling object has no references to it from any reference or object in the repository.</p>
+<h4 id="detached-HEAD"><a href="#detached-HEAD" class="headerlink" title="detached HEAD"></a>detached HEAD</h4><p>Normally the HEAD stores the name of a branch, and commands that operate on the history HEAD represents operate on the history leading to the tip of the branch the HEAD points at. However, Git also allows you to check out an arbitrary commit that isn’t necessarily the tip of any particular branch. The HEAD in such a state is called “detached”.</p>
+<p>Note that commands that operate on the history of the current branch (e.g. git commit to build a new history on top of it) still work while the HEAD is detached. They update the HEAD to point at the tip of the updated history without affecting any branch. Commands that update or inquire information about the current branch (e.g. git branch –set-upstream-to that sets what remote-tracking branch the current branch integrates with) obviously do not work, as there is no (real) current branch to ask about in this state.</p>
+<h4 id="directory"><a href="#directory" class="headerlink" title="directory"></a>directory</h4><p>目录。</p>
+<h4 id="dirty"><a href="#dirty" class="headerlink" title="dirty"></a>dirty</h4><p>工作区有改动没有提交，该工作区则为 <code>dirty</code> 状态。</p>
+<h4 id="evil-merge"><a href="#evil-merge" class="headerlink" title="evil merge"></a>evil merge</h4><p>An evil merge is a merge that introduces changes that do not appear in any parent.</p>
+<h4 id="fast-forward"><a href="#fast-forward" class="headerlink" title="fast-forward"></a>fast-forward</h4><p>A fast-forward is a special type of merge where you have a revision and you are “merging” another branch’s changes that happen to be a descendant of what you have. In such a case, you do not make a new merge commit but instead just update to his revision. This will happen frequently on a remote-tracking branch of a remote repository.</p>
+<h4 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h4><p>从远程仓库拉取最新分支。</p>
+<h4 id="file-system"><a href="#file-system" class="headerlink" title="file system"></a>file system</h4><p>Linus Torvalds 一开始设计 Git 的时候，定位就是一个用户空间的文件系统，然后提供高效的命令和方法用于操作这个文件系统。</p>
+<h4 id="Git-archive"><a href="#Git-archive" class="headerlink" title="Git archive"></a>Git archive</h4><p>对于一些人来讲，这是 repository 的同义词。</p>
+<h4 id="gitfile"><a href="#gitfile" class="headerlink" title="gitfile"></a>gitfile</h4><p>.git 是一个工作区根目录的空文件，指向真正仓库的目录。</p>
+<h4 id="grafts"><a href="#grafts" class="headerlink" title="grafts"></a>grafts</h4><p>Grafts enables two otherwise different lines of development to be joined together by recording fake ancestry information for commits. This way you can make Git pretend the set of parents a commit has is different from what was recorded when the commit was created. Configured via the .git/info/grafts file.</p>
+<p>Note that the grafts mechanism is outdated and can lead to problems transferring objects between repositories; see git-replace[1] for a more flexible and robust system to do the same thing.</p>
+<h4 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h4><p>Git 的对象名称都是对象内容的 hash 值。</p>
+<h4 id="head"><a href="#head" class="headerlink" title="head"></a>head</h4><p>指向分支的最新提交。</p>
+<h4 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h4><p>指向当前分支。</p>
+<h4 id="head-ref"><a href="#head-ref" class="headerlink" title="head ref"></a>head ref</h4><p>head 的别名。</p>
+<h4 id="hook"><a href="#hook" class="headerlink" title="hook"></a>hook</h4><p>git 钩子。</p>
+<h4 id="index"><a href="#index" class="headerlink" title="index"></a>index</h4><p>索引文件。</p>
+<h4 id="index-entry"><a href="#index-entry" class="headerlink" title="index entry"></a>index entry</h4><p>The information regarding a particular file, stored in the index. An index entry can be unmerged, if a merge was started, but not yet finished (i.e. if the index contains multiple versions of that file).</p>
+<h4 id="master"><a href="#master" class="headerlink" title="master"></a>master</h4><p>git 默认的分支。git 仓库初始化时默认会创建该分支。</p>
+<h4 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h4><p>As a verb: To bring the contents of another branch (possibly from an external repository) into the current branch. In the case where the merged-in branch is from a different repository, this is done by first fetching the remote branch and then merging the result into the current branch. This combination of fetch and merge operations is called a pull. Merging is performed by an automatic process that identifies changes made since the branches diverged, and then applies all those changes together. In cases where changes conflict, manual intervention may be required to complete the merge.</p>
+<p>As a noun: unless it is a fast-forward, a successful merge results in the creation of a new commit representing the result of the merge, and having as parents the tips of the merged branches. This commit is referred to as a “merge commit”, or sometimes just a “merge”.</p>
+<h4 id="object"><a href="#object" class="headerlink" title="object"></a>object</h4><p>git 的 存储单元，git 的底层文件系统都是一个个对象，包括 blob 对象、tree 对象、commit 对象、tag 对象等。</p>
+<h4 id="object-database"><a href="#object-database" class="headerlink" title="object database"></a>object database</h4><p>存储一组对象。</p>
+<h4 id="object-identifier"><a href="#object-identifier" class="headerlink" title="object identifier"></a>object identifier</h4><p>和 <code>object name</code> 一样。</p>
+<h4 id="object-name"><a href="#object-name" class="headerlink" title="object name"></a>object name</h4><p>对象的名称即对象的 hash 值。</p>
+<h4 id="object-type"><a href="#object-type" class="headerlink" title="object type"></a>object type</h4><p>对象类型，分别有 “commit”, “tree”, “tag”, “blob”。</p>
+<h4 id="octopus"><a href="#octopus" class="headerlink" title="octopus"></a>octopus</h4><p>merge 超过 2 个分支。</p>
+<h4 id="origin"><a href="#origin" class="headerlink" title="origin"></a>origin</h4><p>上游默认仓库。</p>
+<h4 id="overlay"><a href="#overlay" class="headerlink" title="overlay"></a>overlay</h4><p>Only update and add files to the working directory, but don’t delete them, similar to how cp -R would update the contents in the destination directory. This is the default mode in a checkout when checking out files from the index or a tree-ish. In contrast, no-overlay mode also deletes tracked files not present in the source, similar to rsync –delete.</p>
+<h4 id="pack"><a href="#pack" class="headerlink" title="pack"></a>pack</h4><p>用于压缩存储一组对象。</p>
+<h4 id="pack-index"><a href="#pack-index" class="headerlink" title="pack index"></a>pack index</h4><p>压缩存储一组对象时，使用 <code>pack index</code> 存储对象的索引和信息。</p>
+<h4 id="pathspec"><a href="#pathspec" class="headerlink" title="pathspec"></a>pathspec</h4><p>Pattern used to limit paths in Git commands.</p>
+<p>Pathspecs are used on the command line of “git ls-files”, “git ls-tree”, “git add”, “git grep”, “git diff”, “git checkout”, and many other commands to limit the scope of operations to some subset of the tree or worktree. See the documentation of each command for whether paths are relative to the current directory or toplevel. The pathspec syntax is as follows:</p>
+<p>any path matches itself</p>
+<p>the pathspec up to the last slash represents a directory prefix. The scope of that pathspec is limited to that subtree.</p>
+<p>the rest of the pathspec is a pattern for the remainder of the pathname. Paths relative to the directory prefix will be matched against that pattern using fnmatch(3); in particular, * and ? can match directory separators.</p>
+<p>For example, Documentation/*.jpg will match all .jpg files in the Documentation subtree, including Documentation/chapter_1/figure_1.jpg.</p>
+<p>A pathspec that begins with a colon : has special meaning. In the short form, the leading colon : is followed by zero or more “magic signature” letters (which optionally is terminated by another colon :), and the remainder is the pattern to match against the path. The “magic signature” consists of ASCII symbols that are neither alphanumeric, glob, regex special characters nor colon. The optional colon that terminates the “magic signature” can be omitted if the pattern begins with a character that does not belong to “magic signature” symbol set and is not a colon.</p>
+<p>In the long form, the leading colon : is followed by an open parenthesis (, a comma-separated list of zero or more “magic words”, and a close parentheses ), and the remainder is the pattern to match against the path.</p>
+<p>A pathspec with only a colon means “there is no pathspec”. This form should not be combined with other pathspec.</p>
+<h4 id="top"><a href="#top" class="headerlink" title="top"></a>top</h4><p>The magic word top (magic signature: /) makes the pattern match from the root of the working tree, even when you are running the command from inside a subdirectory.</p>
+<h4 id="literal"><a href="#literal" class="headerlink" title="literal"></a>literal</h4><p>Wildcards in the pattern such as * or ? are treated as literal characters.</p>
+<h4 id="icase"><a href="#icase" class="headerlink" title="icase"></a>icase</h4><p>Case insensitive match.</p>
+<h4 id="glob"><a href="#glob" class="headerlink" title="glob"></a>glob</h4><p>Git treats the pattern as a shell glob suitable for consumption by fnmatch(3) with the FNM_PATHNAME flag: wildcards in the pattern will not match a / in the pathname. For example, “Documentation/*.html” matches “Documentation/git.html” but not “Documentation/ppc/ppc.html” or “tools/perf/Documentation/perf.html”.</p>
+<p>Two consecutive asterisks (“**”) in patterns matched against full pathname may have special meaning:</p>
+<p>A leading “<strong>“ followed by a slash means match in all directories. For example, “</strong>/foo” matches file or directory “foo” anywhere, the same as pattern “foo”. “**/foo/bar” matches file or directory “bar” anywhere that is directly under directory “foo”.</p>
+<p>A trailing “/<strong>“ matches everything inside. For example, “abc/</strong>“ matches all files inside directory “abc”, relative to the location of the .gitignore file, with infinite depth.</p>
+<p>A slash followed by two consecutive asterisks then a slash matches zero or more directories. For example, “a/**/b” matches “a/b”, “a/x/b”, “a/x/y/b” and so on.</p>
+<p>Other consecutive asterisks are considered invalid.</p>
+<p>Glob magic is incompatible with literal magic.</p>
+<h4 id="attr"><a href="#attr" class="headerlink" title="attr"></a>attr</h4><p>After attr: comes a space separated list of “attribute requirements”, all of which must be met in order for the path to be considered a match; this is in addition to the usual non-magic pathspec pattern matching. See gitattributes[5].</p>
+<p>Each of the attribute requirements for the path takes one of these forms:</p>
+<p>“ATTR” requires that the attribute ATTR be set.</p>
+<p>“-ATTR” requires that the attribute ATTR be unset.</p>
+<p>“ATTR=VALUE” requires that the attribute ATTR be set to the string VALUE.</p>
+<p>“!ATTR” requires that the attribute ATTR be unspecified.</p>
+<p>Note that when matching against a tree object, attributes are still obtained from working tree, not from the given tree object.</p>
+<h4 id="exclude"><a href="#exclude" class="headerlink" title="exclude"></a>exclude</h4><p>After a path matches any non-exclude pathspec, it will be run through all exclude pathspecs (magic signature: ! or its synonym ^). If it matches, the path is ignored. When there is no non-exclude pathspec, the exclusion is applied to the result set as if invoked without any pathspec.</p>
+<h4 id="parent"><a href="#parent" class="headerlink" title="parent"></a>parent</h4><p>A commit object contains a (possibly empty) list of the logical predecessor(s) in the line of development, i.e. its parents.</p>
+<h4 id="pickaxe"><a href="#pickaxe" class="headerlink" title="pickaxe"></a>pickaxe</h4><p>The term pickaxe refers to an option to the diffcore routines that help select changes that add or delete a given text string. With the –pickaxe-all option, it can be used to view the full changeset that introduced or removed, say, a particular line of text. See git-diff[1].</p>
+<h4 id="plumbing"><a href="#plumbing" class="headerlink" title="plumbing"></a>plumbing</h4><p>core Git 的别名。</p>
+<h4 id="porcelain"><a href="#porcelain" class="headerlink" title="porcelain"></a>porcelain</h4><p>Cute name for programs and program suites depending on core Git, presenting a high level access to core Git. Porcelains expose more of a SCM interface than the plumbing.</p>
+<h4 id="per-worktree-ref"><a href="#per-worktree-ref" class="headerlink" title="per-worktree ref"></a>per-worktree ref</h4><p>Refs that are per-worktree, rather than global. This is presently only HEAD and any refs that start with refs/bisect/, but might later include other unusual refs.</p>
+<h4 id="pseudoref"><a href="#pseudoref" class="headerlink" title="pseudoref"></a>pseudoref</h4><p>Pseudorefs are a class of files under $GIT_DIR which behave like refs for the purposes of rev-parse, but which are treated specially by git. Pseudorefs both have names that are all-caps, and always start with a line consisting of a SHA-1 followed by whitespace. So, HEAD is not a pseudoref, because it is sometimes a symbolic ref. They might optionally contain some additional data. MERGE_HEAD and CHERRY_PICK_HEAD are examples. Unlike per-worktree refs, these files cannot be symbolic refs, and never have reflogs. They also cannot be updated through the normal ref update machinery. Instead, they are updated by directly writing to the files. However, they can be read as if they were refs, so git rev-parse MERGE_HEAD will work.</p>
+<h4 id="pull"><a href="#pull" class="headerlink" title="pull"></a>pull</h4><p>pull 分支时，会先拉取（fetch）然后再覆盖（merge）。</p>
+<h4 id="push"><a href="#push" class="headerlink" title="push"></a>push</h4><p>把当前的本地仓库版本提交到远程仓库。</p>
+<h4 id="reachable"><a href="#reachable" class="headerlink" title="reachable"></a>reachable</h4><p>All of the ancestors of a given commit are said to be “reachable” from that commit. More generally, one object is reachable from another if we can reach the one from the other by a chain that follows tags to whatever they tag, commits to their parents or trees, and trees to the trees or blobs that they contain.</p>
+<h4 id="rebase"><a href="#rebase" class="headerlink" title="rebase"></a>rebase</h4><p>To reapply a series of changes from a branch to a different base, and reset the head of that branch to the result.</p>
+<h4 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h4><p>A name that begins with refs/ (e.g. refs/heads/master) that points to an object name or another ref (the latter is called a symbolic ref). For convenience, a ref can sometimes be abbreviated when used as an argument to a Git command; see gitrevisions[7] for details. Refs are stored in the repository.</p>
+<p>The ref namespace is hierarchical. Different subhierarchies are used for different purposes (e.g. the refs/heads/ hierarchy is used to represent local branches).</p>
+<p>There are a few special-purpose refs that do not begin with refs/. The most notable example is HEAD.</p>
+<h4 id="reflog"><a href="#reflog" class="headerlink" title="reflog"></a>reflog</h4><p>显示 ref 的变更日志。</p>
+<h4 id="refspec"><a href="#refspec" class="headerlink" title="refspec"></a>refspec</h4><p>A “refspec” is used by fetch and push to describe the mapping between remote ref and local ref.</p>
+<h4 id="remote-repository"><a href="#remote-repository" class="headerlink" title="remote repository"></a>remote repository</h4><p>远程仓库。</p>
+<h4 id="remote-tracking-branch"><a href="#remote-tracking-branch" class="headerlink" title="remote-tracking branch"></a>remote-tracking branch</h4><p>A ref that is used to follow changes from another repository. It typically looks like refs/remotes/foo/bar (indicating that it tracks a branch named bar in a remote named foo), and matches the right-hand-side of a configured fetch refspec. A remote-tracking branch should not contain direct modifications or have local commits made to it.</p>
+<h4 id="repository"><a href="#repository" class="headerlink" title="repository"></a>repository</h4><p>代码仓库。</p>
+<h4 id="resolve"><a href="#resolve" class="headerlink" title="resolve"></a>resolve</h4><p>The action of fixing up manually what a failed automatic merge left behind.</p>
+<h4 id="revision"><a href="#revision" class="headerlink" title="revision"></a>revision</h4><p>用于定位版本。</p>
+<h4 id="rewind"><a href="#rewind" class="headerlink" title="rewind"></a>rewind</h4><p>To throw away part of the development, i.e. to assign the head to an earlier revision.</p>
+<h4 id="SCM"><a href="#SCM" class="headerlink" title="SCM"></a>SCM</h4><p>源码管理工具。</p>
+<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>git 默认使用 <code>SHA-1</code> 来对对象或内容做hash运算。</p>
+<h4 id="shallow-clone"><a href="#shallow-clone" class="headerlink" title="shallow clone"></a>shallow clone</h4><p>Mostly a synonym to shallow repository but the phrase makes it more explicit that it was created by running git clone –depth=… command.</p>
+<h4 id="shallow-repository"><a href="#shallow-repository" class="headerlink" title="shallow repository"></a>shallow repository</h4><p>A shallow repository has an incomplete history some of whose commits have parents cauterized away (in other words, Git is told to pretend that these commits do not have the parents, even though they are recorded in the commit object). This is sometimes useful when you are interested only in the recent history of a project even though the real history recorded in the upstream is much larger. A shallow repository is created by giving the –depth option to git-clone[1], and its history can be later deepened with git-fetch[1].</p>
+<h4 id="stash-entry"><a href="#stash-entry" class="headerlink" title="stash entry"></a>stash entry</h4><p>An object used to temporarily store the contents of a dirty working directory and the index for future reuse.</p>
+<h4 id="submodule"><a href="#submodule" class="headerlink" title="submodule"></a>submodule</h4><p>子仓库，可以用来做多仓库集成。</p>
+<h4 id="superproject"><a href="#superproject" class="headerlink" title="superproject"></a>superproject</h4><p>A repository that references repositories of other projects in its working tree as submodules. The superproject knows about the names of (but does not hold copies of) commit objects of the contained submodules.</p>
+<h4 id="symref"><a href="#symref" class="headerlink" title="symref"></a>symref</h4><p>Symbolic reference: instead of containing the SHA-1 id itself, it is of the format ref: refs/some/thing and when referenced, it recursively dereferences to this reference. HEAD is a prime example of a symref. Symbolic references are manipulated with the git-symbolic-ref[1] command.</p>
+<h4 id="tag"><a href="#tag" class="headerlink" title="tag"></a>tag</h4><p>A ref under refs/tags/ namespace that points to an object of an arbitrary type (typically a tag points to either a tag or a commit object). In contrast to a head, a tag is not updated by the commit command. A Git tag has nothing to do with a Lisp tag (which would be called an object type in Git’s context). A tag is most typically used to mark a particular point in the commit ancestry chain.</p>
+<h4 id="tag-object"><a href="#tag-object" class="headerlink" title="tag object"></a>tag object</h4><p>An object containing a ref pointing to another object, which can contain a message just like a commit object. It can also contain a (PGP) signature, in which case it is called a “signed tag object”.</p>
+<h4 id="topic-branch"><a href="#topic-branch" class="headerlink" title="topic branch"></a>topic branch</h4><p>A regular Git branch that is used by a developer to identify a conceptual line of development. Since branches are very easy and inexpensive, it is often desirable to have several small branches that each contain very well defined concepts or small incremental yet related changes.</p>
+<h4 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h4><p>工作树（working tree）或tree对象。</p>
+<h4 id="tree-object"><a href="#tree-object" class="headerlink" title="tree object"></a>tree object</h4><p>tree 对象，存储一组blob对象，相当于存储目录。</p>
+<h4 id="tree-ish-also-treeish"><a href="#tree-ish-also-treeish" class="headerlink" title="tree-ish (also treeish)"></a>tree-ish (also treeish)</h4><p>A tree object or an object that can be recursively dereferenced to a tree object. Dereferencing a commit object yields the tree object corresponding to the revision’s top directory. The following are all tree-ishes: a commit-ish, a tree object, a tag object that points to a tree object, a tag object that points to a tag object that points to a tree object, etc.</p>
+<h4 id="unmerged-index"><a href="#unmerged-index" class="headerlink" title="unmerged index"></a>unmerged index</h4><p>An index which contains unmerged index entries.</p>
+<h4 id="unreachable-object"><a href="#unreachable-object" class="headerlink" title="unreachable object"></a>unreachable object</h4><p>An object which is not reachable from a branch, tag, or any other reference.</p>
+<h4 id="upstream-branch"><a href="#upstream-branch" class="headerlink" title="upstream branch"></a>upstream branch</h4><p>The default branch that is merged into the branch in question (or the branch in question is rebased onto). It is configured via branch.<name>.remote and branch.<name>.merge. If the upstream branch of A is origin/B sometimes we say “A is tracking origin/B”.</p>
+<h4 id="working-tree"><a href="#working-tree" class="headerlink" title="working tree"></a>working tree</h4><p>工作区。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://xiaowenxia.github.io/git-inside/2020/10/25/git-glossary/" title="Git 术语" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2020/10/25/git-glossary/</a>
+    </li>
+    
+    <!-- <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li> -->
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/xiaowenxia" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/git-inside/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/xiaowenxia" target="_blank"><span class="text-dark">夏晓文</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Git 开发</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/git-inside/2020/10/26/git-branch/" title="Git 的分支策略"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/git-inside/2020/10/25/git-env/" title="Git 的一些环境变量"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/git-inside/js/plugin.min.js"></script>
+
+
+<script src="/git-inside/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/git-inside/',
+        CONTENT_URL: '/git-inside/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/git-inside/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Git 的一些环境变量 | Hexo</title>
+  <meta name="description" content="Git 的一些环境变量 参考：https:&#x2F;&#x2F;git-scm.com&#x2F;book&#x2F;zh&#x2F;v2&#x2F;Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F 和 https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;git#_environment_variables 。  GIT_TRACEGIT_TRACE&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 的一些环境变量">
+<meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2020/10/25/git-env/index.html">
+<meta property="og:site_name" content="夏晓文的博客">
+<meta property="og:description" content="Git 的一些环境变量 参考：https:&#x2F;&#x2F;git-scm.com&#x2F;book&#x2F;zh&#x2F;v2&#x2F;Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F 和 https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;git#_environment_variables 。  GIT_TRACEGIT_TRACE&#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-25T12:10:37.000Z">
+<meta property="article:modified_time" content="2021-02-16T08:42:24.000Z">
+<meta property="article:author" content="夏晓文">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://xiaowenxia.github.io/git-inside/2020/10/25/git-env/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="夏晓文的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/git-inside/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/xiaowenxia" target="_blank">
+          <img class="img-circle img-rotate" src="/git-inside/images/avatar.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">夏晓文</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HangZhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/git-inside/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/git-inside/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+
+    
+      
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/12/">十二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/git-inside/archives/2020/10/">十月 2020</a><span class="archive-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2021/02/16/git-layout/" class="title">Git 目录结构</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-16T03:56:24.000Z" itemprop="datePublished">2021-02-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.file-struct/" class="title">Git 底层原理：Git 底层文件存储格式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:12:56.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/12/06/git-internal.objects/" class="title">Git 底层原理：Git 对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-12-06T09:05:03.000Z" itemprop="datePublished">2020-12-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-protocol/" class="title">Git 传输协议分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/git-inside/2020/11/24/git-internal-operations/" class="title">Git 常用命令底层原理</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-24T02:28:13.000Z" itemprop="datePublished">2020-11-24</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-git-env" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git 的一些环境变量
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/git-inside/2020/10/25/git-env/" class="article-date">
+	  <time datetime="2020-10-25T12:10:37.000Z" itemprop="datePublished">2020-10-25</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/git-inside/2020/10/25/git-env/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Git-的一些环境变量"><a href="#Git-的一些环境变量" class="headerlink" title="Git 的一些环境变量"></a>Git 的一些环境变量</h2><blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F</a> 和 <a target="_blank" rel="noopener" href="https://git-scm.com/docs/git#_environment_variables">https://git-scm.com/docs/git#_environment_variables</a> 。</p>
+</blockquote>
+<h4 id="GIT-TRACE"><a href="#GIT-TRACE" class="headerlink" title="GIT_TRACE"></a>GIT_TRACE</h4><p>GIT_TRACE=1 可以显示具体的git内部执行过程，比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 git pull 的执行过程</span></span><br><span class="line">$ GIT_TRACE=1 git pull</span><br><span class="line">10:15:16.423653 git.c:344               trace: built-in: git pull</span><br><span class="line">10:15:16.424388 run-command.c:646       trace: run_command: git fetch --update-head-ok</span><br><span class="line">10:15:16.425853 git.c:344               trace: built-in: git fetch --update-head-ok</span><br><span class="line">10:15:16.426444 run-command.c:646       trace: run_command: <span class="built_in">unset</span> GIT_DIR GIT_PREFIX; ssh git@gitlab.alibaba-inc.com <span class="string">&#x27;git-upload-pack &#x27;</span><span class="string">&#x27;&#x27;</span>agit/galileo.git<span class="string">&#x27;&#x27;</span><span class="string">&#x27;&#x27;</span></span><br><span class="line">10:15:16.883780 run-command.c:646       trace: run_command: git rev-list --objects --stdin --not --all --quiet</span><br><span class="line">10:15:16.886473 run-command.c:646       trace: run_command: git rev-list --objects --stdin --not --all --quiet</span><br><span class="line">10:15:16.888001 git.c:344               trace: built-in: git rev-list --objects --stdin --not --all --quiet</span><br><span class="line">10:15:16.926434 run-command.c:1569      run_processes_parallel: preparing to run up to 1 tasks</span><br><span class="line">10:15:16.926536 run-command.c:1601      run_processes_parallel: <span class="keyword">done</span></span><br><span class="line">10:15:16.926622 run-command.c:646       trace: run_command: git gc --auto</span><br><span class="line">10:15:16.928214 git.c:344               trace: built-in: git gc --auto</span><br><span class="line">10:15:16.929016 run-command.c:646       trace: run_command: git merge FETCH_HEAD</span><br><span class="line">10:15:16.930404 git.c:344               trace: built-in: git merge FETCH_HEAD</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 git status 的执行过程</span></span><br><span class="line">$ GIT_TRACE=1 git st</span><br><span class="line">10:18:16.275652 git.c:576               trace: <span class="built_in">exec</span>: git-st</span><br><span class="line">10:18:16.275723 run-command.c:646       trace: run_command: git-st</span><br><span class="line">10:18:16.275835 git.c:274               trace: <span class="built_in">alias</span> expansion: st =&gt; status</span><br><span class="line">10:18:16.275870 git.c:576               trace: <span class="built_in">exec</span>: git-status</span><br><span class="line">10:18:16.275876 run-command.c:646       trace: run_command: git-status</span><br><span class="line">10:18:16.277339 git.c:344               trace: built-in: git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with <span class="string">&#x27;origin/master&#x27;</span>.</span><br><span class="line"></span><br><span class="line">nothing to commit, working tree clean</span><br></pre></td></tr></table></figure>
+<h4 id="GIT-DIR"><a href="#GIT-DIR" class="headerlink" title="GIT_DIR"></a>GIT_DIR</h4><h4 id="GIT-CURL-VERBOSE"><a href="#GIT-CURL-VERBOSE" class="headerlink" title="GIT_CURL_VERBOSE"></a>GIT_CURL_VERBOSE</h4><h4 id="GIT-TRACE-PACKET"><a href="#GIT-TRACE-PACKET" class="headerlink" title="GIT_TRACE_PACKET"></a>GIT_TRACE_PACKET</h4><h4 id="GIT-TERMINAL-PROMPT"><a href="#GIT-TERMINAL-PROMPT" class="headerlink" title="GIT_TERMINAL_PROMPT"></a>GIT_TERMINAL_PROMPT</h4><h4 id="GIT-AUTHOR-DATE"><a href="#GIT-AUTHOR-DATE" class="headerlink" title="GIT_AUTHOR_DATE"></a>GIT_AUTHOR_DATE</h4><h4 id="GIT-AUTHOR-NAME"><a href="#GIT-AUTHOR-NAME" class="headerlink" title="GIT_AUTHOR_NAME"></a>GIT_AUTHOR_NAME</h4><h4 id="GIT-AUTHOR-EMAIL"><a href="#GIT-AUTHOR-EMAIL" class="headerlink" title="GIT_AUTHOR_EMAIL"></a>GIT_AUTHOR_EMAIL</h4><h4 id="GIT-COMMITTER-DATE"><a href="#GIT-COMMITTER-DATE" class="headerlink" title="GIT_COMMITTER_DATE"></a>GIT_COMMITTER_DATE</h4><h4 id="GIT-COMMITTER-NAME"><a href="#GIT-COMMITTER-NAME" class="headerlink" title="GIT_COMMITTER_NAME"></a>GIT_COMMITTER_NAME</h4><h4 id="GIT-COMMITTER-EMAIL"><a href="#GIT-COMMITTER-EMAIL" class="headerlink" title="GIT_COMMITTER_EMAIL"></a>GIT_COMMITTER_EMAIL</h4>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://xiaowenxia.github.io/git-inside/2020/10/25/git-env/" title="Git 的一些环境变量" target="_blank" rel="external">https://xiaowenxia.github.io/git-inside/2020/10/25/git-env/</a>
+    </li>
+    
+    <!-- <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li> -->
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/xiaowenxia" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/git-inside/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/xiaowenxia" target="_blank"><span class="text-dark">夏晓文</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Git 开发</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/git-inside/2020/10/25/git-glossary/" title="Git 术语"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/git-inside/2020/10/21/git-config/" title="Git 的配置说明"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xiaowenxia" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/git-inside/js/plugin.min.js"></script>
+
+
+<script src="/git-inside/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/git-inside/',
+        CONTENT_URL: '/git-inside/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/git-inside/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
