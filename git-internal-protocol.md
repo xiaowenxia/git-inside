@@ -1,14 +1,34 @@
 ## Git 底层原理：传输协议分析
 
+!content
+
+
+### 目录
+
+* [概要](#概要)
+* [git https 传输协议分析](#git-https-传输协议分析)
+    - [准备工作](#准备工作)
+    - [git clone](#git-clone)
+    - [git fetch](#git-fetch)
+    - [git push](#git-push)
+* [git ssh 传输协议分析](#git-ssh-传输协议分析)
+* [补充](#补充)
+    - [git 传输协议格式](#git-传输协议格式)
+    - [git 交互协议更多信息](#git-交互协议更多信息)
+    - [相关环境变量](#相关环境变量)
+    - [相关子命令](#相关子命令)
+* [总结](#总结)
+* [参考资料](#参考资料)
+
 ### 概要
 
-
 > 参考文章：[Git on the Server - The Protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)。
-> Git 目前已经支持新的 protocol v2 协议。
 
-### 分析 git https 传输协议
+### git https 传输协议分析
 
 [Wireshark](https://www.wireshark.org/) 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。
+
+> 不借助 Wireshark ，设置 `GIT_TRACE_CURL` 环境变量也能够查看到 Git 的传输协议过程，看下文的 [相关环境变量](#相关环境变量)。
 
 #### 准备工作
 本文使用阿里云的代码托管平台 [Codeup](https://codeup.aliyun.com/) 来分析传输协议。当然，你也可以使用 [Github](https://github.com) 或者 [Gitee](https://gitee.com/) 。
@@ -32,7 +52,7 @@ export SSLKEYLOGFILE=~/sslkeylog.log
 首先让 Wireshark 读取 `sslkeylog.log`，打开 Wireshark，点击 `菜单` >`Performances`，在对话框中选择 `Protocol` > `TLS`，设置 `(Pre)-Master-Secret log filename` 为你的 `SSLKEYLOGFILE` 文件路径：
 
 <div align="center">
-<img style="height:400px" src="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png" />
+<img src="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png" width="600"/>
 </div>
 
 <!-- ![](./res/wireshark-perferences.png) -->
@@ -80,33 +100,33 @@ GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
 
-客户端发起的 GET 请求，URL 为 `$GIT_URL/info/refs?service=git-upload-pack`。
+**客户端** 发起的 GET 请求，URL 为 `$GIT_URL/info/refs?service=git-upload-pack`。
 
-服务端返回的信息按照 pkt-line 格式编排，信息主要是远程仓库的引用信息。pkt-line 格式定义每一行的前四个字节代表这一行的十六进制编码的长度，同时也定义前四个字节 0000 为一点消息的结束。详细说明见文末的 [pkt-line 格式](#pkt-line-格式)。
+**服务端** 返回的信息按照 pkt-line 格式编排，信息主要是远程仓库的引用信息。pkt-line 格式定义每一行的前四个字节代表这一行的十六进制编码的长度，同时也定义前四个字节 0000 为一点消息的结束。详细说明见文末的 [pkt-line 格式](#pkt-line-格式)。
 这次交互里面，根据 0000 出现的位置，可以知道服务端返回的信息里面包含了2部分，第一部分是：
 
 ```
 001e# service=git-upload-pack
 0000
 ```
-表示这次回复的数据类型是 `git-upload-pack`。
+表示这次回复的服务类型是 `git-upload-pack`。
 
 第二部分的第一行内容信息比较多：
 ```
 01163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD\0multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref=HEAD:refs/heads/master object-format=sha1 agent=git/2.28.0.agit.6.0
 ```
 
-这段信息主要描述 HEAD 指针信息，以及功能列表信息，比如 `symref=HEAD:refs/heads/master` 表示默认分支为 `master` ，`object-format=sha1` 表示对象使用 `sha1` 校验对象，`agent=git/2.28.0.agit.6.0` 服务器 git 版本信息。
+这段信息主要描述 HEAD 指针信息，以及功能列表（ capability declarations ）信息，比如 `symref=HEAD:refs/heads/master` 表示默认分支为 `master` ，`object-format=sha1` 表示对象使用 `sha1` 校验对象，`agent=git/2.28.0.agit.6.0` 服务器 git 版本信息。
 
 第二部分第二行开始的信息则是 `info/refs` 文件内容。`info/refs` 文件描述了仓库里面的引用信息，包括分支、 tag ，以及一些自定义引用等。
 
-> * 值得一提的是，服务器回复的 `info/refs` 文件内容里，除了 `refs/heads/*` 和 `refs/tags/*`，还存在 `refs/keep-around/*` 和 `refs/merge-requests/*` 等引用，这些是 Codeup 平台特有的引用。
-> * 你也可以使用`` `git --exec-path`/git-update-server-info`` 命令来生成 `info/refs` 文件。
+> * 值得一提的是，本示例中服务器回复的 `info/refs` 文件内容里，除了 `refs/heads/*` 和 `refs/tags/*`，还存在 `refs/keep-around/*` 和 `refs/merge-requests/*` 等引用，这些是 Codeup 平台特有的引用。
+> * 你可以使用`` `git --exec-path`/git-update-server-info`` 命令来生成 `info/refs` 文件。
 
-实际上这一段的数据流及格式官方文档里面有详细的说明： [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)，也可以参考本文末的 [引用数据流](#git-传输协议格式)。
+实际上这一段的数据流及格式官方文档里面有详细的说明： [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)，也可以参考本文末的 [引用数据流](#引用发现数据格式)。
 
 ##### 第二次交互：请求数据
-第二次交互里，客户端把想要的数据告诉给服务端，服务端然后把 pack 包推送回来。
+第二次交互里，客户端把想要的数据告诉给服务端，服务端然后把 pack 包推送给客户端。
 ```
 客户端发送数据到服务器
 >>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -234,13 +254,7 @@ x...K
 第二次交互里，客户端发起的 POST 请求 URL 为：`$GIT_URL/git-receive-pack` ，其内容格式：
 
 
-
-
-
-如下绘制了git clone 的 https 协议交互图：
-
-
-### 分析 git ssh 传输协议
+### git ssh 传输协议分析
 
 
 ssh 是建立在tcp之上的。
@@ -305,14 +319,15 @@ PKT-LINE("want" SP obj-id LF)
 "0000"
 PKT-LINE("have" SP obj-id LF)
 PKT-LINE("have" SP obj-id LF)
-"0000" / "done"
+"0000" / PKT-LINE("done" LF)
 ```
 
 
 ##### git-receive-pack 数据流格式
 
-#### Git 支持的 4 种交互协议
-Git 客户端和服务端交互的协议支持 4 种：`本地协议`、 `http 协议`、 `ssh 协议`、 `git 协议`，在我们的日常开发过程中，接触最多的是 http 协议和 ssh 协议。
+#### git 交互协议更多信息
+##### Git 支持 4 种交互协议
+Git 客户端和服务端交互的协议支持 4 种：`本地协议`、 `http 协议`、 `ssh 协议`、 `git 协议`，在我们的日常开发过程中，接触最多的是 `http 协议` 和 `ssh 协议` 。
 根据 URL 的前缀可以知道使用的是什么协议： _`file://`_ 、 _`https://`_ 、 _`ssh://`_ 、 _`git://`_ 。通过如下命令和服务器进行交互：
 
 ```bash
@@ -334,14 +349,40 @@ $ git clone https://user:token@server/project.git
 # git 协议
 $ git clone git://git/project.git
 ```
-`本地协议` 一般用于共享目录的开发模式，不过需要有文件系统访问权限，安全性不能保障。`git 协议` 默认使用 `9418` 端口，但是没有认证过程，数据传输也不加密，安全性也不能保障。
+* `本地协议` 一般用于共享目录的开发模式，不过需要有文件系统访问权限，安全性不能保障。
+* `git 协议` 默认使用 `9418` 端口，但是没有认证过程，数据传输过程也不加密，安全性也不能保障。
 
 ##### 哑协议
-上面使用 Wireshark 抓取到的协议叫智能（ smart ）协议，实际上 Git 1.6.6 之前的版本（2010年前）一直使用哑(Dumb)协议。使用哑协议的版本库很难保证安全性和私有化，而且只能架设只读版本库，目前已经很少使用了，哑协议的交互过程可以参考《[Git Internals - Transfer Protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols)》。
+上面使用 Wireshark 抓取到的协议叫智能（ smart ）协议，实际上 Git 1.6.6 之前的版本（2010年前）一直使用哑（ Dumb ）协议。使用哑协议的版本库很难保证安全性和私有化，而且只能架设只读版本库，目前已经很少使用了，哑协议的交互过程可以参考《[Git Internals - Transfer Protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols)》。
+
+##### protocol v2
+
+Git 目前已经有新的 [protocol v2](https://github.com/git/git/blob/master/Documentation/technical/protocol-v2.txt) 协议，支持更高阶的特性，比如能力广播、断电续传等。
+
+#### 相关环境变量
+Git 提供了几个非常有意思的环境变量用于查看和调试传输协议。
+##### `GIT_TRACE_PACKET`
+`GIT_TRACE_PACKET=true`：显示协议交互数据，不过不会显示 PACK 包内容。输出的信息是经过格式化的，并不是原始数据，不过这个比较容易理解和阅读。
+
+<div align="center">
+<img src="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png" width="600"/>
+</div>
+
+##### `GIT_TRACE_PACKFILE`
+`GIT_TRACE_PACKFILE=<file-path>`：把协议交互中的 PACK 包保存到指定文件中，如果设置为 `GIT_TRACE_PACKFILE=true` ，那就显示在标准输出。
+
+##### `GIT_TRACE_CURL`
+显示 curl 交互信息，包括 `TLS` + `HTTP` + `Git 协议`，该数据和使用 Wireshark 抓到的信息基本相同。
+
+<div align="center">
+<img src="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png" width="600"/>
+</div>
 
 #### 相关子命令
 
-##### git-update-server-info 命令可以生成 `info/refs` 引用信息。
+##### git-update-server-info
+
+该命令可以生成 `info/refs` 引用信息。
 
 ```bash
 `git --exec-path`/git-update-server-info && cat .git/info/refs
@@ -357,6 +398,11 @@ ae02248d14bfdc9d4d38b1532cab278d179bc863	refs/remotes/origin/feature/sensitive_s
 ### 总结
 
 相对于TCP、HTTP、Protobuf等协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。
+
+上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述：
+<div align="center">
+<img src="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png" width="800" />
+</div>
 
 ### 参考资料
 
