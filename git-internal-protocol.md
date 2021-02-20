@@ -1,4 +1,4 @@
-## Git 传输协议分析
+## Git 底层原理：传输协议分析
 
 ### 概要
 Git 客户端和服务端交互的协议支持 4 种：本地协议、HTTP 协议、SSH 协议、 Git 协议，在我们的日常开发过程中，接触最多的是 HTTP 协议和 SSH 协议。一般通过如下命令和服务器进行交互：
@@ -16,6 +16,7 @@ $ git clone https://user:token@server/project.git
 ```
 
 > 参考文章：[Git on the Server - The Protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)。
+
 ### Wireshark 抓包分析 git https 传输协议
 
 [Wireshark](https://www.wireshark.org/) 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。
@@ -42,12 +43,12 @@ export SSLKEYLOGFILE=~/sslkeylog.log
 首先让 Wireshark 读取 `sslkeylog.log`，打开 Wireshark，点击 `菜单` >`Performances`，在对话框中选择 `Protocol` > `TLS`，设置 `(Pre)-Master-Secret log filename` 为你的 `SSLKEYLOGFILE` 文件路径：
 
 <div align="center">
-<img src="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png" height=400 />
+<img style="height:400px" src="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png" />
 </div>
 
 <!-- ![](./res/wireshark-perferences.png) -->
 
-启动wireshark 监听网卡，设置过滤规则为`tls && http && ip.addr == 118.31.165.50`，其中 `118.31.165.50`就是获取到的服务器 ip 地址。
+启动wireshark 监听网卡，设置过滤规则为 <span style="text-shadow: 0 1px #fff; color: #822659; background: #eee;border-radius: 3px;">tls && http && ip.addr == 118.31.165.50</span>，其中 `118.31.165.50`就是获取到的服务器 ip 地址。
 
 #### git clone
 
@@ -68,7 +69,7 @@ Wireshark 抓包得到如下数据包：
 
 接下来分析一下 `git clone` 的交互过程。
 
-##### 第一次交互
+##### 第一次交互：引用发现
 
 第一次交互主要起到 `握手` + `获取仓库信息` 的作用。服务端认证用户信息，并告诉客户端对应仓库的所有引用信息，以及相关的仓库信息。
 
@@ -96,7 +97,7 @@ GET /5ed5e6f717b522454a36976e/Codeup-Demo.git/info/refs?service=git-upload-pack
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
 
-服务端返回的信息具有一定的格式，每一行都以一个四位的十六进制值开始，用于指明本行的长度。第二行的 0000 和结尾 0000 告诉 git 已经完成了一个过程。
+服务端返回的信息具有一定的格式（ [pkt-line 格式](#pkt-line-数据流) ），每一行都以一个四位的十六进制值开始，用于指明本行的长度。第二行的 0000 和结尾 0000 告诉 git 已经完成了一个过程。
 
 这次交互里面，根据 0000 出现的位置，可以知道服务端返回的信息里面包含了2部分，第一部分是：
 
@@ -131,7 +132,7 @@ ae02248d14bfdc9d4d38b1532cab278d179bc863	refs/remotes/origin/feature/sensitive_s
 
 实际上这一段的数据流及格式官方文档里面有详细的说明： [http-protocol.txt](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L163)，也可以参考本文末的 [git 传输协议格式](#git-传输协议格式)。
 
-##### 第二次交互
+##### 第二次交互：请求数据
 第二次交互里，客户端把想要的数据告诉给服务端，服务端然后把 pack 包推送回来。
 ```
 客户端发送数据到服务器
@@ -166,7 +167,7 @@ KY..OQ.q.)....}..C...>..Et,."..)........O.b :o..2G...uhK.s.. 3.+N.	</P..a..L.Y.1
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
 
-客户端发送的数据主要是想要的 `commit-id` 及其提交链的数据。具体点其实就是 branch 和 tag 对应的 `commit-id` 。
+通过第一次交互里，客户端拿到了远程仓库的引用列表，然后把想要的 `commit-id` （及其提交链）发送给服务端。具体点其实就是 branch 和 tag 对应的 `commit-id` 。数据格式跟上面的服务端回复的引用列表格式类似。
 
 服务器回复的是 HTTP 数据流格式，其中包括了进度、pack 二进制数据等，其第一行的 `NAK` 代表数据开始，
 
