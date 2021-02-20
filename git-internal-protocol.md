@@ -28,7 +28,7 @@
 
 [Wireshark](https://www.wireshark.org/) 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。
 
-> 不借助 Wireshark ，设置 `GIT_TRACE_CURL` 环境变量也能够查看到 Git 的传输协议过程，看下文的 [相关环境变量](#相关环境变量)。
+> 不借助 Wireshark ，设置 `GIT_TRACE_CURL` 环境变量也能够查看到 Git 的传输协议过程，看下文的 [相关环境变量](#相关环境变量) 。
 
 #### 准备工作
 本文使用阿里云的代码托管平台 [Codeup](https://codeup.aliyun.com/) 来分析传输协议。当然，你也可以使用 [Github](https://github.com) 或者 [Gitee](https://gitee.com/) 。
@@ -365,7 +365,7 @@ Git 提供了几个非常有意思的环境变量用于查看和调试传输协�
 `GIT_TRACE_PACKET=true`：显示协议交互数据，不过不会显示 PACK 包内容。输出的信息是经过格式化的，并不是原始数据，不过这个比较容易理解和阅读。
 
 <div align="center">
-<img src="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png" width="600"/>
+<img src="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png" width="800"/>
 </div>
 
 ##### `GIT_TRACE_PACKFILE`
@@ -375,7 +375,7 @@ Git 提供了几个非常有意思的环境变量用于查看和调试传输协�
 显示 curl 交互信息，包括 `TLS` + `HTTP` + `Git 协议`，该数据和使用 Wireshark 抓到的信息基本相同。
 
 <div align="center">
-<img src="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png" width="600"/>
+<img src="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png" width="800"/>
 </div>
 
 #### 相关子命令
