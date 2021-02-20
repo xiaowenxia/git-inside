@@ -26,7 +26,7 @@
 <meta property="og:description" content="Git Revisions 参考原文链接：https:&#x2F;&#x2F;git-scm.com&#x2F;docs&#x2F;gitrevisions 。  git revisions （Git 修订版本）代表特定的版本或范围，revisions 可以高效的定位你想要的提交，git 命令很多参数都支持 revisions 。 revisions 的具体格式有一整套匹配规则： 1234567891011121314151617181">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-20T01:57:37.000Z">
-<meta property="article:modified_time" content="2021-02-17T03:33:02.000Z">
+<meta property="article:modified_time" content="2021-02-20T07:39:32.000Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -355,7 +355,7 @@
 <li><em><code>v0.99.8^&#123;commit&#125;</code></em></li>
 <li><em><code>dae86e1950b1277e545cee180551750029cfe735^&#123;tree&#125;</code></em></li>
 </ul>
-<h4 id="lt-rev-gt"><a href="#lt-rev-gt" class="headerlink" title="&lt;rev&gt;^{}"></a><em><code>&lt;rev&gt;^&#123;&#125;</code></em></h4><p>表示递归该引用直到找到类型为tag的 object 对象。</p>
+<h4 id="lt-rev-gt"><a href="#lt-rev-gt" class="headerlink" title="&lt;rev&gt;^{}"></a><em><code>&lt;rev&gt;^&#123;&#125;</code></em></h4><p>表示递归该引用直到找到类型不是 tag 的 object 对象。</p>
 <p>示例：</p>
 <ul>
 <li><em><code>v0.99.8^&#123;&#125;</code></em></li>

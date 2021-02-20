@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://xiaowenxia.github.io/git-inside/2020/11/24/git-internal-protocol/</loc>
+    <loc>https://xiaowenxia.github.io/git-inside/2020/10/20/git-internal-commands/</loc>
     
     <lastmod>2021-02-20</lastmod>
     
   </url>
   
   <url>
-    <loc>https://xiaowenxia.github.io/git-inside/2020/10/20/git-internal-commands/</loc>
+    <loc>https://xiaowenxia.github.io/git-inside/2020/10/20/git-revisions/</loc>
     
-    <lastmod>2021-02-19</lastmod>
+    <lastmod>2021-02-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://xiaowenxia.github.io/git-inside/2020/11/24/git-internal-protocol/</loc>
+    
+    <lastmod>2021-02-20</lastmod>
     
   </url>
   
@@ -37,14 +44,7 @@
   </url>
   
   <url>
-    <loc>https://xiaowenxia.github.io/git-inside/2020/10/20/git-revisions/</loc>
-    
-    <lastmod>2021-02-17</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://xiaowenxia.github.io/git-inside/2020/11/24/git-internal-operations/</loc>
+    <loc>https://xiaowenxia.github.io/git-inside/2020/10/25/git-env/</loc>
     
     <lastmod>2021-02-16</lastmod>
     
@@ -79,7 +79,7 @@
   </url>
   
   <url>
-    <loc>https://xiaowenxia.github.io/git-inside/2020/10/25/git-env/</loc>
+    <loc>https://xiaowenxia.github.io/git-inside/2020/11/24/git-internal-operations/</loc>
     
     <lastmod>2021-02-16</lastmod>
     
