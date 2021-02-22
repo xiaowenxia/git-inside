@@ -397,7 +397,7 @@ ae02248d14bfdc9d4d38b1532cab278d179bc863	refs/remotes/origin/feature/sensitive_s
 
 ### 总结
 
-相对于TCP、HTTP、Protobuf等协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。
+相对于 TCP 、 HTTP 、 Protobuf 等协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。
 
 上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述：
 <div align="center">
