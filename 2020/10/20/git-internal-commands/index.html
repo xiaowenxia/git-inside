@@ -44,7 +44,7 @@
   
   
   
-<meta name="generator" content="Hexo 5.3.0"></head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
@@ -348,6 +348,7 @@ or: git cat-file (--batch | --batch-check) [--follow-symlinks] [--textconv | --f
 <p>示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 objects 文件类型</span></span><br><span class="line">$ git cat-file -t 56ec1a0729533fbd8d38b7964b6f8ca2cace70ba</span><br><span class="line">commit</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 objects 文件大小</span></span><br><span class="line">$ git cat-file -s 56ec1a0729533fbd8d38b7964b6f8ca2cace70ba</span><br><span class="line">243</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 objects 文件（格式化）内容</span></span><br><span class="line">$ git cat-file -p 56ec1a0729533fbd8d38b7964b6f8ca2cace70ba</span><br><span class="line">tree 7f9adb36c3e987d1ca9d40ba538afd8cbc74e942</span><br><span class="line">parent cf22ff3d15d718603f93c36f13d848e00d841def</span><br><span class="line">author chenan.xxw &lt;chenan.xxw@alibaba-inc.com&gt; 1599545250 +0800</span><br><span class="line">committer chenan.xxw &lt;chenan.xxw@alibaba-inc.com&gt; 1599545250 +0800</span><br><span class="line"></span><br><span class="line">update README.md</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以通过 tag 或 branch 名称查看 object 文件</span></span><br><span class="line">$ git cat-file -t v0.1.0</span><br><span class="line">tag</span><br><span class="line">$ git cat-file -p v0.1.0</span><br><span class="line">object c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc</span><br><span class="line"><span class="built_in">type</span> commit</span><br><span class="line">tag v0.1.0</span><br><span class="line">tagger Scott Chacon &lt;schacon@gmail.com&gt; 1290556430 -0800</span><br><span class="line"></span><br><span class="line">tagging initial release of libgit2</span><br></pre></td></tr></table></figure>
 
+
 <p><a name="5M8In"></a></p>
 <h3 id="git-ls-files"><a href="#git-ls-files" class="headerlink" title="git ls-files"></a>git ls-files</h3><p>查看index文件内容。</p>
 <details>
@@ -391,6 +392,7 @@ or: git cat-file (--batch | --batch-check) [--follow-symlinks] [--textconv | --f
 
 <p>示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ git ls-files</span><br><span class="line">.gitignore</span><br><span class="line">Makefile</span><br><span class="line">README</span><br><span class="line">README.md</span><br><span class="line">cache.h</span><br><span class="line">cat-file.c</span><br><span class="line">commit-tree.c</span><br><span class="line">init-db.c</span><br><span class="line">read-cache.c</span><br><span class="line">read-tree.c</span><br><span class="line">show-diff.c</span><br><span class="line">update-cache.c</span><br><span class="line">write-tree.c</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 hexdump 可以查看到index文件内容</span></span><br><span class="line">$ hexdump -C .git/index</span><br></pre></td></tr></table></figure>
+
 <p><a name="CFLvH"></a></p>
 <h3 id="git-ls-tree"><a href="#git-ls-tree" class="headerlink" title="git ls-tree"></a>git ls-tree</h3><p>查看树内容，可以是 commit-id ，也可以是 tree-id ，也可以是 <a href="./git-revisions.md">git revisions</a> 格式。</p>
 <details>
@@ -415,6 +417,7 @@ or: git cat-file (--batch | --batch-check) [--follow-symlinks] [--textconv | --f
 示例
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ git ls-tree bace6b8b2d3058e3cc0495f5edfb235ed8cff21e</span><br><span class="line">100644 blob c30106543ed8f32af334362fa82e3a4ad71ef20f	home.md</span><br><span class="line">100644 blob c3d45c3c479ebc458accbbd82c6483aecb35e516	main.md</span><br><span class="line">040000 tree fec352d6a6f669a3e1b035202911245e1d73e8ac	subdir</span><br><span class="line"></span><br><span class="line"><span class="comment"># size、全路径格式</span></span><br><span class="line">$ git ls-tree -l --full-name bace6b8b2d3058e3cc0495f5edfb235ed8cff21e</span><br><span class="line">100644 blob c30106543ed8f32af334362fa82e3a4ad71ef20f      16	home.md</span><br><span class="line">100644 blob c3d45c3c479ebc458accbbd82c6483aecb35e516      18	main.md</span><br><span class="line">040000 tree fec352d6a6f669a3e1b035202911245e1d73e8ac       -	subdir</span><br><span class="line"></span><br><span class="line">$ git ls-tree --full-name HEAD</span><br><span class="line">100644 blob c30106543ed8f32af334362fa82e3a4ad71ef20f	home.md</span><br><span class="line">100644 blob c3d45c3c479ebc458accbbd82c6483aecb35e516	main.md</span><br><span class="line">040000 tree fec352d6a6f669a3e1b035202911245e1d73e8ac	subdir</span><br><span class="line"></span><br><span class="line"><span class="comment"># git revision 格式</span></span><br><span class="line">$ git ls-tree --full-name HEAD^&#123;tree&#125;</span><br><span class="line">100644 blob c30106543ed8f32af334362fa82e3a4ad71ef20f	home.md</span><br><span class="line">100644 blob c3d45c3c479ebc458accbbd82c6483aecb35e516	main.md</span><br><span class="line">040000 tree fec352d6a6f669a3e1b035202911245e1d73e8ac	subdir</span><br></pre></td></tr></table></figure>
+
 
 <p><a name="AAHtb"></a></p>
 <h3 id="git-read-tree"><a href="#git-read-tree" class="headerlink" title="git read-tree"></a>git read-tree</h3><p>把tree的信息（可以是多个）写入到索引（index）中。</p>
@@ -451,6 +454,7 @@ Merging
 
 <p>示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ git read-tree 7fc6c35263716bad0d1df5a814766e8f1fd20345</span><br><span class="line">$ git ls-files</span><br><span class="line">home.md</span><br><span class="line">main.md</span><br><span class="line">subdir/deeper.md</span><br><span class="line"></span><br><span class="line">$ git read-tree HEAD^</span><br><span class="line">home.md</span><br><span class="line">main.md</span><br></pre></td></tr></table></figure>
+
 <h3 id="git-write-tree"><a href="#git-write-tree" class="headerlink" title="git write-tree"></a>git write-tree</h3><p>把存储区的文件结构存储成 tree 对象。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -464,6 +468,7 @@ Merging
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 待补充</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="git-commit-tree"><a href="#git-commit-tree" class="headerlink" title="git commit-tree"></a>git commit-tree</h3><p>把 tree 对象读取到暂存区。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -474,6 +479,7 @@ Merging
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 待补充</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="git-mktree"><a href="#git-mktree" class="headerlink" title="git mktree"></a>git mktree</h3><p>根据输入（<code>ls-tree</code>的输出格式）来生成 tree 对象。</p>
 <summary>命令说明（点击展开）</summary>
 
@@ -486,9 +492,8 @@ Merging
 
 </br>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 待补充</span></span><br></pre></td></tr></table></figure>
-### git diff-tree
-比较 2 个tree 对象 的差异并格式化输出。
 
+<h3 id="git-diff-tree"><a href="#git-diff-tree" class="headerlink" title="git diff-tree"></a>git diff-tree</h3><p>比较 2 个tree 对象 的差异并格式化输出。</p>
 <summary>命令说明（点击展开）</summary>
 
 <p>usage: git diff-tree [–stdin] [-m] [-c] [–cc] [-s] [-v] [–pretty] [-t] [-r] [–root] [<common-diff-options>] <tree-ish> [<tree-ish>] [<path>…]<br>  -r            diff recursively<br>  –root        include the initial commit as diff against /dev/null</p>
@@ -497,6 +502,7 @@ Merging
 
 </br>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 待补充</span></span><br></pre></td></tr></table></figure>
+
 
 <p><a name="UDzYk"></a></p>
 <h3 id="git-gc"><a href="#git-gc" class="headerlink" title="git gc"></a>git gc</h3><p>打包压缩操作，将多个 object 对象打包成 pack 文件对象。</p>
@@ -517,6 +523,7 @@ Merging
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git gc</span><br><span class="line">Enumerating objects: 43, <span class="keyword">done</span>.</span><br><span class="line">Counting objects: 100% (43/43), <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 12 threads</span><br><span class="line">Compressing objects: 100% (43/43), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (43/43), <span class="keyword">done</span>.</span><br><span class="line">Total 43 (delta 15), reused 26 (delta 0)</span><br><span class="line">Computing commit graph generation numbers: 100% (10/10), <span class="keyword">done</span>.</span><br></pre></td></tr></table></figure>
 
+
 <p><a name="hPrtl"></a></p>
 <h3 id="git-verify-pack"><a href="#git-verify-pack" class="headerlink" title="git verify-pack"></a>git verify-pack</h3><p>查看 pack 包内容。<br /></p>
 <details>
@@ -532,6 +539,7 @@ Merging
 
 <p>示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看简略信息</span></span><br><span class="line">$ git verify-pack -s objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.idx</span><br><span class="line">non delta: 28 objects</span><br><span class="line">chain length = 1: 2 objects</span><br><span class="line">chain length = 2: 11 objects</span><br><span class="line">chain length = 3: 2 objects</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看详细内容</span></span><br><span class="line">$ git verify-pack -v objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.idx</span><br><span class="line">b0316411f58dc6dd18c700e04f9d3f7f99c17c41 commit 243 162 12</span><br><span class="line">56ec1a0729533fbd8d38b7964b6f8ca2cace70ba commit 243 163 174</span><br><span class="line">cf22ff3d15d718603f93c36f13d848e00d841def commit 236 155 337</span><br><span class="line">1bac831942f9cd24f9ced4d8fe72988eb584f85c commit 233 153 492</span><br><span class="line">9b6e8ecd34cf3fc023123aaab660e58c4f6b705a commit 243 161 645</span><br><span class="line">......</span><br><span class="line">259a84fd251cdabdbbb93b382575fba00ea3614d blob   6170 2572 33450</span><br><span class="line">49cfa9e43a2a86952e2a93c5a8485da30d5dd306 blob   5423 2189 36022</span><br><span class="line">921f981353229db0c56103a52609d35aff16f41b blob   1441 741 38211</span><br><span class="line">non delta: 28 objects</span><br><span class="line">chain length = 1: 2 objects</span><br><span class="line">chain length = 2: 11 objects</span><br><span class="line">chain length = 3: 2 objects</span><br><span class="line">objects/pack/pack-eebc99ef678d342a5e2aa34c32ec21e488f3bc32.pack: ok</span><br></pre></td></tr></table></figure>
+
 
 <p><a name="D5x8u"></a></p>
 <h3 id="git-hash-object"><a href="#git-hash-object" class="headerlink" title="git hash-object"></a>git hash-object</h3><p>计算并生成 object 文件。<br /></p>
@@ -558,6 +566,7 @@ or: git hash-object  --stdin-paths
 <p>示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 仅计算内容的 hash 值</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;test&quot;</span> | git hash-object --stdin -w --literally</span><br><span class="line">9daeafb9864cf43055ae93beb0afd6c7d144bfa4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算内容的 hash 值并写入成 object 文件</span></span><br><span class="line">$ ll objects/9d/aeafb9864cf43055ae93beb0afd6c7d144bfa4</span><br><span class="line">-r--r--r-- 1 root root 20 Sep 28 09:55 objects/9d/aeafb9864cf43055ae93beb0afd6c7d144bfa4</span><br><span class="line">$ git cat-file -p 9daeafb9864cf43055ae93beb0afd6c7d144bfa4</span><br><span class="line"><span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 
+
 <p><a name="nKiGC"></a></p>
 <h3 id="git-show-index"><a href="#git-show-index" class="headerlink" title="git show-index"></a>git show-index</h3><p>从标准输入（stdio）中读取打包索引文件（<code>*.idx</code>）内容，解析并显示打包文件的索引信息。</p>
 <details>
@@ -570,6 +579,7 @@ or: git hash-object  --stdin-paths
 
 <p>示例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ cat .git/objects/pack/pack-b433cf40a267c0fd6b9c4b8afff213eb9ef4a6fe.idx  | git show-index</span><br><span class="line">11588816 003e02611d63514e51b57eb6575e47475290ed26 (fe575e7e)</span><br><span class="line">11472110 00c99364e50d82189b7894fed6c6dda039cb1930 (55daba02)</span><br><span class="line">11271595 010f8bc628b084496e8ef448b87f05b938321793 (0ee48b3f)</span><br><span class="line">11499040 01122c9bab3033b286caf034e740429bda3910a3 (dc88ce00)</span><br><span class="line">9818594 01742e3d4d110b1dbbee737fe42deb834f61a682 (cff383fc)</span><br><span class="line">11589160 01afc6e92ae59469d19befb2dfe2083718e163dc (278f7124)</span><br><span class="line">10666903 01dc8ba07ced44ea1cb6bbf2372a9d77259cdc49 (d2cfe47d)</span><br><span class="line">10624256 01dfc33db0dd549a00d78daa612d827fd219f31d (2be74112)</span><br><span class="line">7243969 01f2ca67cc81936fed349cf46bcd58cc13ee7fcc (f31729b5)</span><br><span class="line">12537 02468694dfbbdf3e1535630afd2fc646c8de503d (96501cb8)</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
 
 <p><a name="2odx3"></a></p>
 <h3 id="git-show-ref"><a href="#git-show-ref" class="headerlink" title="git show-ref"></a>git show-ref</h3><p>列出本地引用（ref）。<br /></p>
@@ -595,6 +605,7 @@ or: git show-ref --exclude-existing[=&lt;pattern&gt;]
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git show-ref</span><br><span class="line">52855ba8f5c7e8410db2277ca1b00c4e1d1c2721 refs/heads/master</span><br><span class="line">52855ba8f5c7e8410db2277ca1b00c4e1d1c2721 refs/remotes/origin/HEAD</span><br><span class="line">52855ba8f5c7e8410db2277ca1b00c4e1d1c2721 refs/remotes/origin/master</span><br></pre></td></tr></table></figure>
 
+
 <p><a name="RFGzC"></a></p>
 <h3 id="git-update-ref"><a href="#git-update-ref" class="headerlink" title="git update-ref"></a>git update-ref</h3><p>更新引用（ref）的内容为指定的对象名称或 sha1 值。<br /></p>
 <details>
@@ -616,6 +627,7 @@ or: git update-ref [&lt;options&gt;] --stdin [-z]
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git update-ref HEAD 52855ba8f5c7e8410db2277ca1b00c4e1d1c2721</span><br></pre></td></tr></table></figure>
 
+
 <p><a name="mIaJ6"></a></p>
 <h3 id="git-rev-parse"><a href="#git-rev-parse" class="headerlink" title="git rev-parse"></a>git rev-parse</h3><p>把 <a href="#PVM6y">revisions</a> 解析成 commit-id ，除此之外，还有其他的功能。</p>
 <details>
@@ -629,6 +641,7 @@ or: git rev-parse [&lt;options&gt;] [&lt;arg&gt;...]
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示 revisions 的 sha1 值</span></span><br><span class="line">$ git rev-parse HEAD</span><br><span class="line">de1acbdbcb7549b7eff8646f9d9cfb308d6bb90b</span><br><span class="line">$ git rev-parse master^&#123;tree&#125;</span><br><span class="line">06a04ed5cae14951e376336d8eadd59f75be3f9c</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示git的工作目录</span></span><br><span class="line">$ git rev-parse --git-dir</span><br><span class="line">.git</span><br><span class="line"><span class="comment"># 显示工作区目录</span></span><br><span class="line">$ git rev-parse --show-toplevel</span><br><span class="line">/Users/xxw/workspace/aone/force-stone</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示相对于工作区根目录的相对路径</span></span><br><span class="line">$ <span class="built_in">cd</span> vendor/github.com/pkg</span><br><span class="line">$ git rev-parse --show-prefix</span><br><span class="line">vendor/github.com/pkg/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示从当前目录(cd)后退(up)到工作区的根目录的深度</span></span><br><span class="line">$ git rev-parse --show-cdup</span><br><span class="line">../../../</span><br></pre></td></tr></table></figure>
+
 
 <p><a name="NcEOk"></a></p>
 <h3 id="git-rev-list"><a href="#git-rev-list" class="headerlink" title="git rev-list"></a>git rev-list</h3><p>按照时间顺序输出历史的 commit-id 。</p>
@@ -678,6 +691,7 @@ special purpose:
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示 master 分支的历史版本</span></span><br><span class="line">$ git rev-list master</span><br><span class="line">52855ba8f5c7e8410db2277ca1b00c4e1d1c2721</span><br><span class="line">b16a0f533bbda973eb28fbfbc91a7dbb345d38d1</span><br><span class="line">983f2892bebdaa7422895a2583cd32fab54c0ea5</span><br><span class="line">7ba6884d2f1c40caf5ba40136c85c3c413c3488b</span><br><span class="line">585815f7b473f015cf99aeba71b5f37219494d90</span><br><span class="line">3e17226d70bca16ff54647bda3444764c8062922</span><br><span class="line">174b8333509496687fa9baf570b0ebe4459289fb</span><br><span class="line">84c83efa85ddfa026d3db955dac212c3376bd101</span><br><span class="line">93af3cd9281510c1d64d806c30b77ca508942859</span><br><span class="line">32067c28ccc498b8059fb37823aedfb9a2d5527c</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示 master 分支历史版本，同时显示 objects</span></span><br><span class="line">$ git rev-list master --objects</span><br><span class="line">...</span><br><span class="line">29885ee583595d9080b841625d7b2d16f0fb34d2 internal</span><br><span class="line">81a035a831bf13dc28cb86373e23c20d48b08c7c internal/diff</span><br><span class="line">05bb5447d0c6d121103ff75cfde889cd5f790794 internal/diff/diff.go</span><br><span class="line">7248748b8897d3e28421387b5133632c0cd772dd internal/service</span><br><span class="line">a0995fd53aeb7748b7618e5427844bbedf20c832 internal/service/diff</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
+
 <h3 id="git-for-each-ref"><a href="#git-for-each-ref" class="headerlink" title="git for-each-ref"></a>git for-each-ref</h3><p>查看引用列表。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -708,6 +722,7 @@ or: git for-each-ref [--contains [&lt;commit&gt;]] [--no-contains [&lt;commit&gt
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git for-each-ref</span><br><span class="line">ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/heads/master</span><br><span class="line">ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/remotes/origin/HEAD</span><br><span class="line">785b6024cfa7e95359eb5b0fe8cfc7c8e6c4905e commit refs/remotes/origin/cmn/config-snapshot</span><br><span class="line">b63157de51a6caeffe067d3410b0a3f375b94390 commit refs/remotes/origin/cmn/go-http</span><br><span class="line">...... <span class="comment"># 省略</span></span><br><span class="line">ccbe4719bd6d81a40343a97cfb49a094af30ccaf commit refs/tags/v31.3.0</span><br></pre></td></tr></table></figure>
+
 <h3 id="git-var"><a href="#git-var" class="headerlink" title="git var"></a>git var</h3><p>查看 Git 当前生效的变量。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -717,7 +732,8 @@ or: git for-each-ref [--contains [&lt;commit&gt;]] [--no-contains [&lt;commit&gt
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ git var -l</span><br><span class="line">credential.helper=osxkeychain</span><br><span class="line">color.ui=auto</span><br><span class="line"><span class="comment"># 省略</span></span><br><span class="line">alias.co=checkout</span><br><span class="line">core.repositoryformatversion=0</span><br><span class="line">core.filemode=<span class="literal">true</span></span><br><span class="line">core.bare=<span class="literal">false</span></span><br><span class="line">core.logallrefupdates=<span class="literal">true</span></span><br><span class="line">core.ignorecase=<span class="literal">true</span></span><br><span class="line">core.precomposeunicode=<span class="literal">true</span></span><br><span class="line">GIT_COMMITTER_IDENT=xiaowenxia &lt;775117471@qq.com&gt; 1607157829 +0800</span><br><span class="line">GIT_AUTHOR_IDENT=xiaowenxia &lt;775117471@qq.com&gt; 1607157829 +0800</span><br><span class="line">GIT_EDITOR=vi</span><br><span class="line">GIT_PAGER=less</span><br></pre></td></tr></table></figure>
-<h3 id="git-diff-tree"><a href="#git-diff-tree" class="headerlink" title="git diff-tree"></a>git diff-tree</h3><p>比较 2 个tree 对象 的差异并格式化输出。</p>
+
+<h3 id="git-diff-tree-1"><a href="#git-diff-tree-1" class="headerlink" title="git diff-tree"></a>git diff-tree</h3><p>比较 2 个tree 对象 的差异并格式化输出。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
 
@@ -756,6 +772,7 @@ common diff options:
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git diff-tree a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0^&#123;tree&#125; 523d41ce82ea993e7c7df8be1292b2eac84d4659^&#123;tree&#125;</span><br><span class="line">:100644 000000 5664e303b5dc2e9ef8e14a0845d9486ec1920afd 0000000000000000000000000000000000000000 D	README.md</span><br><span class="line">:040000 000000 39fb0fbcac51f66b514fbd589a5b2bc0809ce664 0000000000000000000000000000000000000000 D	doc</span><br><span class="line">:100644 100644 aec2e48cbf0a881d893ccdd9c0d4bbaf011b5b23 6fb38b7118b554886e96fa736051f18d63a80c85 M	file.txt</span><br></pre></td></tr></table></figure>
+
 <h3 id="git-merge-base"><a href="#git-merge-base" class="headerlink" title="git merge-base"></a>git merge-base</h3><p>为合并找到共同祖先。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -776,6 +793,7 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
 <h3 id="git-ref-log"><a href="#git-ref-log" class="headerlink" title="git ref-log"></a>git ref-log</h3><p>查看引用变更日志。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -786,6 +804,7 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git reflog</span><br><span class="line">2c5b80 (HEAD -&gt; main, origin/main, origin/HEAD) HEAD@&#123;0&#125;: commit: Update git commands</span><br><span class="line">539f806 HEAD@&#123;1&#125;: reset: moving to HEAD^</span><br><span class="line">bdff99c HEAD@&#123;2&#125;: commit: first commit</span><br><span class="line">539f806 HEAD@&#123;3&#125;: commit: add git-draw</span><br><span class="line">f5993a4 HEAD@&#123;4&#125;: commit: Add git-draw</span><br><span class="line">83c61eb HEAD@&#123;5&#125;: commit: Update readme.md</span><br></pre></td></tr></table></figure>
+
 <h3 id="git-blame"><a href="#git-blame" class="headerlink" title="git blame"></a>git blame</h3><p>显示文件的每一个修改版本和作者。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -823,6 +842,7 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ git blame git-refs.md</span><br><span class="line">834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800  1) </span><br><span class="line">a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  2) Git 引用本质上是指向特定的 commit 对象，git 默认情况下都会有一个 master 引用，指向一个默认的分支。</span><br><span class="line">a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  3) &gt; github 上已经把默认的分支从 `master` 改成了 `main` 分支。</span><br><span class="line">a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  4) </span><br><span class="line">a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  5) Git 还存在一个 `HEAD` 引用，代表当前工作的 tree。</span><br><span class="line">a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  6) </span><br><span class="line">a5cbb594 (xiaowenxia 2020-12-07 10:06:34 +0800  7) </span><br><span class="line">834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800  8) ```</span><br><span class="line">834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800  9) $ tree .git/refs</span><br><span class="line">834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 10) .git/refs</span><br><span class="line">834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 11) ├── heads</span><br><span class="line">834afb32 (xiaowenxia 2020-11-02 15:09:43 +0800 12) │   └── master</span><br></pre></td></tr></table></figure>
+
 <h3 id="git-check-attr"><a href="#git-check-attr" class="headerlink" title="git check-attr"></a>git check-attr</h3><p>查看文件属性。</p>
 <details>
 <summary>命令说明（点击展开）</summary>
@@ -837,6 +857,7 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 待补充</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="git-count-objects"><a href="#git-count-objects" class="headerlink" title="git count-objects"></a>git count-objects</h3><details>
 <summary>命令说明（点击展开）</summary>
 
@@ -848,6 +869,7 @@ or: git merge-base --fork-point &lt;ref&gt; [&lt;commit&gt;]
 </br>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ git count-objects</span><br><span class="line">235 objects, 2220 kilobytes</span><br><span class="line"><span class="comment"># 方便阅读</span></span><br><span class="line">$ git count-objects -H</span><br><span class="line">235 objects, 2.17 MiB</span><br><span class="line"><span class="comment"># 详细</span></span><br><span class="line">$ git count-objects -Hv</span><br><span class="line">count: 235</span><br><span class="line">size: 2.17 MiB</span><br><span class="line">in-pack: 4</span><br><span class="line">packs: 1</span><br><span class="line">size-pack: 2.42 KiB</span><br><span class="line">prune-packable: 0</span><br><span class="line">garbage: 0</span><br><span class="line">size-garbage: 0 bytes</span><br></pre></td></tr></table></figure>
+
 <h3 id="git-fsck"><a href="#git-fsck" class="headerlink" title="git fsck"></a>git fsck</h3><p>校验对象链表的正确性和有效性。</p>
 <details>
 <summary>命令说明（点击展开）</summary>

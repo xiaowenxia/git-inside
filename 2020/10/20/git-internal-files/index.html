@@ -44,7 +44,7 @@
   
   
   
-<meta name="generator" content="Hexo 5.3.0"></head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
@@ -294,6 +294,7 @@
 </blockquote>
 <p><code>.gitattribute</code> 可以为每个目录定义想要的属性，同时也支持匹配方式来设定一组目录。一个简单的示例：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a*	foo !bar -baz</span><br><span class="line"></span><br><span class="line">(<span class="keyword">in</span> .gitattributes)</span><br><span class="line">abc	foo bar baz</span><br><span class="line"></span><br><span class="line">(<span class="keyword">in</span> t/.gitattributes)</span><br><span class="line">ab*	merge=filfre</span><br><span class="line">abc	-foo -bar</span><br><span class="line">*.c	frotz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <h4 id="gitattributes-文件存储路径"><a href="#gitattributes-文件存储路径" class="headerlink" title="gitattributes 文件存储路径"></a>gitattributes 文件存储路径</h4><ul>
 <li>仓库<ul>
 <li><code>$GIT_DIR/info/attributes</code></li>
@@ -307,6 +308,7 @@
 <p>定义 <code>gitattributes</code> ，除了 <code>.gitattribute</code> 文件，也可以是 <code>$GIT_DIR/info/attributes</code>。</p>
 <p><code>.gitattribute</code> 格式非常简单，每一行定义一个或一组属性，中间使用空格作为分隔符：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pattern attr1 attr2 ...</span><br><span class="line">pattern2 attr1 attr2 ...</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>开头、结尾的空格都会忽略，(<code>#</code>)开头的行也会被忽略，双引号(<code>&quot;</code>)开头的 <code>pattern</code> 使用 C 语言风格。后一行的属性会覆盖前面的属性。</p>
 </blockquote>
@@ -330,14 +332,17 @@
 </ul>
 <p>比如存在如下文件：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 系统</span></span><br><span class="line">/etc/gitattributes          <span class="comment">#1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局</span></span><br><span class="line">/User/xxx/.gitattributes    <span class="comment">#2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地仓库</span></span><br><span class="line">├── .git</span><br><span class="line">|   ├── ......</span><br><span class="line">│   ├── info</span><br><span class="line">│   │   └── .gitattributes  <span class="comment">#3</span></span><br><span class="line">|   └── ......</span><br><span class="line">├── .gitattributes          <span class="comment">#4</span></span><br><span class="line">├── ......</span><br><span class="line">└── subdir</span><br><span class="line">    ├── .gitattributes      <span class="comment">#5</span></span><br><span class="line">    └── subdirx</span><br><span class="line">        └── .gitattributes  <span class="comment">#6</span></span><br></pre></td></tr></table></figure>
+
 <p>那优先级分别是 <code>#3</code> &gt; <code>#6</code> &gt; <code>#5</code> &gt; <code>#4</code> &gt; <code>#2</code> &gt; <code>#1</code>。</p>
 <p>通过 <code>git check-attr</code> 查看 <code>.gitattribute</code>文件内容信息，命令参考 <a href="./git-internal-commands.md#git-check-attr">git check-attr</a>。</p>
 <h4 id="gitkeep"><a href="#gitkeep" class="headerlink" title=".gitkeep"></a>.gitkeep</h4><p>了解 git 底层原理的人应该比较清楚，git 无法追踪一个空的文件夹，当用户需要追踪(track)一个空的文件夹的时候，按照惯例，大家会把一个称为 <code>.gitkeep</code> 的文件放在这些文件夹里。</p>
 <h4 id="gitmodules"><a href="#gitmodules" class="headerlink" title=".gitmodules"></a>.gitmodules</h4><p>git 子仓库（submodules）。</p>
 <h4 id="git-description"><a href="#git-description" class="headerlink" title=".git/description"></a>.git/description</h4><p><code>.git/description</code> 文件用来存储仓库名称以及仓库的描述信息。默认的值为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unnamed repository; edit this file &#39;description&#39; to name the repository.</span><br></pre></td></tr></table></figure>
+
 <p>也可以改成类似如下的值：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git-inside This is git-inside</span><br></pre></td></tr></table></figure>
+
 <p>有些Git 工具（比如 <a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-GitWeb">GitWeb</a> ）通过读取该文件来获取仓库名称以及仓库的说明信息。git hooks 也会读取 <code>.git/description</code> 来获取仓库名称。</p>
 
       

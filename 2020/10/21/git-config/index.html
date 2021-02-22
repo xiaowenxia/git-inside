@@ -44,7 +44,7 @@
   
   
   
-<meta name="generator" content="Hexo 5.3.0"></head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
@@ -299,7 +299,9 @@
 </ul>
 <p><code>git config</code> 命令，分别可以使用 <code>--local</code> 、 <code>--global</code> 、 <code>--system</code> 来设置对应的git 配置：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前工作区配置</span></span><br><span class="line">$ git config --<span class="built_in">local</span> --list</span><br><span class="line"><span class="comment"># 查看全局配置</span></span><br><span class="line">$ git config --global --list</span><br><span class="line"><span class="comment"># 查看系统配置</span></span><br><span class="line">$ git config --system --list</span><br><span class="line"><span class="comment"># 查看当前生效的配置</span></span><br><span class="line">$ git config --list</span><br></pre></td></tr></table></figure>
+
 <h3 id="常见的配置项"><a href="#常见的配置项" class="headerlink" title="常见的配置项"></a>常见的配置项</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置用户名</span></span><br><span class="line">$ git config --global user.name <span class="string">&quot;xiaowenxia&quot;</span></span><br><span class="line"><span class="comment"># 配置邮箱</span></span><br><span class="line">$ git config --global user.email <span class="string">&quot;775117471@qq.com&quot;</span></span><br><span class="line"><span class="comment"># 配置自动颜色</span></span><br><span class="line">$ git config --global color.ui auto</span><br><span class="line"><span class="comment"># 配置默认的编辑器为vim</span></span><br><span class="line">$ git config --global core.editor vim</span><br></pre></td></tr></table></figure>
+
 <h3 id="git-config"><a href="#git-config" class="headerlink" title="git config"></a>git config</h3><details>
 <summary>命令说明（点击展开）</summary>
 
@@ -350,23 +352,31 @@ Other
 <h3 id="更多配置项"><a href="#更多配置项" class="headerlink" title="更多配置项"></a>更多配置项</h3><h4 id="core-editor"><a href="#core-editor" class="headerlink" title="core.editor"></a>core.editor</h4><p>git 默认使用环境变量 <code>VISUAL</code> 或 <code>EDITOR</code> 作为默认的编辑器，用户可以通过配置 <code>core.editor</code> 设置默认的编辑器。</p>
 <h4 id="commit-template"><a href="#commit-template" class="headerlink" title="commit.template"></a>commit.template</h4><p><code>commit.template</code> 可以让你配置 <code>git commit</code> 时的提交信息的模板文件：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置 commit 模板文件为 ~/.gitmessage.txt</span></span><br><span class="line">$ git config --global commit.template ~/.gitmessage.txt</span><br><span class="line"><span class="comment"># 提交时，则会显示模板</span></span><br><span class="line">$ git commit</span><br></pre></td></tr></table></figure>
+
 <h4 id="core-pager"><a href="#core-pager" class="headerlink" title="core.pager"></a>core.pager</h4><p>配置默认的查看git 输出的工具，比如 <code>git log</code>、 <code>git diff</code>等，默认为 <a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man1/less.1.html">less</a>，当然你也可以配置成其他的翻页工具：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置成 more</span></span><br><span class="line">$ git config --global core.pager more</span><br><span class="line"><span class="comment"># 配置为空，则不使用翻页工具</span></span><br><span class="line">$ git config --global core.pager <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
 <h4 id="user-signingkey"><a href="#user-signingkey" class="headerlink" title="user.signingkey"></a>user.signingkey</h4><p>设置你的 <a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/user/project/repository/gpg_signed_commits/#:~:text=You%20can%20use%20a%20GPG%20key%20to%20sign,used%20for%20all%20OpenPGP%2FPGP%2FGPG%20related%20material%20and%20implementations.">GPG</a> 签名id：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.signingkey &lt;gpg-key-id&gt;</span><br></pre></td></tr></table></figure>
+
 <h4 id="core-excludesfile"><a href="#core-excludesfile" class="headerlink" title="core.excludesfile"></a>core.excludesfile</h4><p>设置全局 ignore 的文件，该配置项相当于全局的 <a target="_blank" rel="noopener" href="https://git-scm.com/docs/gitignore">.gitignore</a> 文件。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.excludesfile ~/.gitignore_global</span><br></pre></td></tr></table></figure>
+
 <h4 id="help-autocorrect"><a href="#help-autocorrect" class="headerlink" title="help.autocorrect"></a>help.autocorrect</h4><p>git 命令如果输入有误时，会提示是否存在类似的命令，比如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 故意输错 chekcout，则提示相似的 checkout 命令</span></span><br><span class="line">$ git chekcout master</span><br><span class="line">git: <span class="string">&#x27;chekcout&#x27;</span> is not a git <span class="built_in">command</span>. See <span class="string">&#x27;git --help&#x27;</span>.</span><br><span class="line"></span><br><span class="line">The most similar <span class="built_in">command</span> is</span><br><span class="line">    checkout</span><br></pre></td></tr></table></figure>
 <p><code>help.autocorrect</code> 则可以让 git 自动纠正命令并执行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git chekcout master</span><br><span class="line">WARNING: You called a Git <span class="built_in">command</span> named <span class="string">&#x27;chekcout&#x27;</span>, <span class="built_in">which</span> does not exist.</span><br><span class="line">Continuing under the assumption that you meant <span class="string">&#x27;checkout&#x27;</span></span><br><span class="line"><span class="keyword">in</span> 0.1 seconds automatically...</span><br></pre></td></tr></table></figure>
+
 <h4 id="color-ui"><a href="#color-ui" class="headerlink" title="color.ui"></a>color.ui</h4><p>设置 git 命令输出是否带有颜色。<br>git 还支持更细颗粒度的颜色输出配置：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">color.branch</span><br><span class="line">color.diff</span><br><span class="line">color.interactive</span><br><span class="line">color.status</span><br></pre></td></tr></table></figure>
+
 <h4 id="core-autocrlf"><a href="#core-autocrlf" class="headerlink" title="core.autocrlf"></a>core.autocrlf</h4><p>Windows 和 Linux/MacOS 的换行符是有差异的，Windows的换行符是 <code>CRLF</code>，Linux/MacOS 的换行符是<code>LF</code>，如果用户在 Windows 上提交代码，那 checkout 到Linux/MacOS 平台上则会有显示问题，开启 <code>core.autocrlf</code> 配置项则可以让 git 根据平台自动转换换行符。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.autocrlf <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
 <h4 id="core-attributesFile"><a href="#core-attributesFile" class="headerlink" title="core.attributesFile"></a>core.attributesFile</h4><p>设置 .gitattributes 文件路径。</p>
 <h4 id="配置-merge-或者-diff-工具"><a href="#配置-merge-或者-diff-工具" class="headerlink" title="配置 merge 或者 diff 工具"></a>配置 merge 或者 diff 工具</h4><p>git 还支持配置 merge 或者 diff 工具，比如如下的配置：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global merge.tool extMerge</span><br><span class="line">$ git config --global mergetool.extMerge.cmd \</span><br><span class="line">  <span class="string">&#x27;extMerge &quot;$BASE&quot; &quot;$LOCAL&quot; &quot;$REMOTE&quot; &quot;$MERGED&quot;&#x27;</span></span><br><span class="line">$ git config --global mergetool.extMerge.trustExitCode <span class="literal">false</span></span><br><span class="line">$ git config --global diff.external extDiff</span><br></pre></td></tr></table></figure>
+
 <p>详细配置说明请参考 <a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration">Customizing Git - Git Configuration</a>。</p>
 
       
