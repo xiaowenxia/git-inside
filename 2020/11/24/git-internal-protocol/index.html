@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png">
 <meta property="article:published_time" content="2020-11-24T02:28:13.000Z">
-<meta property="article:modified_time" content="2021-02-22T02:08:10.000Z">
+<meta property="article:modified_time" content="2021-02-22T07:27:43.000Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png">
@@ -445,7 +445,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">`git --exec-path`/git-update-server-info &amp;&amp; cat .git/info/refs</span><br><span class="line">3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/heads/master</span><br><span class="line">3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/remotes/origin/HEAD</span><br><span class="line">f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea	refs/remotes/origin/develop</span><br><span class="line">61ee902744d1f5a480e607856d44b104602d6b13	refs/remotes/origin/feature/p3c_scan</span><br><span class="line">ae02248d14bfdc9d4d38b1532cab278d179bc863	refs/remotes/origin/feature/sensitive_scan</span><br><span class="line">3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/remotes/origin/master</span><br><span class="line">3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12	refs/tags/v1.0</span><br></pre></td></tr></table></figure>
 
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>相对于 TCP 、 HTTP 、 Protobuf 等协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。</p>
-<p>上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述：</p>
+<p>上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述（ <a target="_blank" rel="noopener" href="https://github.com/jiangxin">@jiangxin</a> ）：</p>
 <div align="center">
 <img src="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png" width="800" />
 </div>
