@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01B3sjB41QkSKz32eGb_!!6000000002014-2-tps-2332-1480.png">
 <meta property="article:published_time" content="2021-02-23T02:45:28.000Z">
-<meta property="article:modified_time" content="2021-02-23T02:45:28.000Z">
+<meta property="article:modified_time" content="2021-02-23T13:38:10.000Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png">
@@ -321,7 +321,8 @@
 <li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
 <li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
 </ul>
-<h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><h3 id="Git-传输协议格式"><a href="#Git-传输协议格式" class="headerlink" title="Git 传输协议格式"></a>Git 传输协议格式</h3><h4 id="pkt-line-格式"><a href="#pkt-line-格式" class="headerlink" title="pkt-line 格式"></a>pkt-line 格式</h4><p>pkt-line 数据流用来描述引用信息，每一行的前四个字节代表这一行的十六进制编码的长度，包括这四个字节和数据在内。因为包括自身四个字节，前四个直接一定大于0004，所以 pkt-line 格式定义了3个特殊的编码：</p>
+<h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>本文算是上一篇文章的总结帖，涉及了传输协议格式、环境变量、子命令等，并附上了相关的源码说明。</p>
+<h3 id="Git-传输协议格式"><a href="#Git-传输协议格式" class="headerlink" title="Git 传输协议格式"></a>Git 传输协议格式</h3><h4 id="pkt-line-格式"><a href="#pkt-line-格式" class="headerlink" title="pkt-line 格式"></a>pkt-line 格式</h4><p>pkt-line 数据流用来描述引用信息，每一行的前四个字节代表这一行的十六进制编码的长度，包括这四个字节和数据在内。因为包括自身四个字节，前四个直接一定大于0004，所以 pkt-line 格式定义了3个特殊的编码：</p>
 <ul>
 <li><em><strong>0000</strong></em> ( <code>flush-pkt</code> )：代表一段消息的结束。</li>
 <li><em><strong>0001</strong></em> ( <code>delim-pkt</code> )：代表一段消息的分节符。</li>
@@ -364,7 +365,7 @@
 </ul>
 <h4 id="哑协议"><a href="#哑协议" class="headerlink" title="哑协议"></a>哑协议</h4><p>上面使用 Wireshark 抓取到的协议叫智能（ smart ）协议，实际上 Git 1.6.6 之前的版本（2010年前）一直使用哑（ Dumb ）协议。使用哑协议的版本库很难保证安全性和私有化，而且只能架设只读版本库，目前已经很少使用了，哑协议的交互过程可以参考《<a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols">Git Internals - Transfer Protocols</a>》。</p>
 <h4 id="protocol-v2"><a href="#protocol-v2" class="headerlink" title="protocol v2"></a>protocol v2</h4><p>Git 目前已经有新的 <a target="_blank" rel="noopener" href="https://github.com/git/git/blob/master/Documentation/technical/protocol-v2.txt">protocol v2</a> 协议，支持更高阶的特性，比如能力广播、断电续传等。</p>
-<h3 id="相关环境变量"><a href="#相关环境变量" class="headerlink" title="相关环境变量"></a>相关环境变量</h3><p>Git 提供了几个非常有意思的环境变量用于查看和调试传输协议。</p>
+<h3 id="相关环境变量"><a href="#相关环境变量" class="headerlink" title="相关环境变量"></a>相关环境变量</h3><p>除了 <code>GIT_TRACE</code>用于查看 Git 运行日志，Git 还提供了几个非常有意思的环境变量用于查看和调试传输协议。</p>
 <h4 id="GIT-TRACE"><a href="#GIT-TRACE" class="headerlink" title="GIT_TRACE"></a><code>GIT_TRACE</code></h4><h4 id="GIT-TRACE-PACKET"><a href="#GIT-TRACE-PACKET" class="headerlink" title="GIT_TRACE_PACKET"></a><code>GIT_TRACE_PACKET</code></h4><p><code>GIT_TRACE_PACKET=true</code>：显示协议交互数据，不过不会显示 PACK 包内容。输出的信息是经过格式化的，并不是原始数据，不过这个比较容易理解和阅读。</p>
 <div align="center">
 <img src="https://img.alicdn.com/imgextra/i3/O1CN013WmZbH1vh1SLd3J3l_!!6000000006203-2-tps-2332-1480.png" width="800"/>
