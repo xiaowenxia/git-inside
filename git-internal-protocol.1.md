@@ -13,6 +13,7 @@
 * [参考资料](#参考资料)
 
 ### 概要
+本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。
 
 > 参考文章：[Git on the Server - The Protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)。
 
@@ -20,7 +21,7 @@
 
 [Wireshark](https://www.wireshark.org/) 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。
 
-> 不借助 Wireshark ，设置 `GIT_TRACE_CURL` 环境变量也能够查看到 Git 的传输协议过程，看下文的 [相关环境变量](#相关环境变量) 。
+> 不借助 Wireshark ，设置 `GIT_TRACE_CURL` 环境变量也能够查看到 Git 的传输协议过程，具体看 [GIT_TRACE_CURL](https://git-scm.com/docs/git#Documentation/git.txt-codeGITTRACECURLcode) 或《 Git 底层原理：传输协议分析（二）》。
 
 #### 准备工作
 本文使用阿里云的代码托管平台 [Codeup](https://codeup.aliyun.com/) 来分析传输协议。当然，你也可以使用 [Github](https://github.com) 或者 [Gitee](https://gitee.com/) 。
@@ -35,8 +36,9 @@ codeup.aliyun.com has address 118.31.165.50
 
 ##### 2. 设置 `SSLKEYLOGFILE` 环境变量
 通过设置 `SSLKEYLOGFILE`环境变量，可以保存 TLS 的会话钥匙（ `Session Key` ），wireshark 再读取 `Session Key` 然后实时解析 https 数据流，具体可以参考这篇文章：[Walkthrough: Decrypt SSL/TLS traffic (HTTPS and HTTP/2) in Wireshark](https://joji.me/en-us/blog/walkthrough-decrypt-ssl-tls-traffic-https-and-http2-in-wireshark/#:~:text=The%20second%20method%20to%20decrypt%20SSL%2FTLS%20packets%20is,generate%20TLS%20session%20keys%20out%20to%20that%20file.)。
-
+如下设置：
 ```bash
+# 该命令只在当前终端生效。
 export SSLKEYLOGFILE=~/sslkeylog.log
 ```
 
@@ -46,8 +48,6 @@ export SSLKEYLOGFILE=~/sslkeylog.log
 <div align="center">
 <img src="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png" width="600"/>
 </div>
-
-<!-- ![](./res/wireshark-perferences.png) -->
 
 启动 Wireshark 监听网卡，设置过滤规则为 `tls && http && ip.addr == 118.31.165.50` ，其中 `118.31.165.50`就是获取到的服务器 ip 地址。
 
@@ -63,7 +63,7 @@ $ git clone https://codeup.aliyun.com/5ed5e6f717b522454a36976e/Codeup-Demo.git
 Wireshark 抓包得到如下数据包：
 
 ![](https://img.alicdn.com/imgextra/i4/O1CN019piDk81N0hvSwYyKK_!!6000000001508-2-tps-3654-446.png)
-> 一开始有个 `Unautherized` 的过程，这个主要是 git 尝试不使用认证方式。
+> 一开始有个 `Unautherized` 的过程，这个是 git 在尝试匿名访问。
 
 点击 `菜单` > `Analyze` > `Follow` > `HTTP Stream` 可以更直观的查看数据交互流，这些数据是 HTTP 内容（不包括TLS）：
 

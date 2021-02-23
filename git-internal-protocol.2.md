@@ -25,6 +25,8 @@
 
 ### 概要
 
+本文算是上一篇文章的总结帖，涉及了传输协议格式、环境变量、子命令等，并附上了相关的源码说明。
+
 ### Git 传输协议格式
 
 #### pkt-line 格式
@@ -125,9 +127,11 @@ $ git clone git://git/project.git
 Git 目前已经有新的 [protocol v2](https://github.com/git/git/blob/master/Documentation/technical/protocol-v2.txt) 协议，支持更高阶的特性，比如能力广播、断电续传等。
 
 ### 相关环境变量
-Git 提供了几个非常有意思的环境变量用于查看和调试传输协议。
+
+除了 `GIT_TRACE`用于查看 Git 运行日志，Git 还提供了几个非常有意思的环境变量用于查看和调试传输协议。
 
 #### `GIT_TRACE`
+
 
 #### `GIT_TRACE_PACKET`
 `GIT_TRACE_PACKET=true`：显示协议交互数据，不过不会显示 PACK 包内容。输出的信息是经过格式化的，并不是原始数据，不过这个比较容易理解和阅读。
