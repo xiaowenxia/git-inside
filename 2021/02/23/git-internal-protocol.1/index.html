@@ -18,21 +18,22 @@
   
   
   <title>Git 底层原理：传输协议分析（一） | Hexo</title>
-  <meta name="description" content="Git 底层原理：传输协议分析（一）目录 概要 git https 传输协议分析 准备工作 git clone git fetch git push   git ssh 传输协议分析 总结 参考资料  概要本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。  参考文章：Git on the Server - The Protocols。  git htt">
+  <meta name="description" content="Git 底层原理：传输协议分析（一）目前主流的代码托管平台都支持 https 和 ssh 的方式来下载和推送代码，这个主要得力于 Git 有一套自定义的传输协议来保证可靠的传输， 本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。 git https 传输协议分析Wireshark 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git 底层原理：传输协议分析（一）">
 <meta property="og:url" content="https://xiaowenxia.github.io/git-inside/2021/02/23/git-internal-protocol.1/index.html">
 <meta property="og:site_name" content="夏晓文的博客">
-<meta property="og:description" content="Git 底层原理：传输协议分析（一）目录 概要 git https 传输协议分析 准备工作 git clone git fetch git push   git ssh 传输协议分析 总结 参考资料  概要本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。  参考文章：Git on the Server - The Protocols。  git htt">
+<meta property="og:description" content="Git 底层原理：传输协议分析（一）目前主流的代码托管平台都支持 https 和 ssh 的方式来下载和推送代码，这个主要得力于 Git 有一套自定义的传输协议来保证可靠的传输， 本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。 git https 传输协议分析Wireshark 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i4/O1CN019piDk81N0hvSwYyKK_!!6000000001508-2-tps-3654-446.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01RnN1z21QUQTWDXiAY_!!6000000001979-2-tps-3654-440.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i4/O1CN01N6XA251GnzEOtt5PY_!!6000000000668-2-tps-3654-440.png">
+<meta property="og:image" content="https://img.alicdn.com/imgextra/i1/O1CN01W8mQ3A1FOxzDspx7l_!!6000000000478-2-tps-2332-976.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png">
 <meta property="article:published_time" content="2021-02-23T02:45:28.000Z">
-<meta property="article:modified_time" content="2021-02-23T13:38:10.000Z">
+<meta property="article:modified_time" content="2021-03-22T01:58:03.000Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png">
@@ -295,23 +296,8 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="Git-底层原理：传输协议分析（一）"><a href="#Git-底层原理：传输协议分析（一）" class="headerlink" title="Git 底层原理：传输协议分析（一）"></a>Git 底层原理：传输协议分析（一）</h2><h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
-<li><a href="#%E6%A6%82%E8%A6%81">概要</a></li>
-<li><a href="#git-https-%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90">git https 传输协议分析</a><ul>
-<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">准备工作</a></li>
-<li><a href="#git-clone">git clone</a></li>
-<li><a href="#git-fetch">git fetch</a></li>
-<li><a href="#git-push">git push</a></li>
-</ul>
-</li>
-<li><a href="#git-ssh-%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90">git ssh 传输协议分析</a></li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
-<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
-</ul>
-<h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。</p>
-<blockquote>
-<p>参考文章：<a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols">Git on the Server - The Protocols</a>。</p>
-</blockquote>
+        <h2 id="Git-底层原理：传输协议分析（一）"><a href="#Git-底层原理：传输协议分析（一）" class="headerlink" title="Git 底层原理：传输协议分析（一）"></a>Git 底层原理：传输协议分析（一）</h2><p>目前主流的代码托管平台都支持 <code>https</code> 和 <code>ssh</code> 的方式来下载和推送代码，这个主要得力于 Git 有一套自定义的传输协议来保证可靠的传输，</p>
+<p>本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。</p>
 <h3 id="git-https-传输协议分析"><a href="#git-https-传输协议分析" class="headerlink" title="git https 传输协议分析"></a>git https 传输协议分析</h3><p><a target="_blank" rel="noopener" href="https://www.wireshark.org/">Wireshark</a> 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。</p>
 <blockquote>
 <p>不借助 Wireshark ，设置 <code>GIT_TRACE_CURL</code> 环境变量也能够查看到 Git 的传输协议过程，具体看 <a target="_blank" rel="noopener" href="https://git-scm.com/docs/git#Documentation/git.txt-codeGITTRACECURLcode">GIT_TRACE_CURL</a> 或《 Git 底层原理：传输协议分析（二）》。</p>
@@ -320,8 +306,8 @@
 <blockquote>
 <p>github 使用更高效的 <a target="_blank" rel="noopener" href="https://developers.google.com/web/fundamentals/performance/http2?hl=zh-cn">http/2 协议</a>。 http/2 协议因为数据帧是二进制格式，对于分析 https 交互并不直观，所以本文使用基于 http/1.1 协议的 Codeup 作为示例。</p>
 </blockquote>
-<h5 id="1-查看服务器-ip-地址"><a href="#1-查看服务器-ip-地址" class="headerlink" title="1. 查看服务器 ip 地址"></a>1. 查看服务器 ip 地址</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">host codeup.aliyun.com</span><br><span class="line">codeup.aliyun.com has address <span class="number">118.31</span><span class="number">.165</span><span class="number">.50</span></span><br></pre></td></tr></table></figure>
-<p>服务器 ip 地址为 <code>118.31.165.50</code> 。</p>
+<h5 id="1-查看服务器-ip-地址"><a href="#1-查看服务器-ip-地址" class="headerlink" title="1. 查看服务器 ip 地址"></a>1. 查看服务器 ip 地址</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ host codeup.aliyun.com</span><br><span class="line">codeup.aliyun.com has address <span class="number">118.31</span><span class="number">.165</span><span class="number">.50</span></span><br></pre></td></tr></table></figure>
+<p>获取到 <code>codeup.aliyun.com</code> 服务器 ip 地址为 <code>118.31.165.50</code> 。</p>
 <h5 id="2-设置-SSLKEYLOGFILE-环境变量"><a href="#2-设置-SSLKEYLOGFILE-环境变量" class="headerlink" title="2. 设置 SSLKEYLOGFILE 环境变量"></a>2. 设置 <code>SSLKEYLOGFILE</code> 环境变量</h5><p>通过设置 <code>SSLKEYLOGFILE</code>环境变量，可以保存 TLS 的会话钥匙（ <code>Session Key</code> ），wireshark 再读取 <code>Session Key</code> 然后实时解析 https 数据流，具体可以参考这篇文章：<a target="_blank" rel="noopener" href="https://joji.me/en-us/blog/walkthrough-decrypt-ssl-tls-traffic-https-and-http2-in-wireshark/#:~:text=The%20second%20method%20to%20decrypt%20SSL%2FTLS%20packets%20is,generate%20TLS%20session%20keys%20out%20to%20that%20file.">Walkthrough: Decrypt SSL/TLS traffic (HTTPS and HTTP/2) in Wireshark</a>。<br>如下设置：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该命令只在当前终端生效。</span></span><br><span class="line"><span class="built_in">export</span> SSLKEYLOGFILE=~/sslkeylog.log</span><br></pre></td></tr></table></figure>
 
@@ -340,7 +326,7 @@
 </blockquote>
 <p>点击 <code>菜单</code> &gt; <code>Analyze</code> &gt; <code>Follow</code> &gt; <code>HTTP Stream</code> 可以更直观的查看数据交互流，这些数据是 HTTP 内容（不包括TLS）：</p>
 <p><img src="https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png"></p>
-<p>接下来分析一下 <code>git clone</code> 的交互过程。</p>
+<p>接下来一步一步分析一下 <code>git clone</code> 的交互过程。</p>
 <h5 id="第一次交互：引用发现"><a href="#第一次交互：引用发现" class="headerlink" title="第一次交互：引用发现"></a>第一次交互：引用发现</h5><p>第一次交互主要起到 <code>握手</code> + <code>获取仓库引用信息</code> 的作用。服务端认证用户信息，并告诉客户端对应仓库的所有引用信息，以及相关的功能信息。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">首先客户端发起请求（在&#96;Authorization&#96;字段附上了用户名密码）</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br><span class="line">GET &#x2F;5ed5e6f717b522454a36976e&#x2F;Codeup-Demo.git&#x2F;info&#x2F;refs?service&#x3D;git-upload-pack</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">服务端认证用户信息，然后返回引用列表</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br><span class="line">001e# service&#x3D;git-upload-pack</span><br><span class="line">000001163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD\0multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref&#x3D;HEAD:refs&#x2F;heads&#x2F;master object-format&#x3D;sha1 agent&#x3D;git&#x2F;2.28.0.agit.6.0</span><br><span class="line">0040f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea refs&#x2F;heads&#x2F;develop</span><br><span class="line">...省略...</span><br><span class="line">003c3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 refs&#x2F;tags&#x2F;v1.0</span><br><span class="line">0000</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br></pre></td></tr></table></figure>
 
@@ -373,18 +359,27 @@
 
 <p>引用发现交互和 <code>git clone</code> 是类似的，不同的地方是服务类型为 <code>git-receive-pack</code>，请求的 URL 为 <code>$GIT_URL/info/refs?service=git-receive-pack</code>。</p>
 <h5 id="第二次交互：推送数据"><a href="#第二次交互：推送数据" class="headerlink" title="第二次交互：推送数据"></a>第二次交互：推送数据</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">客户端推送数据</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br><span class="line">POST &#x2F;5ed5e6f717b522454a36976e&#x2F;Codeup-Demo.git&#x2F;git-receive-pack HTTP&#x2F;1.1</span><br><span class="line"></span><br><span class="line">00a5113cc207f5a226e066f1119b51e57e2b8fbd8e28 b4a87307c6b56064d623851fe018b94d25e68e13 refs&#x2F;heads&#x2F;master. report-status side-band-64k agent&#x3D;git&#x2F;2.24.3.(Apple.Git-128)0000PACK.........</span><br><span class="line">x...K</span><br><span class="line">.0.@.9E...L&amp;3).x.|&amp;.E[..&#x3D;.......o.f.LJm.P.....(1..M$...s.P.#.....j%..3...tD.JD.jTR&#x2F;-.%......;..c.!.Q.......\...Q0$.B.O...Q.y..&#123;t......pj&lt;0....&#39;.....R....2....J.x...........&#96;...v....m.f..9..R.R.	.t..g....x.+I-..K.,...+.LI5...;*....1.:.I.;.9...p.v.Bg</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">服务端返回成功</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br><span class="line">0030.000eunpack ok</span><br><span class="line">0019ok refs&#x2F;heads&#x2F;master</span><br><span class="line">00000000</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br></pre></td></tr></table></figure>
-<p>第二次交互里，客户端发起的 POST 请求 URL 为：<code>$GIT_URL/git-receive-pack</code> ，其内容格式：</p>
-<h3 id="git-ssh-传输协议分析"><a href="#git-ssh-传输协议分析" class="headerlink" title="git ssh 传输协议分析"></a>git ssh 传输协议分析</h3><p>ssh 是建立在tcp之上的。<br>最后协商成功之后，将会生成一个对称加密 会话密钥key 以及一个 会话ID ，在这里要特别强调，这个是对称加密密钥key，</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li><p>相对于 TCP 、 HTTP 、 Protobuf 等协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。</p>
-</li>
-<li><p>上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述（ <a target="_blank" rel="noopener" href="https://github.com/jiangxin">@jiangxin</a> ）：</p>
+<p>第二次交互里，客户端发起的 POST 请求 URL 为：<code>$GIT_URL/git-receive-pack</code> ，其内容包括<code>old commit-id</code> 、 <code>new commit-id</code> 、当前分支、功能列表以及需要上传的 PACK 二进制内容。其中新旧 2 个 <code>commit-id</code> 有一个比较有意思的设定：</p>
+<ul>
+<li><code>old commit-id</code> 如果是 40 个 <em><code>0</code></em> ，代表是创建新分支。</li>
+<li><code>new commid-id</code> 如果是 40 个 <em><code>0</code></em> ， 代表是删除分支。</li>
+<li><code>old commit-id</code> 和 <code>new commit-id</code> 都不为 <em><code>0</code></em> ，代表是更新分支。</li>
+</ul>
+<blockquote>
+<p>相关说明可以参考 <a target="_blank" rel="noopener" href="https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L467">http-protocol.txt git-receive-pack</a> 。</p>
+</blockquote>
+<h3 id="git-ssh-传输协议分析"><a href="#git-ssh-传输协议分析" class="headerlink" title="git ssh 传输协议分析"></a>git ssh 传输协议分析</h3><p>ssh 是建立在 TCP 上的，使用的非对称加密来握手和认证，ssh的会话key（对称密钥）也不能像文章上面一样通过 <code>SSLKEYLOGFILE</code> 环境变量来获取，所以很难使用 Wireshark 进行抓包分析。不过 git 提供了环境变量 <a target="_blank" rel="noopener" href="https://git-scm.com/docs/git#Documentation/git.txt-codeGITTRACEPACKETcode">GIT_TRACE_PACKET</a> 来显示传输的过程和数据：</p>
+<p><img src="https://img.alicdn.com/imgextra/i1/O1CN01W8mQ3A1FOxzDspx7l_!!6000000000478-2-tps-2332-976.png"></p>
+<blockquote>
+<p>图中也指定了 GIT_TRACE=1 ，这个可以用来显示远程执行的命令。</p>
+</blockquote>
+<p>可以看到，ssh 只是一个通道，ssh 交互的 git 协议和流程跟 http 基本上是一样的。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>相对于 TCP 、 HTTP 、 <a target="_blank" rel="noopener" href="https://github.com/protocolbuffers/protobuf">Protobuf</a> 等通用协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。</p>
+<p>上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述（ <a target="_blank" rel="noopener" href="https://github.com/jiangxin">@jiangxin</a> ）：</p>
 <div align="center">
 <img src="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png" width="800" />
 </div>
 
-</li>
-</ul>
 <h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt">https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt</a></li>
 <li><a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols">https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols</a></li>
