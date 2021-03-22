@@ -14,18 +14,18 @@
     - [哑协议](#哑协议)
     - [protocol v2](#protocol-v2)
 * [相关环境变量](#相关环境变量)
-    - [GIT_TRACE_PACKET](#GIT_TRACE_PACKET)
-    - [GIT_TRACE_PACKFILE](#GIT_TRACE_PACKFILE)
-    - [GIT_TRACE_CURL](#GIT_TRACE_CURL)
+    - [GIT_TRACE_PACKET](#GIT-TRACE-PACKET)
+    - [GIT_TRACE_PACKFILE](#GIT-TRACE-PACKFILE)
+    - [GIT_TRACE_CURL](#GIT-TRACE-CURL)
 * [相关命令](#相关命令)
     - [git-update-server-info](#git-update-server-info)
-* [#相关源码](#相关源码)
+* [相关源码](#相关源码)
 * [总结](#总结)
 * [参考资料](#参考资料)
 
 ### 概要
 
-本文算是上一篇文章的总结帖，涉及了传输协议格式、环境变量、子命令等，并附上了相关的源码说明。
+上一篇文章讲了 git 传输协议的相关流程和要点，本文算上一篇文章的总结帖，涉及了传输协议格式、环境变量、子命令等，并附上了相关的源码说明。
 
 ### Git 传输协议格式
 

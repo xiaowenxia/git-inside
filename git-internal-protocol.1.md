@@ -1,21 +1,8 @@
 ## Git 底层原理：传输协议分析（一）
 
-### 目录
+目前主流的代码托管平台都支持 `https` 和 `ssh` 的方式来下载和推送代码，这个主要得力于 Git 有一套自定义的传输协议来保证可靠的传输，
 
-* [概要](#概要)
-* [git https 传输协议分析](#git-https-传输协议分析)
-    - [准备工作](#准备工作)
-    - [git clone](#git-clone)
-    - [git fetch](#git-fetch)
-    - [git push](#git-push)
-* [git ssh 传输协议分析](#git-ssh-传输协议分析)
-* [总结](#总结)
-* [参考资料](#参考资料)
-
-### 概要
 本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。
-
-> 参考文章：[Git on the Server - The Protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)。
 
 ### git https 传输协议分析
 
@@ -29,10 +16,10 @@
 
 ##### 1. 查看服务器 ip 地址
 ```c
-host codeup.aliyun.com
+$ host codeup.aliyun.com
 codeup.aliyun.com has address 118.31.165.50
 ```
-服务器 ip 地址为 `118.31.165.50` 。
+获取到 `codeup.aliyun.com` 服务器 ip 地址为 `118.31.165.50` 。
 
 ##### 2. 设置 `SSLKEYLOGFILE` 环境变量
 通过设置 `SSLKEYLOGFILE`环境变量，可以保存 TLS 的会话钥匙（ `Session Key` ），wireshark 再读取 `Session Key` 然后实时解析 https 数据流，具体可以参考这篇文章：[Walkthrough: Decrypt SSL/TLS traffic (HTTPS and HTTP/2) in Wireshark](https://joji.me/en-us/blog/walkthrough-decrypt-ssl-tls-traffic-https-and-http2-in-wireshark/#:~:text=The%20second%20method%20to%20decrypt%20SSL%2FTLS%20packets%20is,generate%20TLS%20session%20keys%20out%20to%20that%20file.)。
@@ -69,7 +56,7 @@ Wireshark 抓包得到如下数据包：
 
 ![](https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png)
 
-接下来分析一下 `git clone` 的交互过程。
+接下来一步一步分析一下 `git clone` 的交互过程。
 
 ##### 第一次交互：引用发现
 
@@ -234,20 +221,26 @@ x...K
 00000000
 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ```
-第二次交互里，客户端发起的 POST 请求 URL 为：`$GIT_URL/git-receive-pack` ，其内容格式：
+第二次交互里，客户端发起的 POST 请求 URL 为：`$GIT_URL/git-receive-pack` ，其内容包括`old commit-id` 、 `new commit-id` 、当前分支、功能列表以及需要上传的 PACK 二进制内容。其中新旧 2 个 `commit-id` 有一个比较有意思的设定：
+* `old commit-id` 如果是 40 个 _`0`_ ，代表是创建新分支。
+* `new commid-id` 如果是 40 个 _`0`_ ， 代表是删除分支。
+* `old commit-id` 和 `new commit-id` 都不为 _`0`_ ，代表是更新分支。
 
+> 相关说明可以参考 [http-protocol.txt git-receive-pack](https://github.com/git/git/blob/master/Documentation/technical/http-protocol.txt#L467) 。
 
 ### git ssh 传输协议分析
 
+ssh 是建立在 TCP 上的，使用的非对称加密来握手和认证，ssh的会话key（对称密钥）也不能像文章上面一样通过 `SSLKEYLOGFILE` 环境变量来获取，所以很难使用 Wireshark 进行抓包分析。不过 git 提供了环境变量 [GIT_TRACE_PACKET](https://git-scm.com/docs/git#Documentation/git.txt-codeGITTRACEPACKETcode) 来显示传输的过程和数据：
 
-ssh 是建立在tcp之上的。
-最后协商成功之后，将会生成一个对称加密 会话密钥key 以及一个 会话ID ，在这里要特别强调，这个是对称加密密钥key，
+![](https://img.alicdn.com/imgextra/i1/O1CN01W8mQ3A1FOxzDspx7l_!!6000000000478-2-tps-2332-976.png)
+> 图中也指定了 GIT_TRACE=1 ，这个可以用来显示远程执行的命令。
+
+可以看到，ssh 只是一个通道，ssh 交互的 git 协议和流程跟 http 基本上是一样的。
 
 ### 总结
+相对于 TCP 、 HTTP 、 [Protobuf](https://github.com/protocolbuffers/protobuf) 等通用协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。
 
-* 相对于 TCP 、 HTTP 、 Protobuf 等协议，Git 传输协议定义的比较随意，且扩展性和通用性比较差。不过仔细想想也没有问题，只要能保证正常传输 Git 数据包那就已经达到目的了。
-
-* 上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述（ [@jiangxin](https://github.com/jiangxin) ）：
+上面讲了一堆的细节，实际上 Git 传输协议可以更简单的表述（ [@jiangxin](https://github.com/jiangxin) ）：
 <div align="center">
 <img src="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png" width="800" />
 </div>
