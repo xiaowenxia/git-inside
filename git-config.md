@@ -169,3 +169,7 @@ $ git config --global diff.external extDiff
 ```
 
 详细配置说明请参考 [Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)。
+
+
+
+#### git 配置文件 说明 vscode 插件
