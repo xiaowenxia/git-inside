@@ -1,14 +1,12 @@
 ## Git 底层原理：传输协议分析（一）
 
-目前主流的代码托管平台都支持 `https` 和 `ssh` 的方式来下载和推送代码，这个主要得力于 Git 有一套自定义的传输协议来保证可靠的传输。
-
-本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。
+目前主流的代码托管平台都支持 `https` 和 `ssh` 的方式来下载和推送代码，这个主要得力于 Git 有一套自定义的传输协议来保证可靠的传输。工欲善其事，必先利其器。了解 git 的传输协议对 git 的使用会有更加直观的了解，也能快速排查 git 日常使用中经常出现的网络和传输问题。本文通过分析 git 的 http 协议开始，由浅入深循序渐进的展开 Git 传输协议的分析。
 
 ### git https 传输协议分析
 
 [Wireshark](https://www.wireshark.org/) 是一个抓包工具，有非常强大的过滤和分析功能，用该工具分析 git 协议流非常方便。
 
-> 不借助 Wireshark ，设置 `GIT_TRACE_CURL` 环境变量也能够查看到 Git 的传输协议过程，不过数据和加护是经过格式化展示的，具体看 [GIT_TRACE_CURL](https://git-scm.com/docs/git#Documentation/git.txt-codeGITTRACECURLcode) 。
+> 不借助 Wireshark ，设置 `GIT_TRACE_CURL` 环境变量也能够查看到 Git 的传输协议过程，不过数据和交互是经过格式化展示的，具体看 [GIT_TRACE_CURL](https://git-scm.com/docs/git#Documentation/git.txt-codeGITTRACECURLcode) 。
 
 #### 准备工作
 本文使用阿里云的代码托管平台 [Codeup](https://codeup.aliyun.com/) 来分析传输协议。当然，你也可以使用 [Github](https://github.com) 或者 [Gitee](https://gitee.com/) 。
@@ -54,7 +52,7 @@ Wireshark 抓包得到如下数据包：
 
 点击 `菜单` > `Analyze` > `Follow` > `HTTP Stream` 可以更直观的查看数据交互流，这些数据是 HTTP 的 payload 内容（不包括TLS）：
 
-![](https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png)
+![](https://img.alicdn.com/imgextra/i2/O1CN01Yt5jNA1RmZnIf2q9X_!!6000000002154-2-tps-7312-4624.png)
 
 接下来一步一步分析一下 `git clone` 的交互过程。
 

@@ -54,7 +54,7 @@ Wireshark 抓包得到如下数据包：
 
 点击 `菜单` > `Analyze` > `Follow` > `HTTP Stream` 可以更直观的查看数据交互流，这些数据是 HTTP 内容（不包括TLS）：
 
-![](https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png)
+![](https://img.alicdn.com/imgextra/i2/O1CN01Yt5jNA1RmZnIf2q9X_!!6000000002154-2-tps-7312-4624.png)
 
 接下来一步一步分析一下 `git clone` 的交互过程。
 
