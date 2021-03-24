@@ -27,13 +27,13 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i4/O1CN019piDk81N0hvSwYyKK_!!6000000001508-2-tps-3654-446.png">
-<meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png">
+<meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01Yt5jNA1RmZnIf2q9X_!!6000000002154-2-tps-7312-4624.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i2/O1CN01RnN1z21QUQTWDXiAY_!!6000000001979-2-tps-3654-440.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i4/O1CN01N6XA251GnzEOtt5PY_!!6000000000668-2-tps-3654-440.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i1/O1CN01W8mQ3A1FOxzDspx7l_!!6000000000478-2-tps-2332-976.png">
 <meta property="og:image" content="https://img.alicdn.com/imgextra/i1/O1CN01R59KkQ265t7GvMW5U_!!6000000007611-2-tps-2506-1284.png">
 <meta property="article:published_time" content="2021-02-23T02:45:28.000Z">
-<meta property="article:modified_time" content="2021-03-22T01:58:03.000Z">
+<meta property="article:modified_time" content="2021-03-24T05:59:33.000Z">
 <meta property="article:author" content="夏晓文">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.alicdn.com/imgextra/i4/O1CN01P91BS21uuvs0F0dlB_!!6000000006098-2-tps-1432-1094.png">
@@ -325,7 +325,7 @@
 <p>一开始有个 <code>Unautherized</code> 的过程，这个是 git 在尝试匿名访问。</p>
 </blockquote>
 <p>点击 <code>菜单</code> &gt; <code>Analyze</code> &gt; <code>Follow</code> &gt; <code>HTTP Stream</code> 可以更直观的查看数据交互流，这些数据是 HTTP 内容（不包括TLS）：</p>
-<p><img src="https://img.alicdn.com/imgextra/i2/O1CN01tFheyx1sfF4GEl70e_!!6000000005793-2-tps-3656-2312.png"></p>
+<p><img src="https://img.alicdn.com/imgextra/i2/O1CN01Yt5jNA1RmZnIf2q9X_!!6000000002154-2-tps-7312-4624.png"></p>
 <p>接下来一步一步分析一下 <code>git clone</code> 的交互过程。</p>
 <h5 id="第一次交互：引用发现"><a href="#第一次交互：引用发现" class="headerlink" title="第一次交互：引用发现"></a>第一次交互：引用发现</h5><p>第一次交互主要起到 <code>握手</code> + <code>获取仓库引用信息</code> 的作用。服务端认证用户信息，并告诉客户端对应仓库的所有引用信息，以及相关的功能信息。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">首先客户端发起请求（在&#96;Authorization&#96;字段附上了用户名密码）</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br><span class="line">GET &#x2F;5ed5e6f717b522454a36976e&#x2F;Codeup-Demo.git&#x2F;info&#x2F;refs?service&#x3D;git-upload-pack</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">服务端认证用户信息，然后返回引用列表</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br><span class="line">001e# service&#x3D;git-upload-pack</span><br><span class="line">000001163ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 HEAD\0multi_ack thin-pack side-band side-band-64k ofs-delta shallow deepen-since deepen-not deepen-relative no-progress include-tag multi_ack_detailed no-done symref&#x3D;HEAD:refs&#x2F;heads&#x2F;master object-format&#x3D;sha1 agent&#x3D;git&#x2F;2.28.0.agit.6.0</span><br><span class="line">0040f82d3c440cf02ff2e20d712eaa7ba63a9fbff4ea refs&#x2F;heads&#x2F;develop</span><br><span class="line">...省略...</span><br><span class="line">003c3ab7c8d1c1e2ce5f5e16a17c41f6665686980d12 refs&#x2F;tags&#x2F;v1.0</span><br><span class="line">0000</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br></pre></td></tr></table></figure>
