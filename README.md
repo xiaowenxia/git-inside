@@ -1,4 +1,4 @@
-## git 深入理解
+## git inside
 
 > 文档地址：[git-inside](https://xiaowenxia.github.io/git-inside/) 或者 [国内地址](https://xiaowenxia.gitee.io/git-inside/)。
 
