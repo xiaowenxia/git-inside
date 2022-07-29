@@ -6,6 +6,7 @@
 * [git 传输协议格式](#git-传输协议格式)
     - [ pkt-line 格式](#pkt-line-格式)
     - [side-band 格式](#side-band-格式)
+    - [能力列表 capabilities list]()
     - [引用发现数据格式](#引用发现数据格式)
     - [git-upload-pack 数据流格式](#git-upload-pack-数据流格式)
     - [git-receive-pack 数据流格式](#git-receive-pack-数据流格式)
@@ -25,6 +26,7 @@
 
 ### 概要
 
+工欲善其事，必先利其器。
 上一篇文章讲了 git 传输协议的相关流程和要点，本文算上一篇文章的总结帖，涉及了传输协议格式、环境变量、子命令等，并附上了相关的源码说明。
 
 ### Git 传输协议格式
