@@ -24,6 +24,7 @@
     * 《[Git 底层原理：Git 对象](./git-internal.objects.md)》
     * 《[git 底层文件存储格式](./git-internal.file-struct.md)》
     * [git cheatsheet](./git-cheatsheet.md)
+    * [vscode 的版本管理都用了哪些 git 命令？](./git-vscode.md)
 
 ## 参考手册
 
