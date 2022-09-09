@@ -8,8 +8,12 @@ VERBOSE=false
 CASE=
 HYPERFINE=hyperfine
 GIT=git
-# 尽量保证 TEST_REPO 在不同的磁盘上
-TEST_REPO=tensorflow.git
+TEST_REPO="unset"
+
+# 默认不挂在 pack 路径
+PACK_DIR=disabled
+# 是否显示 hyperfine 的命令输出
+HYPERFINE_SHOW_OUTPUT=""
 
 # String formatting functions.
 if [[ -t 1 ]]; then
@@ -76,25 +80,38 @@ ${tty_red}Usage:${tty_reset}
     - clone: clone 。
     - fetch: fetch 。
     - push_mirror: 推送 1w 个引用到本地仓库。
+    - all: 测试所有项。
+  -t: 设置 tensorflow.git 的路径。
+  -p: 设置测试仓库的 objects/pack 软连接的路径，用于测试 objects/pack 软链到低价介质的性能场景。
   -v: 输出更多信息。
+  -x: 显示 hyperfine 执行的命令输出。
   -h: 帮助。
 EOF
     exit 1
 }
 
-while getopts "vd:he:" o; do
+while getopts "vd:he:p:xt:" o; do
     case "${o}" in
         h)
             usage ;;
         d)
             # 工作目录
             WORKING_DIRECTORY=$OPTARG ;;
+        t)
+            # 测试的仓库地址，默认为 ${WORKING_DIRECTORY}tensorflow.git
+            TEST_REPO=$OPTARG ;;
         v)
             # 显示更多信息
             VERBOSE=true ;;
         e)
             # 选择测试例
             CASE=$OPTARG ;;
+        p)
+            # 仓库 objects/pack 挂载到该路径下
+            PACK_DIR=$OPTARG ;;
+        x)
+            # hyperfine 显示命令输出 --show-output
+            HYPERFINE_SHOW_OUTPUT="--show-output" ;;
         *)
             usage ;;
     esac
@@ -150,12 +167,6 @@ if command_exists ${HYPERFINE}; then
     tty_exit "${HYPERFINE} not available, refer to https://github.com/sharkdp/hyperfine/releases"
 fi
 
-if git_directory_not_available ${WORKING_DIRECTORY}/${TEST_REPO}; then
-        tty_exit "please clone ${TEST_REPO} first: git clone https://github.com/tensorflow/tensorflow.git --bare"
-fi
-
-flush_cache="sync; echo 3 | sudo tee /proc/sys/vm/drop_caches"
-
 # exists and return runs, or return -1 if not exists
 case_exists() {
     CASE_LIST=(${CASE//\// })
@@ -173,7 +184,35 @@ case_exists() {
     return -1
 }
 
+# 尽量保证 TEST_REPO 在不同的磁盘上
+if [[ ${TEST_REPO} == "unset" ]]; then TEST_REPO=${WORKING_DIRECTORY}/tensorflow.git; fi
+if git_directory_not_available ${TEST_REPO}; then
+        tty_exit "please clone ${TEST_REPO} first: git clone https://github.com/tensorflow/tensorflow.git --bare ${TEST_REPO}"
+fi
+
+flush_cache="sync; echo 3 | sudo tee /proc/sys/vm/drop_caches"
+WORKING_REPO=${WORKING_DIRECTORY}/dest.git
+random_name=`date +%Y%m%d_%H%M%S%N | md5sum |cut -d" " -f1`
+random_path=${PACK_DIR}/${random_name} 
+
+REMOVE_GIT_REPO="rm -rf ${WORKING_REPO}"
+if [[ $PACK_DIR != disabled ]];then
+    emph_red pack random path:${random_path}
+    REMOVE_GIT_REPO="rm -rf ${random_path} && rm -rf ${WORKING_REPO}"
+    tty_msg DEBUG REMOVE_GIT_REPO: ${REMOVE_GIT_REPO}
+fi
+
+CREATE_GIT_REPO="${GIT} init -q --bare ${WORKING_REPO}"
+if [[ $PACK_DIR != disabled ]];then
+    CREATE_GIT_REPO="${GIT} init -q --bare ${WORKING_REPO} && \
+rm -rf ${WORKING_REPO}/objects/pack && \
+mkdir -p ${random_path} && \
+ln -s  ${random_path} ${WORKING_REPO}/objects/pack"
+    tty_msg DEBUG CREATE_GIT_REPO: ${CREATE_GIT_REPO}
+fi
+
 # 测试 git init
+
 benchmark_init() {
     case_exists init
     ret=$?
@@ -182,9 +221,9 @@ benchmark_init() {
 
     emph "git init"
     setup=""
-    prepare="rm -rf ${WORKING_DIRECTORY}/dest.git;${flush_cache};"
-    command="${GIT} init --bare ${WORKING_DIRECTORY}/dest.git"
-    cleanup="rm -rf ${WORKING_DIRECTORY}/dest.git"
+    prepare="${REMOVE_GIT_REPO};${flush_cache};"
+    command="${CREATE_GIT_REPO}"
+    cleanup="${REMOVE_GIT_REPO}"
     runs=$ret
 }
 
@@ -197,16 +236,14 @@ benchmark_unpack_objects() {
 
     emph "git unpack-objects"
     # v0.9.0 有 53585 个对象
-    packfile_prefix=`echo "v0.9.0" | ${GIT} --git-dir=${WORKING_DIRECTORY}/${TEST_REPO} \
+    packfile_prefix=`echo "v0.9.0" | ${GIT} --git-dir=${TEST_REPO} \
                         pack-objects --revs ${WORKING_DIRECTORY}/benchmark_unpack_objects -q`
     packfile=${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.pack
 
     setup=""
-    prepare="rm -rf ${WORKING_DIRECTORY}/dest.git; \
-            git init --bare ${WORKING_DIRECTORY}/dest.git; \
-            ${flush_cache};"
-    command="cat ${packfile} | ${GIT} --git-dir=${WORKING_DIRECTORY}/dest.git unpack-objects"
-    cleanup="rm -rf ${WORKING_DIRECTORY}/dest.git;rm -rf ${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.*"
+    prepare="${REMOVE_GIT_REPO};${CREATE_GIT_REPO};${flush_cache};"
+    command="cat ${packfile} | ${GIT} --git-dir=${WORKING_REPO} unpack-objects"
+    cleanup="${REMOVE_GIT_REPO};rm -rf ${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.*"
     runs=$ret
 }
 
@@ -220,28 +257,33 @@ benchmark_fsck() {
     emph "git fsck"
 
     # v0.9.0 有 53585 个对象
-    packfile_prefix=`echo "v0.9.0" | ${GIT} --git-dir=${WORKING_DIRECTORY}/${TEST_REPO} \
+    packfile_prefix=`echo "v0.9.0" | ${GIT} --git-dir=${TEST_REPO} \
                         pack-objects --revs ${WORKING_DIRECTORY}/benchmark_unpack_objects -q`
     packfile=${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.pack
 
-    setup="rm -rf ${WORKING_DIRECTORY}/dest.git; \
-            git init --bare ${WORKING_DIRECTORY}/dest.git &> /dev/null && \
-            cat ${packfile} | git --git-dir=${WORKING_DIRECTORY}/dest.git unpack-objects &> /dev/null;"
+    setup="${REMOVE_GIT_REPO};${CREATE_GIT_REPO} && \
+            cat ${packfile} | git --git-dir=${WORKING_REPO} unpack-objects;"
     prepare="${flush_cache};"
-    command="${GIT} --git-dir=${WORKING_DIRECTORY}/dest.git fsck --full"
-    cleanup="rm -rf ${WORKING_DIRECTORY}/dest.git;rm -rf ${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.*"
+    command="${GIT} --git-dir=${WORKING_REPO} fsck --full"
+    cleanup="${REMOVE_GIT_REPO};rm -rf ${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.*"
     runs=$ret
 }
 
 # 测试 git fsck
 _benchmark_repack() {
-    repack_command="${GIT} --git-dir=${WORKING_DIRECTORY}/${TEST_REPO} \
-                    -c repack.writeBitmaps=false repack --max-pack-size=$1 -adf --window=10 --depth=50"
-
-    setup="${repack_command}"
+    # 这里需要预先执行一次 repack
+    setup="${REMOVE_GIT_REPO};${CREATE_GIT_REPO};${GIT} --git-dir=${WORKING_REPO} \
+-c fetch.writePackedRefs=true \
+-c fetch.unpackLimit=1 \
+-c pack.window=10 \
+-c pack.depth=50 \
+-c pack.limitpacksize=$1 \
+fetch --prune \
+--end-of-options file://${TEST_REPO} +refs/*:refs/*"
     prepare="${flush_cache};"
-    command="${repack_command}"
-    cleanup=""
+    command="${GIT} --git-dir=${TEST_REPO} \
+-c repack.writeBitmaps=false repack --max-pack-size=$1 -adf --window=10 --depth=50"
+    cleanup="${REMOVE_GIT_REPO}"
     runs=$2
 }
 
@@ -274,9 +316,9 @@ benchmark_clone() {
 
     emph "git clone"
     setup=""
-    prepare="rm -rf ${WORKING_DIRECTORY}/dest.git;${flush_cache};"
-    command="${GIT} clone --bare file://${WORKING_DIRECTORY}/${TEST_REPO} ${WORKING_DIRECTORY}/dest.git"
-    cleanup="rm -rf ${WORKING_DIRECTORY}/dest.git"
+    prepare="${REMOVE_GIT_REPO};${flush_cache};"
+    command="${GIT} clone --bare file://${TEST_REPO} ${WORKING_REPO}"
+    cleanup="${REMOVE_GIT_REPO}"
     runs=$ret
 }
 
@@ -288,13 +330,11 @@ benchmark_fetch() {
 
     emph "git fetch"
     setup=""
-    prepare="rm -rf ${WORKING_DIRECTORY}/dest.git; \
-            git init --bare ${WORKING_DIRECTORY}/dest.git; \
-            ${flush_cache};"
-    command="${GIT} --git-dir=${WORKING_DIRECTORY}/dest.git \
+    prepare="${REMOVE_GIT_REPO};${CREATE_GIT_REPO};${flush_cache};"
+    command="${GIT} --git-dir=${WORKING_REPO} \
 -c fetch.writePackedRefs=true -c fetch.unpackLimit=1 fetch --prune \
---end-of-options file://${WORKING_DIRECTORY}/${TEST_REPO} +refs/*:refs/*"
-    cleanup="rm -rf ${WORKING_DIRECTORY}/dest.git"
+--end-of-options file://${TEST_REPO} +refs/*:refs/*"
+    cleanup="${REMOVE_GIT_REPO}"
     runs=$ret
 }
 
@@ -307,12 +347,13 @@ benchmark_push_mirror() {
     emph "git push --mirror"
 
     # 生成临时仓库
-    rm -rf ${WORKING_DIRECTORY}/dest.git ${WORKING_DIRECTORY}/dest && \
-    ${GIT} init --bare ${WORKING_DIRECTORY}/dest.git -q && \
-    ${GIT} clone -q ${WORKING_DIRECTORY}/dest.git ${WORKING_DIRECTORY}/dest && \
+    eval ${REMOVE_GIT_REPO}
+    eval ${CREATE_GIT_REPO}
+    ${GIT} clone -q ${WORKING_REPO} ${WORKING_DIRECTORY}/dest && \
     date > ${WORKING_DIRECTORY}/dest/tmp && \
     ${GIT} -C ${WORKING_DIRECTORY}/dest add -A && \
-    GIT_AUTHOR_NAME="hello" GIT_AUTHOR_EMAIL="hello@world" ${GIT} -C ${WORKING_DIRECTORY}/dest commit -q -m "push mirror" && \
+    export GIT_AUTHOR_NAME="hello" GIT_AUTHOR_EMAIL="hello@world" GIT_COMMITTER_NAME="hello" GIT_COMMITTER_EMAIL="hello@world" && \
+    ${GIT} -C ${WORKING_DIRECTORY}/dest commit -q -m "push mirror" && \
     ${GIT} -C ${WORKING_DIRECTORY}/dest push -q;
 
     # 生成 10000 个引用
@@ -322,14 +363,14 @@ benchmark_push_mirror() {
     emph "generate 1w refs done."
 
     setup=""
-    prepare="${flush_cache};"
-    command="${GIT} -C ${WORKING_DIRECTORY}/dest push --mirror file://${WORKING_DIRECTORY}/dest.git -q"
-    cleanup="rm -rf ${WORKING_DIRECTORY}/dest.git;rm -rf ${WORKING_DIRECTORY}/dest"
+    prepare="rm -rf ${WORKING_REPO}/refs/tags; ${flush_cache};"
+    command="${GIT} -C ${WORKING_DIRECTORY}/dest push --mirror file://${WORKING_REPO} -q"
+    cleanup="${REMOVE_GIT_REPO};rm -rf ${WORKING_DIRECTORY}/dest"
     runs=$ret
 }
 
 hyperfine_run() {
-    hyperfine_command="${HYPERFINE} '${command}' \
+    hyperfine_command="${HYPERFINE} '${command}' ${HYPERFINE_SHOW_OUTPUT} \
                             --setup '${setup}' \
                             --prepare '${prepare}' \
                             --runs ${runs} \

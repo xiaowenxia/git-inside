@@ -8,7 +8,8 @@
 ### 运行
 下载脚本：
 ```sh
-wget https://amp-service.oss-cn-shanghai.aliyuncs.com/git-io-benchmark
+$ wget https://amp-service.oss-cn-shanghai.aliyuncs.com/git-io-benchmark
+$ chmod +x ./git-io-benchmark
 ```
 
 #### 参数
@@ -22,18 +23,31 @@ wget https://amp-service.oss-cn-shanghai.aliyuncs.com/git-io-benchmark
     - `clone`: clone 。
     - `fetch`: fetch 。
     - `push_mirror`: 推送 1w 个引用到本地仓库。
+    - `all`: 测试所有项。
+* `-t`: 设置 `tensorflow.git` 的路径。
+* `-p`: 设置测试仓库的`objects/pack` 软连接的路径，用于测试 `objects/pack` 软链到低价介质的性能场景。
 * `-v`: 输出更多信息。
+* `-x`: 显示 hyperfine 执行的命令输出。
 * `-h`: 帮助。
 
+示例：
+```
+$ ./git-io-benchmark.sh -d /home/xxw -eall -p /nas -v -t /home/xxw/workspace/oss/tensorflow.git
+```
 #### 运行效果
 ![](https://img.alicdn.com/imgextra/i2/O1CN01d20NHe1OR6UBcCxdX_!!6000000001701-2-tps-2488-1480.png)
 
 
 #### 测试数据
 
-|hardware                           |disk           |init   |unpack |fsck   |repack_split   |repack_all |clone  |fetch  |push_mirror    |
+|hardware                   |disk           |init   |unpack |fsck   |repack_split   |repack_all |clone  |fetch  |push_mirror|
 |:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|
-|AMD 5600X <br />6 CPU 32 GiB       |samsung 980 PRO|14ms   |13.5s  |16.9ms |43.7s          |36.2s      |22.1s  |26.9s  |414.2ms    |
-|AMD 5600X <br />6 CPU 32 GiB       |SSD NVMe 3.0   |15.3ms |7.7s   |16.8ms |38.9s          |32.2s      |19.1s  |21.4s  |434.8ms    |
-|AMD 5600X <br />6 CPU 32 GiB       |ramfs          |12.1ms |7.1s   |16.2ms |41.6s          |35.2s      |20.6  |22.7s  |53.1ms    |
-|ecs.c5.4xlarge <br />16 vCPU 32 GiB|ramfs          |31.1ms |15.6s  |23200ms|80.1s          |36.2s      |22.1s  |26.9s  |414.2ms    |
+|AMD 5600X <br/>6 CPU 32 GiB|samsung 980 PRO|15.1ms |13.3s  |18.4ms |40.7s          |33.5s      |20.7s  |24.1s  |485.3ms    |
+|AMD 5600X <br/>6 CPU 32 GiB|SSD NVMe 3.0   |16.7ms |7.7s   |17.0ms |38.9s          |32.2s      |19.1s  |21.4s  |634.5ms    |
+|AMD 5600X <br/>6 CPU 32 GiB|ramfs          |13.4ms |7.1s   |16.8ms |38.5s          |31.7s      |18.5s  |20.7s  |64.7ms     |
+|ecs.c5.4xlarge <br/>16C32G |ramfs          |37.7ms |14.8s  |4.5s   |78.5s          |63.5s      |52.1s  |58.7s  |156.7ms    |
+|ecs.c5.4xlarge <br/>16C32G |ESSD PL1       |34.1ms |15.8s  |18.4s  |79.8s          |64.5s      |53.1s  |59.6s  |2.6s       |
+|ecs.c5.4xlarge <br/>16C32G |NAS 通用性能型  |208.1ms|760.6s |137.8s |85.0s          |69.8s       |57.8s  |70.2s  |43.3s       |
+|ecs.c5.4xlarge <br/>16C32G |高效云盘        |36.4ms|15.7s   |25.9s  |84.3s          |69.0s      |55.0s  |61.6s  |4.6s       |
+
+> NAS 性能型网络延时为 0.15ms 。
