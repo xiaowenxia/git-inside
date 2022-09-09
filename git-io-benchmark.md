@@ -1,5 +1,6 @@
 ### 说明
 该脚本用于测试 git 在不同存储介质的 IO 性能。
+> 目前仅支持 linux 系统。
 
 ### 准备
 安装 git 、[hyperfine](https://github.com/sharkdp/hyperfine/releases)，并克隆 [tensorflow](https://github.com/tensorflow/tensorflow.git) 的裸仓库到测试目录。
