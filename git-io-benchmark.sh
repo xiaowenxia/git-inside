@@ -151,7 +151,7 @@ if command_exists ${HYPERFINE}; then
 fi
 
 if git_directory_not_available ${WORKING_DIRECTORY}/${TEST_REPO}; then
-        tty_exit "please clone ${TEST_REPO} first: git clone https://github.com/tensorflow/tensorflow.git --bare /tmp/tensorflow.git"
+        tty_exit "please clone ${TEST_REPO} first: git clone https://github.com/tensorflow/tensorflow.git --bare"
 fi
 
 flush_cache="sync; echo 3 | sudo tee /proc/sys/vm/drop_caches"
@@ -162,6 +162,8 @@ case_exists() {
 
     for case in ${CASE_LIST[@]}; do
         opt_list=(${case//,/ })
+        # 测试全部
+        if [[ ${opt_list[0]} == all ]];then return 0;fi
         if [[ ${opt_list[0]} == $1 ]];then
             if [[ ${#opt_list[@]} == 2 ]]; then return ${opt_list[1]}; fi
             return 0

@@ -27,3 +27,13 @@ wget https://amp-service.oss-cn-shanghai.aliyuncs.com/git-io-benchmark
 
 #### 运行效果
 ![](https://img.alicdn.com/imgextra/i2/O1CN01d20NHe1OR6UBcCxdX_!!6000000001701-2-tps-2488-1480.png)
+
+
+#### 测试数据
+
+|hardware                           |disk           |init   |unpack |fsck   |repack_split   |repack_all |clone  |fetch  |push_mirror    |
+|:-|:-|:-|:-|:-|:-|:-|:-|:-|:-|
+|AMD 5600X <br />6 CPU 32 GiB       |samsung 980 PRO|14ms   |13.5s  |16.9ms |43.7s          |36.2s      |22.1s  |26.9s  |414.2ms    |
+|AMD 5600X <br />6 CPU 32 GiB       |SSD NVMe 3.0   |15.3ms |7.7s   |16.8ms |38.9s          |32.2s      |19.1s  |21.4s  |434.8ms    |
+|AMD 5600X <br />6 CPU 32 GiB       |ramfs          |12.1ms |7.1s   |16.2ms |41.6s          |35.2s      |20.6  |22.7s  |53.1ms    |
+|ecs.c5.4xlarge <br />16 vCPU 32 GiB|ramfs          |31.1ms |15.6s  |23200ms|80.1s          |36.2s      |22.1s  |26.9s  |414.2ms    |
