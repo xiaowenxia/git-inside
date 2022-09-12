@@ -72,14 +72,14 @@ usage() {
 ${tty_red}Usage:${tty_reset} 
   -d: 测试的目录，这个目录在你要测试的存储介质中，没有给定则使用当前目录。
   -e: 设置测试项和测试次数，每个测试项用 / 分隔，一个测试项后面跟随 , 可以设置测试次数，比如 init,100/unpack,5 表示测试 init 5次, 测试 unpack 5次。目前包括的测试项有:
-    - init: 初始化一个裸仓库。
-    - unpack: 解包一个约有 5w 个对象的packfile。
-    - fsck: 校验 5w 个松散对象。
-    - repack_split: 对 tensorflow 做 repack ，生成多个 packfile。
-    - repack_all: 对 tensorflow 做 repack ，只生成一个 packfile。
-    - clone: clone 。
-    - fetch: fetch 。
-    - push_mirror: 推送 1w 个引用到本地仓库。
+    - init: 初始化一个裸仓库。默认测试 100 次。
+    - unpack: 解包一个约有 5w 个对象的packfile。默认测试 3 次。
+    - fsck: 校验 5w 个松散对象。默认测试 20 次。
+    - repack_split: 对 tensorflow 做 repack ，生成多个 packfile。默认测试 3 次。
+    - repack_all: 对 tensorflow 做 repack ，只生成一个 packfile。默认测试 3 次。
+    - clone: clone 。默认测试 2 次。
+    - fetch: fetch 。默认测试 2 次。
+    - push_mirror: 推送 1w 个引用到本地仓库。默认测试 20 次。
     - all: 测试所有项。
   -t: 设置 tensorflow.git 的路径。
   -p: 设置测试仓库的 objects/pack 软连接的路径，用于测试 objects/pack 软链到低价介质的性能场景。
@@ -236,14 +236,13 @@ benchmark_unpack_objects() {
 
     emph "git unpack-objects"
     # v0.9.0 有 53585 个对象
-    packfile_prefix=`echo "v0.9.0" | ${GIT} --git-dir=${TEST_REPO} \
-                        pack-objects --revs ${WORKING_DIRECTORY}/benchmark_unpack_objects -q`
-    packfile=${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.pack
+    packfile=${WORKING_DIRECTORY}/benchmark_unpack_objects.pack
+    echo "v0.9.0" | ${GIT} --git-dir=${TEST_REPO} pack-objects --revs --stdout -q > ${packfile}
 
     setup=""
     prepare="${REMOVE_GIT_REPO};${CREATE_GIT_REPO};${flush_cache};"
     command="cat ${packfile} | ${GIT} --git-dir=${WORKING_REPO} unpack-objects"
-    cleanup="${REMOVE_GIT_REPO};rm -rf ${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.*"
+    cleanup="${REMOVE_GIT_REPO};rm -rf ${packfile}"
     runs=$ret
 }
 
@@ -255,17 +254,15 @@ benchmark_fsck() {
     if [[ $ret == 0 ]]; then ret=20; fi
 
     emph "git fsck"
-
     # v0.9.0 有 53585 个对象
-    packfile_prefix=`echo "v0.9.0" | ${GIT} --git-dir=${TEST_REPO} \
-                        pack-objects --revs ${WORKING_DIRECTORY}/benchmark_unpack_objects -q`
-    packfile=${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.pack
+    packfile=${WORKING_DIRECTORY}/benchmark_unpack_objects.pack
+    echo "v0.9.0" | ${GIT} --git-dir=${TEST_REPO} pack-objects --revs --stdout -q > ${packfile}
 
     setup="${REMOVE_GIT_REPO};${CREATE_GIT_REPO} && \
             cat ${packfile} | git --git-dir=${WORKING_REPO} unpack-objects;"
     prepare="${flush_cache};"
     command="${GIT} --git-dir=${WORKING_REPO} fsck --full"
-    cleanup="${REMOVE_GIT_REPO};rm -rf ${WORKING_DIRECTORY}/benchmark_unpack_objects-${packfile_prefix}.*"
+    cleanup="${REMOVE_GIT_REPO};rm -rf ${packfile}"
     runs=$ret
 }
 
@@ -346,13 +343,15 @@ benchmark_push_mirror() {
 
     emph "git push --mirror"
 
+    export GIT_AUTHOR_NAME="hello" GIT_AUTHOR_EMAIL="hello@world" GIT_COMMITTER_NAME="hello" GIT_COMMITTER_EMAIL="hello@world";
+
     # 生成临时仓库
     eval ${REMOVE_GIT_REPO}
     eval ${CREATE_GIT_REPO}
+    rm -rf ${WORKING_DIRECTORY}/dest && \
     ${GIT} clone -q ${WORKING_REPO} ${WORKING_DIRECTORY}/dest && \
     date > ${WORKING_DIRECTORY}/dest/tmp && \
     ${GIT} -C ${WORKING_DIRECTORY}/dest add -A && \
-    export GIT_AUTHOR_NAME="hello" GIT_AUTHOR_EMAIL="hello@world" GIT_COMMITTER_NAME="hello" GIT_COMMITTER_EMAIL="hello@world" && \
     ${GIT} -C ${WORKING_DIRECTORY}/dest commit -q -m "push mirror" && \
     ${GIT} -C ${WORKING_DIRECTORY}/dest push -q;
 
@@ -363,7 +362,7 @@ benchmark_push_mirror() {
     emph "generate 1w refs done."
 
     setup=""
-    prepare="rm -rf ${WORKING_REPO}/refs/tags; ${flush_cache};"
+    prepare="rm -rf ${WORKING_REPO}/refs/tags/; ${flush_cache};"
     command="${GIT} -C ${WORKING_DIRECTORY}/dest push --mirror file://${WORKING_REPO} -q"
     cleanup="${REMOVE_GIT_REPO};rm -rf ${WORKING_DIRECTORY}/dest"
     runs=$ret
