@@ -53,8 +53,7 @@ $ ./git-io-benchmark.sh -d /home/xxw -eall -p /nas -v -t /home/xxw/workspace/oss
 |ecs.c5.4xlarge <br/>16C32G |NAS 通用性能型  |208.1ms |760.6s |137.8s |85.0s          |69.8s       |57.8s  |70.2s  |43.3s      |
 |ecs.c5.4xlarge <br/>16C32G |高效云盘        |36.4ms |15.7s   |25.9s  |84.3s          |69.0s      |55.0s  |61.6s  |4.6s       |
 |ecs.c5.4xlarge <br/>16C32G |ESSD PL1 + NAS |42.6ms |15.7s  |18.0s  |79.1s          |66.2s      |53.1s  |63.9s   |s       |
-
-|ecs.c5.4xlarge <br/>16C32G |NAS 极速型      |92.3ms |308.0s  |.0s  |.1s          |.2s      |.1s  |.9s   |s       |
+|ecs.c5.4xlarge <br/>16C32G |NAS 极速型 TODO     |92.3ms |308.0s  |.0s  |.1s          |.2s      |.1s  |.9s   |s       |
 
 * `ESSD PL1 + NAS` 表示仓库在 ESSD PL1 上，但是仓库的 `objects/pack` 挂在到 NAS 通用性能型上。
 * NAS 性能型的网络延时为 0.15ms ，NAS 极速型的网络延时为 0.17ms 。
