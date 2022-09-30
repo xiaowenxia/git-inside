@@ -52,7 +52,7 @@ $ git status -uall -z | hexdump -C
 默认的数据格式见：[Porcelain Format Version 1](https://git-scm.com/docs/git-status#_porcelain_format_version_1) 。
 <a name="EwseU"></a>
 ### git symbolic-ref --short HEAD
-获取当前仓库所在的分支。<br />[git symbolic-ref](https://git-scm.com/docs/git-symbolic-ref) 是用来读写符号引用的，符号引用是指内容以 `ref: refs/`开头的文件，比如 .git/HEAD 和 .git/refs/remotes/origin/HEAD ：
+获取当前仓库所在的分支。<br />[git symbolic-ref](https://git-scm.com/docs/git-symbolic-ref) 是用来读写符号引用的，符号引用是指内容以 `ref: refs/`开头的文件，比如 .git/HEAD 和 `.git/refs/remotes/origin/HEAD` ：
 ```bash
 $ cat .git/HEAD
 ref: refs/heads/topic/0173-midx-fixup-deleting-packfile
@@ -67,7 +67,7 @@ ref: refs/remotes/origin/master
 ### git for-each-ref
 vscode 使用`git for-each-ref`来获取本地分支和远程分支的差异。<br />[git for-each-ref](https://git-scm.com/docs/git-for-each-ref) 会遍历所有匹配格式的引用，然后按照 `--format` 的格式输出数据。<br />比如
 
-git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname)
+`git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname)`
 
 ```bash
 $ git for-each-ref --sort -committerdate --format "%(refname) %(objectname) %(*objectname)"
