@@ -187,14 +187,14 @@ $ ./git-io-benchmark.sh -d /home/xxw -eall -p /nas -v -t /home/xxw/workspace/oss
 
 ## 我的结论
 
-- <span style="color:red">松散对象和松散引用的读写性能 NAS 极差</span>：
-  - `git unpack-objects` 涉及了大量的小文件写入，NAS 上的表现极差，NAS 的耗时为 SSD 的 **<span style="color:red">700</span>** 倍。（git push --mirorr 也是一样的）
+- **松散对象和松散引用的读写性能 NAS 极差**
+  - `git unpack-objects` 涉及了大量的小文件写入，NAS 上的表现极差，NAS 的耗时为 SSD 的 **<span style="color:red">700</span>** 倍。（`git push --mirorr` 也是一样的）
   - `git fsck` 涉及了大量小文件的读取，NAS 上也表现极差，NAS 的耗时为 SSD 的 **<span style="color:red">10</span>** 倍。
-- <span style="color:green">在 packfile 读写性能上 NAS 接近 SSD</span>：
-  - `git repack` 只生成一个 packfile 时（ --max-pack-size = 10g ），NAS 的表现跟 SSD 几乎一样。
-  - git log、git rev-list 都是只读取一个 packfile ，NAS 测试耗时接近 SSD 。
+- **在 packfile 读写性能上 NAS 接近 SSD**
+  - `git repack` 只生成一个 packfile 时（ `--max-pack-size = 10g` ），NAS 的表现跟 SSD 几乎一样。
+  - `git log`、`git rev-list` 都是只读取一个 packfile ，NAS 测试耗时接近 SSD 。
 
-存储介质有三个指标：吞吐量、IOPS、IO 延迟。在 [常见存储介质参数对比](#常见存储介质参数对比) 可以看到粗略的对比。而基于网络访问的分布式文件系统（比如 NAS、OSS）的 IO 延时往往能达到 1~10ms 以上，再加上网络的延迟，总体算下来连 HDD 的 IO 延时都不如。git 命令存在大量的按序读写的操作，比如写入一个 blob 对象，一般涉及到 open、access、unlink 等 POSIX 系统调用，这些系统调用就导致了 IO 延时被多次放大，累加起来 git 命令耗时就非常糟糕，这是 git 在分布式存储介质上的关键性能瓶颈所在。
+存储介质有三个指标：吞吐量、IOPS、IO 延迟。在 [常见存储介质参数对比](#常见存储介质参数对比) 可以看到粗略的对比。而基于网络访问的分布式文件系统（比如 NAS、OSS）的 IO 延时往往能达到 1~10ms 以上，再加上网络的延迟，总体算下来连 HDD 的 IO 延时都不如。git 命令存在大量的按序读写的操作，比如写入一个 blob 对象，一般涉及到 `open`、`access`、`unlink` 等 POSIX 系统调用，这些系统调用就导致了 IO 延时被多次放大，累加起来 git 命令耗时就非常糟糕，这是 git 在分布式存储介质上的关键性能瓶颈所在。
 
 当然可以通过一些配置让 git 命令以 packfile 和 pack-refs 的方式存储对象和引用，但是实际测试下来，以 `pack-refs` 的方式存储引用仍然存在一定的性能问题，因为 git 为了保证引用的事务管理，仍然对松散引用进行了加解锁过程，导致 IO 延时一直居高不下。个人判断，要让 git 能够在分布式存储中的正常读写，就势必要减少 git 对文件系统的读写次数，也就需要对 git 做更深层次的改造。
 
@@ -208,7 +208,7 @@ $ ./git-io-benchmark.sh -d /home/xxw -eall -p /nas -v -t /home/xxw/workspace/oss
 
 测试过程中，也针对了一些高频场景做了相关的测试，比如：
 
-- `git clone --bare` 是常见 git 使用场景，涉及到了大文件读写，其功能与 git fetch 类似，实际测试下来的数据也是一样的。
+- `git clone --bare` 是常见 git 使用场景，涉及到了大文件读写，其功能与 `git fetch` 类似，实际测试下来的数据也是一样的。
 - `git rev-list --objects --all` 测试遍历 commit 和 tree 对象的性能。实际测试下来各种存储介质耗时接近，主要是跟计算能力有关，跟磁盘 IO 性能关系不大。
 - `git log -Sfoo --raw` 读取所有 commit 对象的内容，实际测试下来也是跟磁盘 IO 性能关系不大。
 
