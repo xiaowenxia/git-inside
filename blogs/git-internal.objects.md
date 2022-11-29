@@ -1,4 +1,5 @@
 ## Git 底层原理：Git 对象
+
 <h1 style="margin-top: 30px; margin-bottom: 15px; padding: 0px 100px; font-size: 22px; text-align: center; position: relative; font-weight: bold; color: black; line-height: 1.1em; padding-top: 12px; padding-bottom: 12px; margin: 70px 30px 30px; border: 1px solid #000; width: 60%; margin: 0 auto" data-id="heading-2"><span style="float: left; display: block; width: 60%; border-top: 1px solid #000; height: 1px; line-height: 1px; margin-left: -5px; margin-top: -17px;"> </span><span class="prefix" style="display: block; width: 3px; margin: 0 0 0 5%; height: 3px; line-height: 3px; overflow: hidden; background-color: #000; box-shadow: 3px 0 #000, 0 3px #000, -3px 0 #000, 0 -3px #000;"></span><span class="content" style="display: block; -webkit-box-reflect: below 0em -webkit-gradient(linear,left top,left bottom, from(rgba(0,0,0,0)),to(rgba(255,255,255,0.1)));">Git 底层原理：Git 对象</span><span class="suffix" style="display: block; width: 3px; margin: 0 0 0 95%; height: 3px; line-height: 3px; overflow: hidden; background-color: #000; box-shadow: 3px 0 #000, 0 3px #000, -3px 0 #000, 0 -3px #000;"></span><span style="float: right; display: block; width: 60%; border-bottom: 1px solid #000; height: 1px; line-height: 1px; margin-right: -5px; margin-top: 16px;"> </span></h1>
 <br />
 
@@ -9,6 +10,7 @@ Git 对象 是 Git 的最小组成单位，git 的所有核心底层命令实际
 本文会从一个空的仓库开始，一步一步由浅入深的展开讲解 git 的内部原理以及底层对象。
 
 ### <span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0x01</span> 首先初始化工程
+
 ```bash
 # 初始化工程
 $ git init
@@ -35,18 +37,19 @@ $ tree -a
 
 git 初始化时，实际上是在仓库下创建了一个 `.git` 目录的隐藏目录，以及一些默认的文件：
 
-* `HEAD`: `HEAD` 指针，指向当前的操作分支。
-* `config`: 存储的本地仓库的配置。
-* `description`: 用来存储仓库名称以及仓库的描述信息。
-* `hooks/*`: git 钩子，git 钩子可以做非常有用的事情，也是构建 git 工作流中不可或缺的部分。具体看 [git 钩子](https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90)。
-* `info/exclude`: 该文件的功能和 [.gitignore](https://git-scm.com/docs/gitignore) 一样，都是配置 git 忽略本地文件。
-* `objects/*`: git 的底层对象。
-* `refs/heads` 和 `refs/tags` : git 引用，实现了git 的分支策略，具体看 [git 引用](https://git-scm.com/book/en/v2/Git-Internals-Git-References)。
-> 实际上还有更多不常用的文件和目录，更详细的细节可以查阅：[Git Repository Layout](https://github.com/git/git/blob/master/Documentation/gitrepository-layout.txt)。
+- `HEAD`: `HEAD` 指针，指向当前的操作分支。
+- `config`: 存储的本地仓库的配置。
+- `description`: 用来存储仓库名称以及仓库的描述信息。
+- `hooks/*`: git 钩子，git 钩子可以做非常有用的事情，也是构建 git 工作流中不可或缺的部分。具体看 [git 钩子](https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90)。
+- `info/exclude`: 该文件的功能和 [.gitignore](https://git-scm.com/docs/gitignore) 一样，都是配置 git 忽略本地文件。
+- `objects/*`: git 的底层对象。
+- `refs/heads` 和 `refs/tags` : git 引用，实现了 git 的分支策略，具体看 [git 引用](https://git-scm.com/book/en/v2/Git-Internals-Git-References)。
+  > 实际上还有更多不常用的文件和目录，更详细的细节可以查阅：[Git Repository Layout](https://github.com/git/git/blob/master/Documentation/gitrepository-layout.txt)。
 
 ### <span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0x02</span> 添加一个文件
 
 使用 `git add` 命令把当前工作区的变更提交到暂存区：
+
 ```bash
 # 添加文件
 $ echo "git-inside" > file.txt
@@ -54,6 +57,7 @@ $ echo "git-inside" > file.txt
 # 把文件添加到暂存区中
 $ git add file.txt
 ```
+
 此时查看 `.git/` 工作目录：
 
 ```bash
@@ -65,8 +69,8 @@ $ find .git/objects -type f
 
 git 对象的文件路径和名称根据文件内容的 [sha1](https://en.wikipedia.org/wiki/SHA-1) 值决定，取 sha1 值的第一个字节的 hex 值为目录，其他字节的 hex 值为名称。这里使用这种方式存储 Git 对象有 2 个好处：
 
-* 对 Git 对象做完整性校验。
-* 快速遍历/查找 Git 对象。
+- 对 Git 对象做完整性校验。
+- 快速遍历/查找 Git 对象。
 
 为了减少存储大小，**git 对象都是使用 [zlib](http://zlib.net/) 压缩存储的**。git 提供了 [cat-file](https://git-scm.com/docs/git-cat-file) 命令用来格式化查看 git 对象内容：
 
@@ -78,14 +82,18 @@ git-inside
 $ git cat-file -t 6fb38b7118b554886e96fa736051f18d63a80c85
 blob
 ```
+
 可以看到 `6fb38b7`（上述 git 对象的 sha1 值简写） 对象类型为 `blob` 对象，`blob` 对象存储变更文件的内容快照。
+
 > 根据 sha1 的散列特性，使用 sha1 的前 7 个字符就基本可以表示该 sha1 值。Github、Gitlab 也一样。
 
 此时查看 `.git/` 目录下，会新增一个 index 文件（索引文件）：
+
 ```bash
 $ file .git/index
 .git/index: Git index, version 2, 1 entries
 ```
+
 `index` 文件存储暂存区的文件列表，`index`文件代表了 git 的一个重要的概念：暂存区。`index` 文件的详细说明可以查看 [索引文件](https://github.com/xiaowenxia/git-first-commit#%E7%B4%A2%E5%BC%95%E6%96%87%E4%BB%B6) 。
 `index` 文件使用二进制方式存储暂存区信息，通过 git 提供的 [ls-files](https://git-scm.com/docs/git-ls-files) 底层命令可以查看索引文件的格式化输出：
 
@@ -109,7 +117,7 @@ $ git commit -m "first commit"
 
 > 其中 `100644` 是指的文件模式，`100644` 表明这是一个普通文件。 其他情况比如 `100755` 表示可执行文件，`120000` 表示符号链接。
 
-> 如果你是边阅读本文边动手操作，那你会发现生成的 commit 对象的 sha1 值跟本文不一致，因为提交日期以及用户名邮箱是不一样的，可以点击这里 [设置固定的时间日期、用户名和邮箱](#LhzBD)，这样提交的对象就会是一样的 sha1值，也方便阅读本文。
+> 如果你是边阅读本文边动手操作，那你会发现生成的 commit 对象的 sha1 值跟本文不一致，因为提交日期以及用户名邮箱是不一样的，可以点击这里 [设置固定的时间日期、用户名和邮箱](#LhzBD)，这样提交的对象就会是一样的 sha1 值，也方便阅读本文。
 
 查看 `.git/objects` 目录下，会新增 2 个 git 对象：
 
@@ -119,9 +127,11 @@ $ find .git/objects -type f
 .git/objects/52/3d41ce82ea993e7c7df8be1292b2eac84d4659
 .git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
 ```
+
 分别是 `523d41c` 和 `4120b5f` 。
 
 使用 `git cat-file` 可以看到 2 个 对象的类型和内容：
+
 ```bash
 # 523d41c 是一个 commit 对象
 $ git cat-file -t 523d41c
@@ -146,9 +156,9 @@ $ git cat-file -p 4120b5f
 
 操作到这里，git 的底层对象一共生成了 3 个，分别是：
 
-* `6fb38b7`: blob 对象。
-* `4120b5f`: tree 对象，指向 `6fb38b7`。
-* `523d41c`: commit 对象，指向 `4120b5f`。
+- `6fb38b7`: blob 对象。
+- `4120b5f`: tree 对象，指向 `6fb38b7`。
+- `523d41c`: commit 对象，指向 `4120b5f`。
 
 他们之间的关系是：
 ![](https://img.alicdn.com/tfs/TB1UzBK4XP7gK0jSZFjXXc5aXXa-1818-608.png)
@@ -168,7 +178,8 @@ $ git commit -m "second commit"
  create mode 100644 README.md
  create mode 100644 doc/changelog
 ```
-该提交为 `file.txt` 添加了内容，同时新增了子目录：`doc/`，并新增了 `README.md` 和 `doc/changelog` 2个文件。
+
+该提交为 `file.txt` 添加了内容，同时新增了子目录：`doc/`，并新增了 `README.md` 和 `doc/changelog` 2 个文件。
 查看 git 对象列表：
 
 ```bash
@@ -186,12 +197,12 @@ $ find .git/objects -type f | sort
 
 可以看到除了原先的 `6fb38b7`、`4120b5f`、`523d41c`，又新增了：
 
-* `10da374`: tree 对象，指向 `README.md` ( `5664e30` ) 、`file.txt` ( `aec2e48` )、`doc/` ( `39fb0fb` )。
-* `39fb0fb`: tree 对象，指向 `changelog` ( `45c7a58` )。
-* `45c7a58`: blob 对象， 存储 `changelog` 内容快照。
-* `5664e30`: blob 对象，存储 `README.md` 内容快照。
-* `a0e96b5`: commit 对象，指向 `10da374`、`523d41c`。
-* `aec2e48`: blob 对象，存储更改的 `file.txt` 内容快照。
+- `10da374`: tree 对象，指向 `README.md` ( `5664e30` ) 、`file.txt` ( `aec2e48` )、`doc/` ( `39fb0fb` )。
+- `39fb0fb`: tree 对象，指向 `changelog` ( `45c7a58` )。
+- `45c7a58`: blob 对象， 存储 `changelog` 内容快照。
+- `5664e30`: blob 对象，存储 `README.md` 内容快照。
+- `a0e96b5`: commit 对象，指向 `10da374`、`523d41c`。
+- `aec2e48`: blob 对象，存储更改的 `file.txt` 内容快照。
 
 查看新增的 2 个 tree 对象：
 
@@ -219,13 +230,14 @@ committer xiaowenxia <775117471@qq.com> 1606913178 +0800
 second commit
 ```
 
-仔细的同学会发现，`a0e96b5` 跟第一次提交生成的 commit 对象（`523d41c`）相比，多了一个 `parent` 字段。`parent` 字段是用来指向上一次提交的，一般是1个 parent ，有些情况下会是多个 parent ，比如 merge 这种情况。
+仔细的同学会发现，`a0e96b5` 跟第一次提交生成的 commit 对象（`523d41c`）相比，多了一个 `parent` 字段。`parent` 字段是用来指向上一次提交的，一般是 1 个 parent ，有些情况下会是多个 parent ，比如 merge 这种情况。
 
 我们再总结一下这些对象之间的关系：
 ![](https://img.alicdn.com/tfs/TB17QMC4oY1gK0jSZFCXXcwqXXa-2748-1654.png)
 
 如图所示，每一次提交可以是一个文件，也可以是多个文件和多个目录，一次提交就是一次版本（ [revision](https://git-scm.com/docs/gitrevisions) ）。
-同时这里又引申出来了 git 的一个非常重要的概念，每一次新的提交都会指向上一个提交，这样多个提交就组成了一个提交链。这个提交链使用到了一个非常有名的算法：[merkle tree](https://baike.baidu.com/item/%E6%A2%85%E5%85%8B%E5%B0%94%E6%A0%91/22456281)，感兴趣的同学可以去深入了解，这里就不深入讲解了。`merkle tree` 有一个重要的特性就是单独更改其中一个节点的内容就会破坏掉这个tree，也就是说 `merkle tree` 的节点是不可更改的。git 就是通过 `merkle tree` 来保证每个版本都是连续有效的。
+同时这里又引申出来了 git 的一个非常重要的概念，每一次新的提交都会指向上一个提交，这样多个提交就组成了一个提交链。这个提交链使用到了一个非常有名的算法：[merkle tree](https://baike.baidu.com/item/%E6%A2%85%E5%85%8B%E5%B0%94%E6%A0%91/22456281)，感兴趣的同学可以去深入了解，这里就不深入讲解了。`merkle tree` 有一个重要的特性就是单独更改其中一个节点的内容就会破坏掉这个 tree，也就是说 `merkle tree` 的节点是不可更改的。git 就是通过 `merkle tree` 来保证每个版本都是连续有效的。
+
 > 这就是为什么很难修改 git 的历史提交记录的原因，如果要修改某一个提交，那同时还需要修改这个提交之后的所有提交，这样才能保证 `merkle tree` 是有效成立的。
 > 另外，区块链也是基于 `merkle tree` 来保证数据可靠性的。
 
@@ -235,7 +247,7 @@ second commit
 
 按照先后时间顺序单独看 `commit` 对象之间的关系：
 
-<div align="center"><img src="https://img.alicdn.com/tfs/TB1LU0F4kL0gK0jSZFAXXcA9pXa-496-208.png" width=200 /></div> 
+<div align="center"><img src="https://img.alicdn.com/tfs/TB1LU0F4kL0gK0jSZFAXXcA9pXa-496-208.png" width=200 /></div>
 
 这个 `commit` 对象关系图非常重要，git 分支策略就是围绕着这个关系图来运作的，这里暂且不做展开。
 
@@ -243,6 +255,7 @@ second commit
 
 上面的操作涉及了 3 种 git 对象，分别是 `blob`、`tree`、`commit` 对象，其实 git 还存在一个 `tag` 类型的对象，用来存储带注释的标签。
 使用如下命令创建标签：
+
 ```bash
 $ git tag "v0.0.2" -m "this is annotated tag"
 
@@ -294,12 +307,12 @@ tag 对象相对比较独立，不参与构建文件系统，只是单纯的存�
 
 ### <span style="color: #41B883; border-left:4px solid #41B883; padding-left: 5px; padding-right: 5px">0xFF</span> 总结
 
-到这里其实应该已经对 Git 底层对象有一个深刻的了解了。从根本上来讲，git 底层实际上是由一个个对象（object）组成的，git 底层对象分为4种：
+到这里其实应该已经对 Git 底层对象有一个深刻的了解了。从根本上来讲，git 底层实际上是由一个个对象（object）组成的，git 底层对象分为 4 种：
 
-* **blob 对象**：保存着文件快照，数据结构参考： [blob 对象](https://github.com/xiaowenxia/git-first-commit#blob-%E5%AF%B9%E8%B1%A1)。
-* **tree 对象**：记录着目录结构和 blob 对象索引，其数据结构参考： [tree 对象](https://github.com/xiaowenxia/git-first-commit#tree-%E5%AF%B9%E8%B1%A1)。
-* **commit 对象**：包含着指向前述 tree 对象的指针和所有提交信息，数据结构参考：[commit 对象](https://github.com/xiaowenxia/git-first-commit#commit-%E5%AF%B9%E8%B1%A1)。
-* **tag 对象**：记录带注释的 tag 。
+- **blob 对象**：保存着文件快照，数据结构参考： [blob 对象](https://github.com/xiaowenxia/git-first-commit#blob-%E5%AF%B9%E8%B1%A1)。
+- **tree 对象**：记录着目录结构和 blob 对象索引，其数据结构参考： [tree 对象](https://github.com/xiaowenxia/git-first-commit#tree-%E5%AF%B9%E8%B1%A1)。
+- **commit 对象**：包含着指向前述 tree 对象的指针和所有提交信息，数据结构参考：[commit 对象](https://github.com/xiaowenxia/git-first-commit#commit-%E5%AF%B9%E8%B1%A1)。
+- **tag 对象**：记录带注释的 tag 。
 
 一个仓库里面的所有 Git 对象会组成一个图（Graph），按照指向关系可以简单的这么理解：`refs` --> `tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`，对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，[`git fsck`](https://git-scm.com/docs/git-fsck) 命令就会提示 `"hash mismatch"` 。所以这也是 Git 对象的文件存储结构里面并没有自身数据的校验（checksum）字段的原因。
 
@@ -310,31 +323,32 @@ tag 对象相对比较独立，不参与构建文件系统，只是单纯的存�
 ![](https://img.alicdn.com/tfs/TB1g9ID4oY1gK0jSZFMXXaWcVXa-2868-1380.png)
 
 ##### git 对象的相关命令
+
 git 擅长的一点是提供了很多丰富抽象的子命令来操作这些 git 对象，比如上面的一系列操作：
 
-* `git add`：实际上是把当前工作区的文件快照保存下来，产出是 blob 对象。
-* `git commit`：保存暂存区的文件层级关系和提交者信息，产出是 tree 对象 和 commit 对象。
-* `git tag -m`：保存 tag 标签的信息，产出是 tag 对象。
+- `git add`：实际上是把当前工作区的文件快照保存下来，产出是 blob 对象。
+- `git commit`：保存暂存区的文件层级关系和提交者信息，产出是 tree 对象 和 commit 对象。
+- `git tag -m`：保存 tag 标签的信息，产出是 tag 对象。
 
 这些是上层命令，实际上 git 还提供了非常丰富的底层命令用来操作对象：
 
-* [`git-hash-object`](https://git-scm.com/docs/git-hash-object)：把输入内容存储成 blob 对象。
-* [`git-cat-file`](https://git-scm.com/docs/git-cat-file)：读取并格式化输出对象。
-* [`git-count-objects`](https://git-scm.com/docs/git-count-objects)：计算对象数量。
-* [`git-write-tree`]()：把存储区的文件结构存储成 tree 对象。
-* [`git-read-tree`](https://git-scm.com/docs/git-read-tree)：把 tree 对象读取到暂存区。
-* [`git-commit-tree`](https://git-scm.com/docs/git-commit-tree)：根据输入信息（tree、父提交、author、commiter、日期等）存储成 commit 对象。
-* [`git-ls-tree`](https://git-scm.com/docs/git-ls-tree)：读取并格式化输出 tree 对象。
-* [`git-mktag`](https://git-scm.com/docs/git-mktag)：把输入内容存储成 tag 对象。
-* [`git-mktree`](https://git-scm.com/docs/git-mktree)：根据输入（`ls-tree`的输出格式）来生成 tree 对象。
-* [`git-fsck`](https://git-scm.com/docs/git-fsck)：校验对象链表的正确性和有效性。
-* [`git-diff-tree`](https://git-scm.com/docs/git-diff-tree)：比较 2 个tree 对象 的差异并格式化输出。
+- [`git-hash-object`](https://git-scm.com/docs/git-hash-object)：把输入内容存储成 blob 对象。
+- [`git-cat-file`](https://git-scm.com/docs/git-cat-file)：读取并格式化输出对象。
+- [`git-count-objects`](https://git-scm.com/docs/git-count-objects)：计算对象数量。
+- [`git-write-tree`]()：把存储区的文件结构存储成 tree 对象。
+- [`git-read-tree`](https://git-scm.com/docs/git-read-tree)：把 tree 对象读取到暂存区。
+- [`git-commit-tree`](https://git-scm.com/docs/git-commit-tree)：根据输入信息（tree、父提交、author、commiter、日期等）存储成 commit 对象。
+- [`git-ls-tree`](https://git-scm.com/docs/git-ls-tree)：读取并格式化输出 tree 对象。
+- [`git-mktag`](https://git-scm.com/docs/git-mktag)：把输入内容存储成 tag 对象。
+- [`git-mktree`](https://git-scm.com/docs/git-mktree)：根据输入（`ls-tree`的输出格式）来生成 tree 对象。
+- [`git-fsck`](https://git-scm.com/docs/git-fsck)：校验对象链表的正确性和有效性。
+- [`git-diff-tree`](https://git-scm.com/docs/git-diff-tree)：比较 2 个 tree 对象 的差异并格式化输出。
 
 <a name="LhzBD"></a>
 
 ##### 设置固定的时间日期、用户名和邮箱
 
-本文中的示例都设置了固定的时间日期、用户名和邮箱，如果你是边阅读本文边动手操作，可以如下执行 `git commit` 或者 `git tag` ，这样生成的对象hash值和本文中的是一致的：
+本文中的示例都设置了固定的时间日期、用户名和邮箱，如果你是边阅读本文边动手操作，可以如下执行 `git commit` 或者 `git tag` ，这样生成的对象 hash 值和本文中的是一致的：
 
 ```bash
 # git commit
@@ -355,10 +369,13 @@ export GIT_AUTHOR_DATE="1606913178 +0800" GIT_AUTHOR_NAME="xiaowenxia" GIT_AUTHO
 [点击下载](https://aos-app-dev.oss-cn-shanghai.aliyuncs.com/git-inside.tar.gz)本文中创建的仓库。
 
 ##### git-draw
+
 这里有一个很有趣的工具：[git-draw](https://github.com/sensorflo/git-draw)，这个工具会绘制 git 仓库的所有 Git 对象和引用的关系。下图使用 `git-draw` 绘制了本文的仓库：
 
 ![](https://img.alicdn.com/imgextra/i4/O1CN013r001V1zJRVp9ETDH_!!6000000006693-55-tps-1412-824.svg)
+
 ### 参考资料
-* https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
-* https://maryrosecook.com/blog/post/git-from-the-inside-out
-* https://matthew-brett.github.io/curious-git/git_object_types.html
+
+- https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
+- https://maryrosecook.com/blog/post/git-from-the-inside-out
+- https://matthew-brett.github.io/curious-git/git_object_types.html

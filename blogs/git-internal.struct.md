@@ -1,7 +1,7 @@
 ## Git 底层原理：Git 底层文件存储格式
 
-Git 底层文件有 Git 对象、索引文件、pack 文件、分支/引用、HEAD指针等，
-在[《Git 底层原理： Git 对象》](./git-internal.1.md)里面有讲解到，Git 是一个文件系统，最小单元是 Git 对象，Git 对象又分为 4种：`blob`、`tree`、`commit`、`tag`，那这些对象具体是以什么形式存储的？
+Git 底层文件有 Git 对象、索引文件、pack 文件、分支/引用、HEAD 指针等，
+在[《Git 底层原理： Git 对象》](./git-internal.1.md)里面有讲解到，Git 是一个文件系统，最小单元是 Git 对象，Git 对象又分为 4 种：`blob`、`tree`、`commit`、`tag`，那这些对象具体是以什么形式存储的？
 
 首先按照[《Git 底层原理： Git 对象》](./git-internal.1.md)里面提到的步骤初始化一个简单的 git 仓库，查看生成的 git 对象：
 
@@ -20,16 +20,19 @@ $ find .git/objects -type f | sort
 ```
 
 ### Git 对象
+
 为了减少存储大小，git 对象都是使用 [zlib](http://zlib.net/) 压缩存储的。git 对象由 `<type>` + `<size>` + `<content>` 组成：
-* `<type>`: git 对象类型，有如下 4 种：`blob`、`tree`、`commit`、`tag`。
-* `<size>`: git 对象的内容大小。
-* `<content>`: git 对象内容。
+
+- `<type>`: git 对象类型，有如下 4 种：`blob`、`tree`、`commit`、`tag`。
+- `<size>`: git 对象的内容大小。
+- `<content>`: git 对象内容。
 
 如下是 4 种对象的数据存储格式：
 
 ![](https://img.alicdn.com/imgextra/i3/O1CN01Prj90h1qr21f8nMgE_!!6000000005548-2-tps-2060-1784.png)
 
 这里可能会有人有疑惑，Git 对象并没有对自身数据做校验（checksum），这样会不会有人对数据进行修改？这个其实不用担心，所有的 Git 对象都会组成一个图（Graph），按照指向关系可以这么理解：`refs` --> `tag 对象 ` --> `commit 对象` --> `tree 对象` --> `blob 对象`（实际上更为复杂），对象之间通过对方的 sha1 值来确定指向关系，所以要是篡改了对象的内容，那指向关系就会被破坏掉，[`git fsck`](https://git-scm.com/docs/git-fsck) 命令就会提示 `"hash mismatch"`。
+
 #### 查看对象存储格式
 
 git 提供了 `cat-file` 来解析 git 对象，并输出格式化可阅读的内容：
@@ -51,6 +54,7 @@ $ git cat-file -s 6fb38
 ```
 
 同时，`cat-file` 也支持输出未格式化的内容：
+
 ```bash
 # 查看未格式化的内容
 $ git cat-file tree 10da374
@@ -65,9 +69,11 @@ $ git cat-file tree 10da374
 $ zlib-flate -uncompress < .git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
 blob 11git-inside
 ```
+
 > 根据上面的 blob 存储格式可以知道，其中 `"blob"` 是对象类型，`"11"` 是文件大小，`"git-inside"` 是文件内容。
 
 这里提供一下 4 种对象的原始数据，仅供参考：
+
 ```bash
 # 查看 blob 对象内容
 $ zlib-flate -uncompress < .git/objects/6f/b38b7118b554886e96fa736051f18d63a80c85
@@ -101,10 +107,11 @@ tagger xiaowenxia <775117471@qq.com> 1606913178 +0800
 
 this is annotated tag
 ```
+
 > 这里使用到了 hexdump，[hexdump](https://www.man7.org/linux/man-pages/man1/hexdump.1.html) 是一个 UNIX 命令，用来格式化输出二进制数据。
 
-
 ### 索引文件
+
 索引文件默认路径为：`.git/index`。索引文件用来存储暂存区的相关文件信息，当运行 `git add` 命令时会把工作区的变更文件信息添加到该索引文件中。索引文件以如下的格式存储暂存区内容：
 
 ![](https://img.alicdn.com/imgextra/i3/O1CN01IDu59O1U9auyFw6YI_!!6000000002475-2-tps-2414-1376.png)
@@ -114,12 +121,14 @@ this is annotated tag
 #### 查看索引文件存储格式
 
 使用 `ls-files` 可以读取索引文件存储的文件信息：
+
 ```bash
 $ git ls-files --stage
 100644 5664e303b5dc2e9ef8e14a0845d9486ec1920afd 0	README.md
 100644 45c7a584f300657dba878a542a6ab3b510b63aa3 0	doc/changelog
 100644 aec2e48cbf0a881d893ccdd9c0d4bbaf011b5b23 0	file.txt
 ```
+
 当然，`ls-files` 的输出内容也是经过格式化的。跟 Git 对象 不一样，索引文件 `.git/indx` 并没有经过 zlib 压缩，使用 `hexdump` 工具就可以直接查看原始数据：
 
 ```
@@ -145,19 +154,23 @@ $ hexdump -C .git/index
 00000120  58 9a 5b 2b c0 80 9c e6  64 ac 8f 88 7a 1e a4 d0  |X.[+....d...z...|
 00000130  b9 83 8d 83 72 4e 7b 71  d2 d8 a0 a5 3d           |....rN{q....=|
 ```
+
 索引文件大部分内容都是以二进制存储的，可读性很差，喜欢钻研的同学可以去看源码。
 
 ### pack 文件
 
-pack文件用来合并压缩多个object对象的，可以方便进行网络传输（推送到远程仓库）。<br />`*.pack` 文件格式：<br />![image.png](https://ucc.alicdn.com/pic/developer-ecology/d6efb1160bf74b40887a74cf1ad43c16.png)
+pack 文件用来合并压缩多个 object 对象的，可以方便进行网络传输（推送到远程仓库）。<br />`*.pack` 文件格式：<br />![image.png](https://ucc.alicdn.com/pic/developer-ecology/d6efb1160bf74b40887a74cf1ad43c16.png)
+
 > 该图片来自于：[https://developer.aliyun.com/article/761663](https://developer.aliyun.com/article/761663) 。
 
 <br />`*.idx` 文件格式：<br />![image.png](https://ucc.alicdn.com/pic/developer-ecology/941607f49ac44958876d511c5b831ed2.png)
+
 > 该图片来自于：[https://developer.aliyun.com/article/761663](https://developer.aliyun.com/article/761663) 。
 
 ### HEAD 等指针文件
 
 HEAD 具体路径为 `.git/HEAD` ，`HEAD` 实际上是一个指针，指向具体的引用或者 `commit-id` ，比如 HEAD 指向 `master` 分支时是如下内容：
+
 ```bash
 $ cat .git/HEAD
 ref: refs/heads/master
@@ -170,6 +183,7 @@ $ git checkout 523d41ce82ea993e7c7df8be1292b2eac84d4659
 $ cat .git/HEAD
 523d41ce82ea993e7c7df8be1292b2eac84d4659
 ```
+
 另外，如果我 checkout 了指定的 `tag` 时，那 HEAD 的值是这个 `tag` 对应的 `commit-id`。
 同样的，`.git/ORIG_HEAD`、`.git/FETCH_HEAD` 也是这样的存储方式。
 
@@ -185,14 +199,15 @@ a0e96b5ee9f1a3a73f340ff7d1d6fe2031291bb0
 ### 附录
 
 ##### 相关的 Git 源码
-> 基于 git v2.29.2 版本。
-* Git 对象：
-    * 写入 Git 对象源码： `sha1-file.c` > [`write_object_file()`](https://github.com/git/git/blob/v2.29.2/sha1-file.c#L1931)。
-    * 读取 Git 对象源码： `sha1-file.c` > [`read_object_file_extended()`](https://github.com/git/git/blob/v2.29.2/sha1-file.c#L1621)
-* 索引文件：
-    * 解析 索引文件：`read-cache.c` > [`read_index_from`](https://github.com/git/git/blob/v2.29.2/read-cache.c#L2277)
-    * 工作区锁定：[`lockfile.c`](https://github.com/git/git/blob/v2.29.2/lockfile.c)。
 
+> 基于 git v2.29.2 版本。
+
+- Git 对象：
+  - 写入 Git 对象源码： `sha1-file.c` > [`write_object_file()`](https://github.com/git/git/blob/v2.29.2/sha1-file.c#L1931)。
+  - 读取 Git 对象源码： `sha1-file.c` > [`read_object_file_extended()`](https://github.com/git/git/blob/v2.29.2/sha1-file.c#L1621)
+- 索引文件：
+  - 解析 索引文件：`read-cache.c` > [`read_index_from`](https://github.com/git/git/blob/v2.29.2/read-cache.c#L2277)
+  - 工作区锁定：[`lockfile.c`](https://github.com/git/git/blob/v2.29.2/lockfile.c)。
 
 ```c
 /* 索引文件 header */
@@ -219,7 +234,7 @@ struct ondisk_cache_entry {
 
 ### 参考资料
 
-* https://stackoverflow.com/questions/14790681/what-is-the-internal-format-of-a-git-tree-object
-* https://stackoverflow.com/questions/4084921/what-does-the-git-index-contain-exactly
-* https://gist.github.com/masak/2415865
-* https://linux.die.net/man/1/git-pack-objects
+- https://stackoverflow.com/questions/14790681/what-is-the-internal-format-of-a-git-tree-object
+- https://stackoverflow.com/questions/4084921/what-does-the-git-index-contain-exactly
+- https://gist.github.com/masak/2415865
+- https://linux.die.net/man/1/git-pack-objects
